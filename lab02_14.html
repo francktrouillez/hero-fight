@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<h1>Refactoring</h1>
+	<p>As you saw, the code become quickly difficult to handle</p>
+	<p>In a real application you will have several shaders, several objects, one camera.</p>
+	<p>Make a function to handle:</p>
+	<ul>
+		<li>the camera and shortcuts</li>
+		<li>the buffers (data + attributes)</li>
+		<li>the shaders</li>
+		<li>texture creation</li>
+		<li>adapt the rest</li>
+	</ul>
+    <canvas id="webgl_canvas" width="500" height="500"></canvas>
+	<div id="fps"></div>
+	
+	<script src="gl-matrix-min.js"></script>
+    <script>
+	
+		var make_camera = function() {
+		
+			// 1. Your code
+			
+			return {
+				View: View,
+				Projection, Projection,
+			}
+		
+		}
+	
+	  document.addEventListener('DOMContentLoaded', () => {
+		// Boilerplate code
+		const canvas = document.getElementById('webgl_canvas');
+		const gl = canvas.getContext('webgl');
+		
+		var make_shader = function (vertex_shader, fragment_shader) {
+			// 3. Your code
+			
+			return {
+				program:program,
+				get_uniforms:get_uniforms,
+				use:use,
+			}
+		}
+		
+		var make_texture = function(url) {
+			// 4. Your code
+
+			return texture;
+		}
+		
+		var make_object = function(data, num_triangles) {
+			// 2. Your code
+			
+			return {
+				buffer: buffer,
+				model: Model,
+				activate: activate,
+				draw:draw,
+			}
+		
+		}
+
+		const sourceV = `
+		  // 5. Your code
+		`;
+		
+		const sourceF = `
+		  // 5. Your code
+		`;
+		
+		var shader_triangle = make_shader(sourceV, sourceF);
+		var tex_cat = make_texture("cat.jpg");
+		var obj_triangle = make_object(new Float32Array([
+		  // 5. Your code
+		]), 3);
+		
+		var camera = make_camera();
+		
+		
+		var deltaTime = 0;
+		function animate (time) {
+			//Draw loop
+			gl.clearColor(0.2, 0.2, 0.2, 1);
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			
+			shader_triangle.use();
+			obj_triangle.activate(shader_triangle);
+			
+			var unif = shader_triangle.get_uniforms();
+		
+			gl.uniformMatrix4fv(unif['model'], false, obj_triangle.model);
+			gl.uniformMatrix4fv(unif['view'], false, camera.View);
+			gl.uniformMatrix4fv(unif['proj'], false, camera.Projection);
+			
+			obj_triangle.draw();
+			
+			deltaTime += 0.005;
+			//console.log(deltaTime);
+			fps(time);
+			window.requestAnimationFrame(animate); // While(True) loop!
+		}
+		
+		var prev = 0
+		const fpsElem = document.querySelector("#fps");
+		function fps(now) {
+			now *= 0.001;
+			const deltaTime = now - prev;
+			prev = now;
+			const fps = 1 / deltaTime;
+			fpsElem.textContent = 'FPS: ' + fps.toFixed(1);
+			return fps;
+		}
+		
+		animate(0);
+	  });
+	  
+	</script>
+</body>
+</html>
+
+
