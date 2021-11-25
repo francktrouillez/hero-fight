@@ -2,7 +2,7 @@
 var make_camera = function() {
 
   var View = glMatrix.mat4.create();
-  View = glMatrix.mat4.lookAt(View, glMatrix.vec3.fromValues(0.0,0.0,1.0) 
+  View = glMatrix.mat4.lookAt(View, glMatrix.vec3.fromValues(0.0,0.0,2.0) 
                   , glMatrix.vec3.fromValues(0.0,0.0,0.0)
                   , glMatrix.vec3.fromValues(0.0,1.0,0.0))
 
@@ -35,6 +35,10 @@ var make_camera = function() {
     }
     else if (key === '-' || key === 'Subtract') {
     View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(0.0, 0.0, 0.05));
+    return;
+    }
+    else if (key == 'a') {
+    View = glMatrix.mat4.rotate(View, View, 0.1, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
     return;
     }
   }, false);
@@ -148,11 +152,11 @@ var make_object = function(data, num_triangles) {
     const sizeofFloat = Float32Array.BYTES_PER_ELEMENT;
     const att_pos = gl.getAttribLocation(shader.program, 'position');
     gl.enableVertexAttribArray(att_pos);
-    gl.vertexAttribPointer(att_pos, 3, gl.FLOAT, false, 5*sizeofFloat, 0*sizeofFloat);
+    gl.vertexAttribPointer(att_pos, 3, gl.FLOAT, false, 3*sizeofFloat, 0*sizeofFloat);
     
-    const att_textcoord = gl.getAttribLocation(shader.program, "texcoord");
+    /*const att_textcoord = gl.getAttribLocation(shader.program, "texcoord");
     gl.enableVertexAttribArray(att_textcoord);
-    gl.vertexAttribPointer(att_textcoord, 2, gl.FLOAT, false, 5*sizeofFloat, 3*sizeofFloat);
+    gl.vertexAttribPointer(att_textcoord, 2, gl.FLOAT, false, 5*sizeofFloat, 3*sizeofFloat);*/
   }
   
   function draw() {
@@ -190,20 +194,57 @@ const sourceF = `
   uniform sampler2D u_texture;
 
   void main() {
-  gl_FragColor = texture2D(u_texture, vec2(v_texcoord.x, 1.0-v_texcoord.y));
+  gl_FragColor = vec4(1.0,0.0,0.0,0.0);//texture2D(u_texture, vec2(v_texcoord.x, 1.0-v_texcoord.y));
   }
 `;
 
 var shader_triangle = make_shader(sourceV, sourceF);
 console.log(document.URL)
-var tex_cat = make_texture("./src/assets/textures/cat.jpg");
+/*var tex_cat = make_texture("./src/assets/textures/cat.jpg");
 var obj_triangle = make_object(new Float32Array([
     // vertices       // Texture
     -1.0, -1.0, 0.0,  0.0, 0.0,
     1.0, -1.0, 0.0,  1.0, 0.0,
     0.0,  1.0, 0.0,  0.5, 1.0,
 ]), 3);
+*/
+var obj_triangle = make_object(new Float32Array([
+  // Front face
+  -1.0, -1.0,  1.0,
+   1.0, -1.0,  1.0,
+   1.0,  1.0,  1.0,
+  -1.0,  1.0,  1.0,
 
+  // Back face
+  -1.0, -1.0, -1.0,
+  -1.0,  1.0, -1.0,
+   1.0,  1.0, -1.0,
+   1.0, -1.0, -1.0,
+
+  // Top face
+  -1.0,  1.0, -1.0,
+  -1.0,  1.0,  1.0,
+   1.0,  1.0,  1.0,
+   1.0,  1.0, -1.0,
+
+  // Bottom face
+  -1.0, -1.0, -1.0,
+   1.0, -1.0, -1.0,
+   1.0, -1.0,  1.0,
+  -1.0, -1.0,  1.0,
+
+  // Right face
+   1.0, -1.0, -1.0,
+   1.0,  1.0, -1.0,
+   1.0,  1.0,  1.0,
+   1.0, -1.0,  1.0,
+
+  // Left face
+  -1.0, -1.0, -1.0,
+  -1.0, -1.0,  1.0,
+  -1.0,  1.0,  1.0,
+  -1.0,  1.0, -1.0,
+]), 24);
 var camera = make_camera();
 
 
@@ -219,7 +260,7 @@ function animate (time) {
   var unif = shader_triangle.get_uniforms();
         
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, tex_cat);
+        //gl.bindTexture(gl.TEXTURE_2D, tex_cat);
         gl.uniform1i(unif['tex0'], 0);
 
   gl.uniformMatrix4fv(unif['model'], false, obj_triangle.model);
