@@ -2,7 +2,7 @@
 var make_camera = function() {
 
   var View = glMatrix.mat4.create();
-  View = glMatrix.mat4.lookAt(View, glMatrix.vec3.fromValues(0.0,0.0,-1.0) 
+  View = glMatrix.mat4.lookAt(View, glMatrix.vec3.fromValues(0.0,0.0,1.0) 
                   , glMatrix.vec3.fromValues(0.0,0.0,0.0)
                   , glMatrix.vec3.fromValues(0.0,1.0,0.0))
 
@@ -96,8 +96,8 @@ var make_shader = function (vertex_shader, fragment_shader) {
     gl.useProgram(program);
   }
   
-  const shaderV = compile_shader(sourceV, gl.VERTEX_SHADER);
-  const shaderF = compile_shader(sourceF, gl.FRAGMENT_SHADER);
+  const shaderV = compile_shader(vertex_shader, gl.VERTEX_SHADER);
+  const shaderF = compile_shader(fragment_shader, gl.FRAGMENT_SHADER);
   
   const program = create_program(shaderV, shaderF);
   
@@ -195,7 +195,8 @@ const sourceF = `
 `;
 
 var shader_triangle = make_shader(sourceV, sourceF);
-var tex_cat = make_texture("cat.jpg");
+console.log(document.URL)
+var tex_cat = make_texture("./src/assets/textures/cat.jpg");
 var obj_triangle = make_object(new Float32Array([
     // vertices       // Texture
     -1.0, -1.0, 0.0,  0.0, 0.0,
