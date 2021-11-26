@@ -8,42 +8,55 @@ var make_camera = function() {
 
   var Projection = glMatrix.mat4.create();
   Projection = glMatrix.mat4.perspective(Projection, 45.0, 500.0/500.0, 0.01, 100.0);
+
+  var zoom = function(value) {
+    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(0.0, 0.0, value));
+  }
+
+  var move = function(values) {
+    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(values.x, values.y, 0.0));
+  }
+
+  var rotateY = function(value) {
+    View = glMatrix.mat4.rotate(View, View, value, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
+  }
+
+  var rotateX = function(value) {
+    View = glMatrix.mat4.rotate(View, View, value, glMatrix.vec3.fromValues(1.0, 0.0, 0.0));
+  }
   
   document.addEventListener('keydown', (event) => {
     const key = event.key;
 
     if (key === 'ArrowDown') {
-    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(0.0, 0.05, 0.0));
-    return;
+      move({x: 0.0, y: 0.05}); return;
     }
     else if (key === 'ArrowUp') {
-    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(0.0, -0.05, 0.0));
-    return;
+      move({x: 0.0, y: -0.05}); return;
     }
     else if (key === 'ArrowLeft') {
-    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(-0.05, 0.0, 0.0));
-    return;
+      move({x: 0.05, y: 0.0}); return;
     }
     else if (key === 'ArrowRight') {
-    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(0.05, 0.0, 0.0));
-    return;
+      move({x: -0.05, y: 0.0}); return;
     }
-    else if (key === '+' || key === 'Add') {
-    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(0.0, 0.0, -0.05));
-    console.log("+")
-    return;
+    else if (key === '+') {
+      zoom(0.05); return;
     }
-    else if (key === '-' || key === 'Subtract') {
-    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(0.0, 0.0, 0.05));
-    return;
-    }
-    else if (key == 'a') {
-    View = glMatrix.mat4.rotate(View, View, 0.1, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
-    return;
+    else if (key === '-') {
+      zoom(-0.05); return;
     }
     else if (key == 'z') {
-    View = glMatrix.mat4.rotate(View, View, -0.1, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
-    return;
+      rotateX(0.05); return;
+    }
+    else if (key == 'q') {
+      rotateY(0.05); return;
+    }
+    else if (key == 's') {
+      rotateX(-0.05); return;
+    }
+    else if (key == 'd') {
+      rotateY(-0.05); return;
     }
   }, false);
   
@@ -336,9 +349,9 @@ function animate () {
 
 
   shader.use();
-  obj.activate(shader_triangle);
+  obj.activate(shader);
   
-  var unif = shader_triangle.get_uniforms();
+  var unif = shader.get_uniforms();
         
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, tex_cat);
@@ -346,11 +359,11 @@ function animate () {
 
   gl.uniform2fv(unif['aspect_ratio'], aspect_ratio);
 
-  gl.uniformMatrix4fv(unif['model'], false, obj_triangle.model);
+  gl.uniformMatrix4fv(unif['model'], false, obj.model);
   gl.uniformMatrix4fv(unif['view'], false, camera.View);
   gl.uniformMatrix4fv(unif['proj'], false, camera.Projection);
   
-  obj_triangle.draw();
+  obj.draw();
   
   window.requestAnimationFrame(animate); // While(True) loop!
 }
