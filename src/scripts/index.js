@@ -54,10 +54,28 @@ var make_camera = function() {
 
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
 // Boilerplate code
 const canvas = document.getElementById('webgl_canvas');
 const gl = canvas.getContext('webgl');
+
+var aspect_ratio = [1.0, 1.0];
+
+window.addEventListener('resize', resizeCanvas, false);
+        
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  aspect_ratio = [1.0, 1.0];
+  if (gl.canvas.width > gl.canvas.height) {
+    aspect_ratio[0] = gl.canvas.height/gl.canvas.width;
+  } else {
+    aspect_ratio[1] = gl.canvas.width/gl.canvas.height;
+  }
+}
+resizeCanvas();
 
 var make_shader = function (vertex_shader, fragment_shader) {
   function compile_shader(source, type) {
@@ -91,12 +109,14 @@ var make_shader = function (vertex_shader, fragment_shader) {
     const u_M = gl.getUniformLocation(program, 'M');
     const u_V = gl.getUniformLocation(program, 'V');
     const u_P = gl.getUniformLocation(program, 'P');
-            //const u_tex0 = gl.getUniformLocation(program, 'u_texture');
+    const u_tex0 = gl.getUniformLocation(program, 'u_texture');
+    const u_aspect_ratio = gl.getUniformLocation(program, 'u_aspect_ratio');
     return {
       "model": u_M,
       "view": u_V,
       "proj": u_P,
-              //  "tex0": u_tex0,
+      "tex0": u_tex0,
+      "aspect_ratio": u_aspect_ratio
     }
   }
   
@@ -141,14 +161,14 @@ var make_texture = function(url) {
   return texture;
 }
 
-var make_object = function(positions, colors, indexes, num_triangles) {
+var make_object = function(positions, textures, indexes, num_triangles) {
   const position_buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, position_buffer);
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 
-  const color_buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+  const texture_buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, texture_buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, textures, gl.STATIC_DRAW);
 
   const index_buffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
@@ -171,11 +191,11 @@ var make_object = function(positions, colors, indexes, num_triangles) {
     gl.enableVertexAttribArray(att_pos);
     gl.vertexAttribPointer(att_pos, 3, gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
 
-    // Color of vertices
-    gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
-    const att_color = gl.getAttribLocation(shader.program, 'aColor');
-    gl.enableVertexAttribArray(att_color);
-    gl.vertexAttribPointer(att_color, 4, gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
+    // Texture
+    gl.bindBuffer(gl.ARRAY_BUFFER, texture_buffer);
+    const att_textcoord = gl.getAttribLocation(shader.program, 'aTexcoord');
+    gl.enableVertexAttribArray(att_textcoord);
+    gl.vertexAttribPointer(att_textcoord, 2, gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
 
     // Indexes
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
@@ -187,7 +207,7 @@ var make_object = function(positions, colors, indexes, num_triangles) {
   
   return {
     position_buffer: position_buffer,
-    color_buffer: color_buffer,
+    texture_buffer: texture_buffer,
     index_buffer: index_buffer,
     model: Model,
     activate: activate,
@@ -199,16 +219,21 @@ var make_object = function(positions, colors, indexes, num_triangles) {
 const sourceV = `
   attribute vec3 aPosition;
   attribute vec4 aColor;
+  attribute vec2 aTexcoord;
   
   uniform mat4 M;
   uniform mat4 V;
   uniform mat4 P;
+  uniform vec2 u_aspect_ratio;
 
   varying vec4 vColor;
+  varying vec2 vTexcoord;
 
   void main() {
-    gl_Position = P*V*M*vec4(aPosition, 1);
+    vec4 temp_position = P*V*M*vec4(aPosition, 1);
+    gl_Position = vec4(u_aspect_ratio.x*temp_position.x, u_aspect_ratio.y*temp_position.y, temp_position.z, temp_position.w);
     vColor = aColor;
+    vTexcoord = aTexcoord;
   }
 `;
 
@@ -216,41 +241,19 @@ const sourceF = `
   precision mediump float;
   
   varying vec4 vColor;
+  varying vec2 vTexcoord;
+
+  uniform sampler2D u_texture;
 
   void main() {
-    gl_FragColor = vColor;
+    gl_FragColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
   }
 `;
 
-var shader_triangle = make_shader(sourceV, sourceF);
-/*var tex_cat = make_texture("./src/assets/textures/cat.jpg");
-var obj_triangle = make_object(new Float32Array([
-    // vertices       // Texture
-    -1.0, -1.0, 0.0,  0.0, 0.0,
-    1.0, -1.0, 0.0,  1.0, 0.0,
-    0.0,  1.0, 0.0,  0.5, 1.0,
-]), 3);
-*/
-const faceColors = [
-  [0.0,  1.0,  1.0,  1.0],    // Front face: cyan
-  [1.0,  0.0,  0.0,  1.0],    // Back face: red
-  [0.0,  1.0,  0.0,  1.0],    // Top face: green
-  [0.0,  0.0,  1.0,  1.0],    // Bottom face: blue
-  [1.0,  1.0,  0.0,  1.0],    // Right face: yellow
-  [1.0,  0.0,  1.0,  1.0],    // Left face: purple
-];
+var shader = make_shader(sourceV, sourceF);
+var tex_cat = make_texture("./src/assets/textures/cat.jpg");
 
-// Convert the array of colors into a table for all the vertices.
-
-var colors = [];
-
-for (var j = 0; j < faceColors.length; ++j) {
-  const c = faceColors[j];
-
-  // Repeat each color four times for the four vertices of the face
-  colors = colors.concat(c, c, c, c);
-}
-var obj_triangle = make_object(new Float32Array([
+var obj = make_object(new Float32Array([
   // Front face
   -1.0, -1.0,  1.0,
   1.0, -1.0,  1.0,
@@ -286,8 +289,32 @@ var obj_triangle = make_object(new Float32Array([
  -1.0, -1.0,  1.0,
  -1.0,  1.0,  1.0,
  -1.0,  1.0, -1.0,
-]), new Float32Array(colors), 
-new Uint16Array([
+]), new Float32Array([
+  0.0, 0.0,
+  0.0, 1.0,
+  1.0, 0.0,
+  1.0, 1.0,  
+  0.0, 0.0,
+  0.0, 1.0,
+  1.0, 0.0,
+  1.0, 1.0,  
+  0.0, 0.0,
+  0.0, 1.0,
+  1.0, 0.0,
+  1.0, 1.0,  
+  0.0, 0.0,
+  0.0, 1.0,
+  1.0, 0.0,
+  1.0, 1.0,  
+  0.0, 0.0,
+  0.0, 1.0,
+  1.0, 0.0,
+  1.0, 1.0,  
+  0.0, 0.0,
+  0.0, 1.0,
+  1.0, 0.0,
+  1.0, 1.0,  
+]), new Uint16Array([
   0,  1,  2,      0,  2,  3,    // front
   4,  5,  6,      4,  6,  7,    // back
   8,  9,  10,     8,  10, 11,   // top
@@ -297,7 +324,7 @@ new Uint16Array([
 ]), 36);
 var camera = make_camera();
 
-function animate (time) {
+function animate () {
   //Draw loop
   gl.clearColor(0.2, 0.2, 0.2, 1);
   gl.clearDepth(1.0);                 // Clear everything
@@ -308,14 +335,16 @@ function animate (time) {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 
-  shader_triangle.use();
-  obj_triangle.activate(shader_triangle);
+  shader.use();
+  obj.activate(shader_triangle);
   
   var unif = shader_triangle.get_uniforms();
         
-        //gl.activeTexture(gl.TEXTURE0);
-        //gl.bindTexture(gl.TEXTURE_2D, tex_cat);
-        //gl.uniform1i(unif['tex0'], 0);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, tex_cat);
+  gl.uniform1i(unif['tex0'], 0);
+
+  gl.uniform2fv(unif['aspect_ratio'], aspect_ratio);
 
   gl.uniformMatrix4fv(unif['model'], false, obj_triangle.model);
   gl.uniformMatrix4fv(unif['view'], false, camera.View);
@@ -323,20 +352,8 @@ function animate (time) {
   
   obj_triangle.draw();
   
-  fps(time);
   window.requestAnimationFrame(animate); // While(True) loop!
 }
 
-var prev = 0
-const fpsElem = document.querySelector("#fps");
-function fps(now) {
-  now *= 0.001;
-  const deltaTime = now - prev;
-  prev = now;
-  const fps = 1 / deltaTime;
-  fpsElem.textContent = 'FPS: ' + fps.toFixed(1);
-  return fps;
-}
-
-animate(0);
+animate();
 });
