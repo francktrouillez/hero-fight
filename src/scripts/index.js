@@ -229,40 +229,6 @@ var make_object = function(positions, textures, indexes, num_triangles) {
 
 }
 
-const sourceV = `
-  attribute vec3 aPosition;
-  attribute vec4 aColor;
-  attribute vec2 aTexcoord;
-  
-  uniform mat4 M;
-  uniform mat4 V;
-  uniform mat4 P;
-  uniform vec2 u_aspect_ratio;
-
-  varying vec4 vColor;
-  varying vec2 vTexcoord;
-
-  void main() {
-    vec4 temp_position = P*V*M*vec4(aPosition, 1);
-    gl_Position = vec4(u_aspect_ratio.x*temp_position.x, u_aspect_ratio.y*temp_position.y, temp_position.z, temp_position.w);
-    vColor = aColor;
-    vTexcoord = aTexcoord;
-  }
-`;
-
-const sourceF = `
-  precision mediump float;
-  
-  varying vec4 vColor;
-  varying vec2 vTexcoord;
-
-  uniform sampler2D u_texture;
-
-  void main() {
-    gl_FragColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
-  }
-`;
-
 var shader = make_shader(sourceV, sourceF);
 var tex_cat = make_texture("./src/assets/textures/cat.jpg");
 
