@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const canvas = document.getElementById('webgl_canvas');
 const gl = canvas.getContext('webgl');
 
-var aspect_ratio = [1.0, 1.0];
+var aspect_ratio = [1.0, 1.0]; // aspect ratio of the window -> Without that, ratio not respected
 
 window.addEventListener('resize', resizeCanvas, false);
         
