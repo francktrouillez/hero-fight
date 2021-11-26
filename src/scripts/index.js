@@ -41,6 +41,10 @@ var make_camera = function() {
     View = glMatrix.mat4.rotate(View, View, 0.1, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
     return;
     }
+    else if (key == 'z') {
+    View = glMatrix.mat4.rotate(View, View, -0.1, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
+    return;
+    }
   }, false);
   
   return {
@@ -87,12 +91,12 @@ var make_shader = function (vertex_shader, fragment_shader) {
     const u_M = gl.getUniformLocation(program, 'M');
     const u_V = gl.getUniformLocation(program, 'V');
     const u_P = gl.getUniformLocation(program, 'P');
-            const u_tex0 = gl.getUniformLocation(program, 'u_texture');
+            //const u_tex0 = gl.getUniformLocation(program, 'u_texture');
     return {
       "model": u_M,
       "view": u_V,
       "proj": u_P,
-                "tex0": u_tex0,
+              //  "tex0": u_tex0,
     }
   }
   
@@ -137,34 +141,54 @@ var make_texture = function(url) {
   return texture;
 }
 
-var make_object = function(data, num_triangles) {
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+var make_object = function(positions, colors, indexes, num_triangles) {
+  const position_buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, position_buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+  const color_buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+
+  const index_buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexes, gl.STATIC_DRAW);
+
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
   
   var Model = glMatrix.mat4.create();
   Model = glMatrix.mat4.translate(Model, Model, glMatrix.vec3.fromValues(0.5,-0.5,-1.0));
   
   function activate(shader) {
-    // these object have all 3 positions + 2 textures, in practice you can add normals etc..!
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    // these object have all 3 positions
+
     const sizeofFloat = Float32Array.BYTES_PER_ELEMENT;
-    const att_pos = gl.getAttribLocation(shader.program, 'position');
-    gl.enableVertexAttribArray(att_pos);
-    gl.vertexAttribPointer(att_pos, 3, gl.FLOAT, false, 3*sizeofFloat, 0*sizeofFloat);
     
-    /*const att_textcoord = gl.getAttribLocation(shader.program, "texcoord");
-    gl.enableVertexAttribArray(att_textcoord);
-    gl.vertexAttribPointer(att_textcoord, 2, gl.FLOAT, false, 5*sizeofFloat, 3*sizeofFloat);*/
+    //Vertex positions
+    gl.bindBuffer(gl.ARRAY_BUFFER, position_buffer);
+    const att_pos = gl.getAttribLocation(shader.program, 'aPosition');
+    gl.enableVertexAttribArray(att_pos);
+    gl.vertexAttribPointer(att_pos, 3, gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
+
+    // Color of vertices
+    gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
+    const att_color = gl.getAttribLocation(shader.program, 'aColor');
+    gl.enableVertexAttribArray(att_color);
+    gl.vertexAttribPointer(att_color, 4, gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
+
+    // Indexes
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
   }
   
   function draw() {
-    gl.drawArrays (gl.TRIANGLES, 0, num_triangles);
+    gl.drawElements(gl.TRIANGLES, num_triangles, gl.UNSIGNED_SHORT, 0);
   }
   
   return {
-    buffer: buffer,
+    position_buffer: position_buffer,
+    color_buffer: color_buffer,
+    index_buffer: index_buffer,
     model: Model,
     activate: activate,
     draw:draw,
@@ -173,33 +197,32 @@ var make_object = function(data, num_triangles) {
 }
 
 const sourceV = `
-  attribute vec3 position;
-  attribute vec2 texcoord;
-  varying vec2 v_texcoord;
+  attribute vec3 aPosition;
+  attribute vec4 aColor;
   
   uniform mat4 M;
   uniform mat4 V;
   uniform mat4 P;
 
+  varying vec4 vColor;
+
   void main() {
-  gl_Position = P*V*M*vec4(position, 1);
-  v_texcoord = texcoord;
+    gl_Position = P*V*M*vec4(aPosition, 1);
+    vColor = aColor;
   }
 `;
 
 const sourceF = `
   precision mediump float;
-  varying vec2 v_texcoord;
   
-  uniform sampler2D u_texture;
+  varying vec4 vColor;
 
   void main() {
-  gl_FragColor = vec4(1.0,0.0,0.0,0.0);//texture2D(u_texture, vec2(v_texcoord.x, 1.0-v_texcoord.y));
+    gl_FragColor = vColor;
   }
 `;
 
 var shader_triangle = make_shader(sourceV, sourceF);
-console.log(document.URL)
 /*var tex_cat = make_texture("./src/assets/textures/cat.jpg");
 var obj_triangle = make_object(new Float32Array([
     // vertices       // Texture
@@ -208,60 +231,91 @@ var obj_triangle = make_object(new Float32Array([
     0.0,  1.0, 0.0,  0.5, 1.0,
 ]), 3);
 */
+const faceColors = [
+  [0.0,  1.0,  1.0,  1.0],    // Front face: cyan
+  [1.0,  0.0,  0.0,  1.0],    // Back face: red
+  [0.0,  1.0,  0.0,  1.0],    // Top face: green
+  [0.0,  0.0,  1.0,  1.0],    // Bottom face: blue
+  [1.0,  1.0,  0.0,  1.0],    // Right face: yellow
+  [1.0,  0.0,  1.0,  1.0],    // Left face: purple
+];
+
+// Convert the array of colors into a table for all the vertices.
+
+var colors = [];
+
+for (var j = 0; j < faceColors.length; ++j) {
+  const c = faceColors[j];
+
+  // Repeat each color four times for the four vertices of the face
+  colors = colors.concat(c, c, c, c);
+}
 var obj_triangle = make_object(new Float32Array([
   // Front face
   -1.0, -1.0,  1.0,
-   1.0, -1.0,  1.0,
-   1.0,  1.0,  1.0,
-  -1.0,  1.0,  1.0,
+  1.0, -1.0,  1.0,
+  1.0,  1.0,  1.0,
+ -1.0,  1.0,  1.0,
 
-  // Back face
-  -1.0, -1.0, -1.0,
-  -1.0,  1.0, -1.0,
-   1.0,  1.0, -1.0,
-   1.0, -1.0, -1.0,
+ // Back face
+ -1.0, -1.0, -1.0,
+ -1.0,  1.0, -1.0,
+  1.0,  1.0, -1.0,
+  1.0, -1.0, -1.0,
 
-  // Top face
-  -1.0,  1.0, -1.0,
-  -1.0,  1.0,  1.0,
-   1.0,  1.0,  1.0,
-   1.0,  1.0, -1.0,
+ // Top face
+ -1.0,  1.0, -1.0,
+ -1.0,  1.0,  1.0,
+  1.0,  1.0,  1.0,
+  1.0,  1.0, -1.0,
 
-  // Bottom face
-  -1.0, -1.0, -1.0,
-   1.0, -1.0, -1.0,
-   1.0, -1.0,  1.0,
-  -1.0, -1.0,  1.0,
+ // Bottom face
+ -1.0, -1.0, -1.0,
+  1.0, -1.0, -1.0,
+  1.0, -1.0,  1.0,
+ -1.0, -1.0,  1.0,
 
-  // Right face
-   1.0, -1.0, -1.0,
-   1.0,  1.0, -1.0,
-   1.0,  1.0,  1.0,
-   1.0, -1.0,  1.0,
+ // Right face
+  1.0, -1.0, -1.0,
+  1.0,  1.0, -1.0,
+  1.0,  1.0,  1.0,
+  1.0, -1.0,  1.0,
 
-  // Left face
-  -1.0, -1.0, -1.0,
-  -1.0, -1.0,  1.0,
-  -1.0,  1.0,  1.0,
-  -1.0,  1.0, -1.0,
-]), 24);
+ // Left face
+ -1.0, -1.0, -1.0,
+ -1.0, -1.0,  1.0,
+ -1.0,  1.0,  1.0,
+ -1.0,  1.0, -1.0,
+]), new Float32Array(colors), 
+new Uint16Array([
+  0,  1,  2,      0,  2,  3,    // front
+  4,  5,  6,      4,  6,  7,    // back
+  8,  9,  10,     8,  10, 11,   // top
+  12, 13, 14,     12, 14, 15,   // bottom
+  16, 17, 18,     16, 18, 19,   // right
+  20, 21, 22,     20, 22, 23,   // left
+]), 36);
 var camera = make_camera();
 
-
-var deltaTime = 0;
 function animate (time) {
   //Draw loop
   gl.clearColor(0.2, 0.2, 0.2, 1);
+  gl.clearDepth(1.0);                 // Clear everything
+
+  gl.enable(gl.DEPTH_TEST);           // Enable depth testing
+  gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  
+
+
   shader_triangle.use();
   obj_triangle.activate(shader_triangle);
   
   var unif = shader_triangle.get_uniforms();
         
-        gl.activeTexture(gl.TEXTURE0);
+        //gl.activeTexture(gl.TEXTURE0);
         //gl.bindTexture(gl.TEXTURE_2D, tex_cat);
-        gl.uniform1i(unif['tex0'], 0);
+        //gl.uniform1i(unif['tex0'], 0);
 
   gl.uniformMatrix4fv(unif['model'], false, obj_triangle.model);
   gl.uniformMatrix4fv(unif['view'], false, camera.View);
@@ -269,8 +323,6 @@ function animate (time) {
   
   obj_triangle.draw();
   
-  deltaTime += 0.005;
-  //console.log(deltaTime);
   fps(time);
   window.requestAnimationFrame(animate); // While(True) loop!
 }
