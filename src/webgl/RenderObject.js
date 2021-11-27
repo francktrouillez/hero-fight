@@ -7,6 +7,7 @@ class RenderObject {
   }
 
   render() {
+    this.object.update();
     this.program.use();
     this.object.activate(this.program.program);
     this.program.manage_uniforms(this.uniform_map)

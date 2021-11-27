@@ -1,12 +1,13 @@
 class SimpleObject {
 
-  constructor(gl, positions, textures, indexes, num_triangles) {
+  constructor(gl, positions, textures, indexes, num_triangles, update) {
     this.gl = gl;
 
     this.positions = positions;
     this.textures = textures;
     this.indexes = indexes;
     this.num_triangles = num_triangles;
+    this.update = update;
 
     this.position_buffer = null;
     this.texture_buffer = null;
@@ -36,8 +37,6 @@ class SimpleObject {
 
   init_model() {
     this.model = glMatrix.mat4.create();
-    this.model = glMatrix.mat4.translate(this.model, this.model, glMatrix.vec3.fromValues(0.5,-0.5,-1.0));
-    
   }
 
   activate(program) {
@@ -57,6 +56,14 @@ class SimpleObject {
 
     // Indexes
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.index_buffer);
+  }
+
+  translate(x, y, z) {
+    this.model = glMatrix.mat4.translate(this.model, this.model, glMatrix.vec3.fromValues(x, y, z));
+  }
+
+  rotate(value, x, y, z) {
+    this.model = glMatrix.mat4.rotate(this.model, this.model, value, glMatrix.vec3.fromValues(x, y, z));
   }
 
   draw() {
