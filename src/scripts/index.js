@@ -2,34 +2,10 @@ async function main() {
   // Boilerplate code
   const canvas = document.getElementById('webgl_canvas');
   const gl = canvas.getContext('webgl');
+  
   var aspect_ratio = [1.0, 1.0];
 
   auto_resize_window(window, canvas, gl, aspect_ratio);
-
-  var make_texture = function(url) {
-    var texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-      
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-            new Uint8Array([0, 0, 255, 255]));
-      
-    // Asynchronously load an image
-    var image = new Image();
-    image.crossOrigin = "anonymous";
-    image.src = url;
-    image.addEventListener('load', function() {
-      // Now that the image has loaded make copy it to the texture.
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
-      // TODO add parameters for filtering and warping!
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    });
-
-    return texture;
-  }
 
   var make_object = function(positions, textures, indexes, num_triangles) {
     const position_buffer = gl.createBuffer();
@@ -97,7 +73,7 @@ async function main() {
     "aspect_ratio": "u_aspect_ratio"
   })
 
-  var tex_cat = make_texture("./src/assets/textures/cat.jpg");
+  var tex_cat = new Texture(gl, "./src/assets/textures/cat.jpg");
 
   var obj = make_object(new Float32Array([
     // Front face
@@ -202,7 +178,7 @@ async function main() {
     var unif = program.get_uniforms();
           
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, tex_cat);
+    gl.bindTexture(gl.TEXTURE_2D, tex_cat.gl_texture);
     gl.uniform1i(unif['tex0'], 0);
 
     gl.uniform2fv(unif['aspect_ratio'], aspect_ratio);
