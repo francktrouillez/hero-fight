@@ -1,72 +1,3 @@
-
-var make_camera = function() {
-
-  var View = glMatrix.mat4.create();
-  View = glMatrix.mat4.lookAt(View, glMatrix.vec3.fromValues(0.0,0.0,2.0) 
-                  , glMatrix.vec3.fromValues(0.0,0.0,0.0)
-                  , glMatrix.vec3.fromValues(0.0,1.0,0.0))
-
-  var Projection = glMatrix.mat4.create();
-  Projection = glMatrix.mat4.perspective(Projection, 45.0, 500.0/500.0, 0.01, 100.0);
-
-  var zoom = function(value) {
-    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(0.0, 0.0, value));
-  }
-
-  var move = function(values) {
-    View = glMatrix.mat4.translate(View, View, glMatrix.vec3.fromValues(values.x, values.y, 0.0));
-  }
-
-  var rotateY = function(value) {
-    View = glMatrix.mat4.rotate(View, View, value, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
-  }
-
-  var rotateX = function(value) {
-    View = glMatrix.mat4.rotate(View, View, value, glMatrix.vec3.fromValues(1.0, 0.0, 0.0));
-  }
-  
-  document.addEventListener('keydown', (event) => {
-    const key = event.key;
-
-    if (key === 'ArrowDown') {
-      move({x: 0.0, y: 0.05}); return;
-    }
-    else if (key === 'ArrowUp') {
-      move({x: 0.0, y: -0.05}); return;
-    }
-    else if (key === 'ArrowLeft') {
-      move({x: 0.05, y: 0.0}); return;
-    }
-    else if (key === 'ArrowRight') {
-      move({x: -0.05, y: 0.0}); return;
-    }
-    else if (key === '+') {
-      zoom(0.05); return;
-    }
-    else if (key === '-') {
-      zoom(-0.05); return;
-    }
-    else if (key == 'z') {
-      rotateX(0.05); return;
-    }
-    else if (key == 'q') {
-      rotateY(0.05); return;
-    }
-    else if (key == 's') {
-      rotateX(-0.05); return;
-    }
-    else if (key == 'd') {
-      rotateY(-0.05); return;
-    }
-  }, false);
-  
-  return {
-    View: View,
-    Projection, Projection,
-  }
-
-}
-
 async function main() {
   // Boilerplate code
   const canvas = document.getElementById('webgl_canvas');
@@ -74,65 +5,6 @@ async function main() {
   var aspect_ratio = [1.0, 1.0];
 
   auto_resize_window(window, canvas, gl, aspect_ratio);
-
-  var make_shader = function (vertex_shader, fragment_shader) {
-    function compile_shader(source, type) {
-      var shader = gl.createShader(type);
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error(gl.getShaderInfoLog(shader));
-        throw new Error('Failed to compile ' + type + ' shader');
-      }
-      
-      return shader;
-    }
-    
-    function create_program(vertex_shader, fragment_shader) {
-      let program = gl.createProgram();
-      gl.attachShader(program, vertex_shader);
-      gl.attachShader(program, fragment_shader);
-      gl.linkProgram(program);
-
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error(gl.getProgramInfoLog(program));
-        throw new Error('Unable to compile program');
-      }
-      
-      return program;
-    }
-    
-    function get_uniforms() {
-      const u_M = gl.getUniformLocation(program, 'M');
-      const u_V = gl.getUniformLocation(program, 'V');
-      const u_P = gl.getUniformLocation(program, 'P');
-      const u_tex0 = gl.getUniformLocation(program, 'u_texture');
-      const u_aspect_ratio = gl.getUniformLocation(program, 'u_aspect_ratio');
-      return {
-        "model": u_M,
-        "view": u_V,
-        "proj": u_P,
-        "tex0": u_tex0,
-        "aspect_ratio": u_aspect_ratio
-      }
-    }
-    
-    function use() {
-      gl.useProgram(program);
-    }
-    
-    const shaderV = compile_shader(vertex_shader, gl.VERTEX_SHADER);
-    const shaderF = compile_shader(fragment_shader, gl.FRAGMENT_SHADER);
-    
-    const program = create_program(shaderV, shaderF);
-    
-    return {
-      program:program,
-      get_uniforms:get_uniforms,
-      use:use,
-    }
-  }
 
   var make_texture = function(url) {
     var texture = gl.createTexture();
@@ -217,7 +89,14 @@ async function main() {
   const sourceV = await read_file("./src/glsl/vertexShader.vert");
   const sourceF = await read_file("./src/glsl/fragmentShader.frag");
 
-  var shader = make_shader(sourceV, sourceF);
+  var program = new Program(gl, sourceV, sourceF, {
+    "model": "M",
+    "view": "V",
+    "proj": "P",
+    "tex0": "u_texture",
+    "aspect_ratio": "u_aspect_ratio"
+  })
+
   var tex_cat = make_texture("./src/assets/textures/cat.jpg");
 
   var obj = make_object(new Float32Array([
@@ -289,7 +168,22 @@ async function main() {
     16, 17, 18,     16, 18, 19,   // right
     20, 21, 22,     20, 22, 23,   // left
   ]), 36);
-  var camera = make_camera();
+
+  var camera = new Camera(document, {
+    eye: {
+      x: 0.0, y: 0.0, z: 2.0
+    },
+    center: {
+      x: 0.0, y: 0.0, z: 0.0
+    },
+    up: {
+      x: 0.0, y: 1.0, z: 0.0
+    },
+    fov: 45.0,
+    aspect: 1.0,
+    near: 0.01,
+    far: 100.0
+  });
 
   function animate () {
     //Draw loop
@@ -302,10 +196,10 @@ async function main() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 
-    shader.use();
-    obj.activate(shader);
+    program.use();
+    obj.activate(program);
     
-    var unif = shader.get_uniforms();
+    var unif = program.get_uniforms();
           
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tex_cat);
@@ -314,8 +208,8 @@ async function main() {
     gl.uniform2fv(unif['aspect_ratio'], aspect_ratio);
 
     gl.uniformMatrix4fv(unif['model'], false, obj.model);
-    gl.uniformMatrix4fv(unif['view'], false, camera.View);
-    gl.uniformMatrix4fv(unif['proj'], false, camera.Projection);
+    gl.uniformMatrix4fv(unif['view'], false, camera.view);
+    gl.uniformMatrix4fv(unif['proj'], false, camera.projection);
     
     obj.draw();
     
