@@ -4,6 +4,7 @@ class Program {
     this.gl = gl;
     this.vertex_shader = this.compile_shader(vertex_code, gl.VERTEX_SHADER);
     this.fragment_shader = this.compile_shader(fragment_code, gl.FRAGMENT_SHADER);
+    this.program = null;
     this.create_program();
     this.uniforms_map = uniforms_map;
   }
@@ -37,11 +38,25 @@ class Program {
     this.gl.useProgram(this.program);
   }
 
-  get_uniforms() {
-    let uniforms = {}
-    for (let key in this.uniforms_map) {
-      uniforms[key] = this.gl.getUniformLocation(this.program, this.uniforms_map[key])
+  map_uniform(uniform_location, type, value) {
+    if (type == "vec2") {
+      this.gl.uniform2fv(uniform_location, value); return;
+    } else if (type == "mat4") {
+      this.gl.uniformMatrix4fv(uniform_location, false, value); return;
+    } else if (type == "sampler2D") {
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, value);
+      this.gl.uniform1i(uniform_location, 0);
+      return;
+    } else {
+      throw new Error('Unable to map uniform of type '+type);
     }
-    return uniforms;
+  }
+
+  manage_uniforms(map) {
+    for (let key in this.uniforms_map) {
+      const uniform_location = this.gl.getUniformLocation(this.program, this.uniforms_map[key].variable);
+      this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key])
+    }
   }
 }

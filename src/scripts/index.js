@@ -66,11 +66,26 @@ async function main() {
   const sourceF = await read_file("./src/glsl/fragmentShader.frag");
 
   var program = new Program(gl, sourceV, sourceF, {
-    "model": "M",
-    "view": "V",
-    "proj": "P",
-    "tex0": "u_texture",
-    "aspect_ratio": "u_aspect_ratio"
+    "model": {
+      variable:"M",
+      type: "mat4"
+    },
+    "view": {
+      variable:"V",
+      type: "mat4"
+    },
+    "proj": {
+      variable:"P",
+      type: "mat4"
+    },
+    "tex0": {
+      variable: "u_texture",
+      type: "sampler2D"
+    },
+    "aspect_ratio": {
+      variable: "u_aspect_ratio",
+      type: "vec2"
+    }
   })
 
   var tex_cat = new Texture(gl, "./src/assets/textures/cat.jpg");
@@ -161,38 +176,34 @@ async function main() {
     far: 100.0
   });
 
-  function animate () {
+  render_object = new RenderObject(obj, program, camera, {
+    "tex0": tex_cat.gl_texture,
+    "aspect_ratio": aspect_ratio,
+    "model": obj.model,
+    "view": camera.view,
+    "proj": camera.projection
+  });
+
+  var render_objects = [render_object];
+
+  function render() {
     //Draw loop
     gl.clearColor(0.2, 0.2, 0.2, 1);
     gl.clearDepth(1.0);                 // Clear everything
-
+  
     gl.enable(gl.DEPTH_TEST);           // Enable depth testing
     gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
-
+  
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-
-    program.use();
-    obj.activate(program);
-    
-    var unif = program.get_uniforms();
-          
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, tex_cat.gl_texture);
-    gl.uniform1i(unif['tex0'], 0);
-
-    gl.uniform2fv(unif['aspect_ratio'], aspect_ratio);
-
-    gl.uniformMatrix4fv(unif['model'], false, obj.model);
-    gl.uniformMatrix4fv(unif['view'], false, camera.view);
-    gl.uniformMatrix4fv(unif['proj'], false, camera.projection);
-    
-    obj.draw();
-    
-    window.requestAnimationFrame(animate); // While(True) loop!
+  
+    for (const render_object of render_objects) {
+      render_object.render();
+    }    
+    window.requestAnimationFrame(render); // While(True) loop!
   }
 
-  animate();
+  render();
+
 };
 
 document.addEventListener('DOMContentLoaded', () => {main()});

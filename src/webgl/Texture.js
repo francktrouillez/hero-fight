@@ -1,6 +1,7 @@
 class Texture {
   constructor(gl, url) {
     this.url = url;
+    this.gl_texture = null;
     this.make_texture(gl)
   }
 
