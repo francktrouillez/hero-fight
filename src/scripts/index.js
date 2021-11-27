@@ -3,9 +3,11 @@ async function main() {
   const canvas = document.getElementById('webgl_canvas');
   const gl = canvas.getContext('webgl');
   
-  var aspect_ratio = [1.0, 1.0];
+  var aspect = {
+    ratio: [1.0, 1.0]
+  }
 
-  auto_resize_window(window, canvas, gl, aspect_ratio);
+  auto_resize_window(window, canvas, gl, aspect);
 
   var make_object = function(positions, textures, indexes, num_triangles) {
     const position_buffer = gl.createBuffer();
@@ -178,7 +180,7 @@ async function main() {
 
   render_object = new RenderObject(obj, program, camera, {
     "tex0": tex_cat.gl_texture,
-    "aspect_ratio": aspect_ratio,
+    "aspect_ratio": aspect.ratio,
     "model": obj.model,
     "view": camera.view,
     "proj": camera.projection

@@ -4,7 +4,7 @@ async function read_file(file) {
   return text;
 }
 
-function auto_resize_window(window, canvas, gl, aspect_ratio) {
+function auto_resize_window(window, canvas, gl, aspect) {
   // aspect ratio of the window -> Without that, ratio not respected
 
  window.addEventListener('resize', resizeCanvas, false);
@@ -19,6 +19,7 @@ function auto_resize_window(window, canvas, gl, aspect_ratio) {
    } else {
      aspect_ratio[1] = gl.canvas.width/gl.canvas.height;
    }
+   aspect.ratio = aspect_ratio;
  }
  resizeCanvas();
 }
