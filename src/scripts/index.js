@@ -92,7 +92,7 @@ async function main() {
 
   var tex_cat = new Texture(gl, "./src/assets/textures/cat.jpg");
 
-  var obj = make_object(new Float32Array([
+  var obj = new SimpleObject(gl, new Float32Array([
     // Front face
     -1.0, -1.0,  1.0,
     1.0, -1.0,  1.0,
