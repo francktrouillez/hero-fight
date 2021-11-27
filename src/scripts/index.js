@@ -73,22 +73,26 @@ document.addEventListener('DOMContentLoaded', () => {
 const canvas = document.getElementById('webgl_canvas');
 const gl = canvas.getContext('webgl');
 
-var aspect_ratio = [1.0, 1.0]; // aspect ratio of the window -> Without that, ratio not respected
+var auto_resize_window = function() {
+  var aspect_ratio = [1.0, 1.0]; // aspect ratio of the window -> Without that, ratio not respected
 
-window.addEventListener('resize', resizeCanvas, false);
-        
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  aspect_ratio = [1.0, 1.0];
-  if (gl.canvas.width > gl.canvas.height) {
-    aspect_ratio[0] = gl.canvas.height/gl.canvas.width;
-  } else {
-    aspect_ratio[1] = gl.canvas.width/gl.canvas.height;
+  window.addEventListener('resize', resizeCanvas, false);
+          
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    aspect_ratio = [1.0, 1.0];
+    if (gl.canvas.width > gl.canvas.height) {
+      aspect_ratio[0] = gl.canvas.height/gl.canvas.width;
+    } else {
+      aspect_ratio[1] = gl.canvas.width/gl.canvas.height;
+    }
   }
+  resizeCanvas();
 }
-resizeCanvas();
+
+auto_resize_window();
 
 var make_shader = function (vertex_shader, fragment_shader) {
   function compile_shader(source, type) {
