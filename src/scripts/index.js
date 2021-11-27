@@ -68,7 +68,9 @@ var make_camera = function() {
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {main()});
+
+async function main() {
 // Boilerplate code
 const canvas = document.getElementById('webgl_canvas');
 const gl = canvas.getContext('webgl');
@@ -233,6 +235,9 @@ var make_object = function(positions, textures, indexes, num_triangles) {
 
 }
 
+const sourceV = await read_file("./src/glsl/vertexShader.vert");
+const sourceF = await read_file("./src/glsl/fragmentShader.frag");
+
 var shader = make_shader(sourceV, sourceF);
 var tex_cat = make_texture("./src/assets/textures/cat.jpg");
 
@@ -339,4 +344,4 @@ function animate () {
 }
 
 animate();
-});
+};
