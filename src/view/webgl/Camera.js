@@ -1,6 +1,6 @@
 class Camera {
 
-  constructor(document, info) {
+  constructor(info) {
     this.view = glMatrix.mat4.create();
     this.view = glMatrix.mat4.lookAt(this.view, 
       glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z), 
@@ -9,7 +9,7 @@ class Camera {
     )
     this.projection = glMatrix.mat4.create();
     this.projection = glMatrix.mat4.perspective(this.projection, info.fov, info.aspect, info.near, info.far);
-    this.bind_listener(document);
+    //this.bind_listener(document);
   }
   
   zoom(value) {

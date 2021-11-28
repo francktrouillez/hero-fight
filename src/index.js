@@ -60,7 +60,7 @@ async function main() {
     }
   );
 
-  var camera = new Camera(document, {
+  var camera = new Camera({
     eye: {
       x: -10.0, y: 10.0, z: 10.0
     },
@@ -75,6 +75,18 @@ async function main() {
     near: 0.01,
     far: 100.0
   });
+
+  new CameraController(document, camera);
+
+  const html_button = document.getElementById("attack_button");
+  new InteractiveButton(
+    html_button, 
+    "./src/view/assets/buttons/sword.png",
+    "./src/view/assets/buttons/sword_light.png",
+    function() {
+      this.setAttribute("type", "hidden");
+    }
+  )
 
   render_object_1 = new RenderObject(cube_1, program, camera, {
     "tex0": cube_1.texture_object.gl_texture,

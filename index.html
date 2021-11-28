@@ -4,27 +4,50 @@
 	<link rel="stylesheet" href="./src/view/css/styles.css">
 </head>
 <body>
+	<!-- Buttons -->
+
   <canvas id="webgl_canvas"></canvas>
+	<div id="menu">
+		<input type="image" id="attack_button"/>
+	</div>
 
-	<!-- Libraries -->
-	<script type="text/javascript" src="./src/view/library/gl-matrix-min.js"></script>
 
-	<!-- Utils -->
-	<script type="text/javascript" src="./src/view/scripts/utils.js"></script>
+	<!-- Model -->
+	<script type="text/javascript" src="./src/model/Character.js"></script>
+  <script type="text/javascript" src="./src/model/Characters/Hero.js"></script>
+  <script type="text/javascript" src="./src/model/Characters/Monster.js"></script>
+  <script type="text/javascript" src="./src/model/Characters/Monsters/A.js"></script>
+  <script type="text/javascript" src="./src/model/Characters/Monsters/B.js"></script>
+  <script type="text/javascript" src="./src/model/Characters/Monsters/C.js"></script>
+  <script type="text/javascript" src="./src/model/Fight.js"></script>
+  <script type="text/javascript" src="./src/model/Game.js"></script>
 
+	<!-- View -->
+		<!-- Libraries -->
+		<script type="text/javascript" src="./src/view/library/gl-matrix-min.js"></script>
+
+		<!-- Utils -->
+		<script type="text/javascript" src="./src/view/scripts/utils.js"></script>
+		<!-- WebGL -->
+		<script type="text/javascript" src="./src/view/webgl/Camera.js"></script>
+		<script type="text/javascript" src="./src/view/webgl/Program.js"></script>
+		<script type="text/javascript" src="./src/view/webgl/Texture.js"></script>
+		<script type="text/javascript" src="./src/view/webgl/RenderObject.js"></script>
+		<script type="text/javascript" src="./src/view/webgl/SimpleObject.js"></script>
+			<!-- Objects-->
+			<script type="text/javascript" src="./src/view/webgl/Objects/Cube.js"></script>
 	
+		<!-- Controller -->
+		<script type="text/javascript" src="./src/controller/Keyboard.js"></script>
+		<script type="text/javascript" src="./src/controller/Button.js"></script>
+			<!-- Keyboard controllers -->
+			<script type="text/javascript" src="./src/controller/KeyboardControllers/CameraController.js"></script>
+			<script type="text/javascript" src="./src/controller/Buttons/InteractiveButton.js"></script>
 
-	<!-- WebGL -->
-	<script type="text/javascript" src="./src/view/webgl/Camera.js"></script>
-	<script type="text/javascript" src="./src/view/webgl/Program.js"></script>
-	<script type="text/javascript" src="./src/view/webgl/Texture.js"></script>
-	<script type="text/javascript" src="./src/view/webgl/RenderObject.js"></script>
-	<script type="text/javascript" src="./src/view/webgl/SimpleObject.js"></script>
-		<!-- Objects-->
-		<script type="text/javascript" src="./src/view/webgl/Objects/Cube.js"></script>
+		
 
 	<!-- Main script -->
-	<script type="text/javascript" src="./src/view/scripts/index.js"></script>
+	<script type="text/javascript" src="./src/index.js"></script>
 </body>
 </html>
 
