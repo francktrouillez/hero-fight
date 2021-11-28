@@ -9,8 +9,8 @@ async function main() {
 
   auto_resize_window(window, canvas, gl, aspect);
 
-  const sourceV = await read_file("./src/glsl/vertexShader.vert");
-  const sourceF = await read_file("./src/glsl/fragmentShader.frag");
+  const sourceV = await read_file("./src/view/glsl/vertexShader.vert");
+  const sourceF = await read_file("./src/view/glsl/fragmentShader.frag");
 
   var program = new Program(gl, sourceV, sourceF, {
     "model": {
@@ -35,7 +35,7 @@ async function main() {
     }
   })
 
-  var tex_cat = new Texture(gl, "./src/assets/textures/cat.jpg");
+  var tex_cat = new Texture(gl, "./src/view/assets/textures/cat.jpg");
 
   var tex_face = [
     0.0, 0.0,
