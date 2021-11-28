@@ -15,11 +15,11 @@ async function main() {
   var program = new Program(gl, sourceV, sourceF, {
     "model": {
       variable:"M",
-      type: "mat4"
+      type: "mat4",
     },
     "view": {
       variable:"V",
-      type: "mat4"
+      type: "mat4",
     },
     "proj": {
       variable:"P",
@@ -37,156 +37,32 @@ async function main() {
 
   var tex_cat = new Texture(gl, "./src/assets/textures/cat.jpg");
 
-  var obj1 = new SimpleObject(gl, new Float32Array([
-    // Front face
-    -1.0, -1.0,  1.0,
-    1.0, -1.0,  1.0,
-    1.0,  1.0,  1.0,
-    -1.0,  1.0,  1.0,
-
-  // Back face
-  -1.0, -1.0, -1.0,
-  -1.0,  1.0, -1.0,
-    1.0,  1.0, -1.0,
-    1.0, -1.0, -1.0,
-
-  // Top face
-  -1.0,  1.0, -1.0,
-  -1.0,  1.0,  1.0,
-    1.0,  1.0,  1.0,
-    1.0,  1.0, -1.0,
-
-  // Bottom face
-  -1.0, -1.0, -1.0,
-    1.0, -1.0, -1.0,
-    1.0, -1.0,  1.0,
-  -1.0, -1.0,  1.0,
-
-  // Right face
-    1.0, -1.0, -1.0,
-    1.0,  1.0, -1.0,
-    1.0,  1.0,  1.0,
-    1.0, -1.0,  1.0,
-
-  // Left face
-  -1.0, -1.0, -1.0,
-  -1.0, -1.0,  1.0,
-  -1.0,  1.0,  1.0,
-  -1.0,  1.0, -1.0,
-  ]), new Float32Array([
+  var tex_face = [
     0.0, 0.0,
-    0.0, 1.0,
     1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
+    1.0, 1.0,
     0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-  ]), new Uint16Array([
-    0,  1,  2,      0,  2,  3,    // front
-    4,  5,  6,      4,  6,  7,    // back
-    8,  9,  10,     8,  10, 11,   // top
-    12, 13, 14,     12, 14, 15,   // bottom
-    16, 17, 18,     16, 18, 19,   // right
-    20, 21, 22,     20, 22, 23,   // left
-  ]), 36,
-  function() {
-    this.rotate(0.01, 0.5, 1.0, 0.0);
-  });
-
-  var obj2 = new SimpleObject(gl, new Float32Array([
-    // Front face
-    -1.0, -1.0,  1.0,
-    1.0, -1.0,  1.0,
-    1.0,  1.0,  1.0,
-    -1.0,  1.0,  1.0,
-
-  // Back face
-  -1.0, -1.0, -1.0,
-  -1.0,  1.0, -1.0,
-    1.0,  1.0, -1.0,
-    1.0, -1.0, -1.0,
-
-  // Top face
-  -1.0,  1.0, -1.0,
-  -1.0,  1.0,  1.0,
-    1.0,  1.0,  1.0,
-    1.0,  1.0, -1.0,
-
-  // Bottom face
-  -1.0, -1.0, -1.0,
-    1.0, -1.0, -1.0,
-    1.0, -1.0,  1.0,
-  -1.0, -1.0,  1.0,
-
-  // Right face
-    1.0, -1.0, -1.0,
-    1.0,  1.0, -1.0,
-    1.0,  1.0,  1.0,
-    1.0, -1.0,  1.0,
-
-  // Left face
-  -1.0, -1.0, -1.0,
-  -1.0, -1.0,  1.0,
-  -1.0,  1.0,  1.0,
-  -1.0,  1.0, -1.0,
-  ]), new Float32Array([
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-    0.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0,  
-  ]), new Uint16Array([
-    0,  1,  2,      0,  2,  3,    // front
-    4,  5,  6,      4,  6,  7,    // back
-    8,  9,  10,     8,  10, 11,   // top
-    12, 13, 14,     12, 14, 15,   // bottom
-    16, 17, 18,     16, 18, 19,   // right
-    20, 21, 22,     20, 22, 23,   // left
-  ]), 36,
-  function() {
-    this.rotate(0.01, 0.5, 1.0, 0.0);
+  ]
+  var tex_positions = []
+  for (let i = 0; i < 6; i++) {
+    tex_positions = tex_positions.concat(tex_face);
   }
+
+  var cube_1 = new Cube(gl, tex_cat, new Float32Array(tex_positions), 
+    function() {
+      return;
+    }
+  );
+
+  var cube_2 = new Cube(gl, tex_cat, new Float32Array(tex_positions), 
+    function() {
+      return;
+    }
   );
 
   var camera = new Camera(document, {
     eye: {
-      x: 0.0, y: 0.0, z: 4.0
+      x: -10.0, y: 10.0, z: 10.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
@@ -200,24 +76,24 @@ async function main() {
     far: 100.0
   });
 
-  render_object_1 = new RenderObject(obj1, program, camera, {
-    "tex0": tex_cat.gl_texture,
+  render_object_1 = new RenderObject(cube_1, program, camera, {
+    "tex0": cube_1.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
-    "model": obj1.model,
+    "model": cube_1.model,
     "view": camera.view,
     "proj": camera.projection
   });
 
-  render_object_2 = new RenderObject(obj2, program, camera, {
-    "tex0": tex_cat.gl_texture,
+  render_object_2 = new RenderObject(cube_2, program, camera, {
+    "tex0": cube_2.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
-    "model": obj2.model,
+    "model": cube_2.model,
     "view": camera.view,
     "proj": camera.projection
   });
 
-  obj1.translate(-2.0, 0.0, 0.0);
-  obj2.translate(2.0, 0.0, 0.0);
+  cube_1.setXYZ(-4.0, 0.0, 0.0);
+  cube_2.setXYZ(4.0, 0.0, 0.0);
 
   var render_objects = [render_object_1, render_object_2];
 

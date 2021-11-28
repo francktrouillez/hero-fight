@@ -1,7 +1,9 @@
 class SimpleObject {
 
-  constructor(gl, positions, textures, indexes, num_triangles, update) {
+  constructor(gl, texture_object, positions, textures, indexes, num_triangles, update) {
     this.gl = gl;
+
+    this.texture_object = texture_object;
 
     this.positions = positions;
     this.textures = textures;
@@ -15,7 +17,9 @@ class SimpleObject {
     this.init_buffers();
 
     this.model = null;
+    this.position = null;
     this.init_model();
+
   }
 
   init_buffers() {
@@ -37,6 +41,9 @@ class SimpleObject {
 
   init_model() {
     this.model = glMatrix.mat4.create();
+    this.position = {
+      x: 0, y: 0, z: 0
+    }
   }
 
   activate(program) {
@@ -59,11 +66,31 @@ class SimpleObject {
   }
 
   translate(x, y, z) {
+    this.position.x += x;
+    this.position.y += y;
+    this.position.z += z;
     this.model = glMatrix.mat4.translate(this.model, this.model, glMatrix.vec3.fromValues(x, y, z));
   }
 
   rotate(value, x, y, z) {
     this.model = glMatrix.mat4.rotate(this.model, this.model, value, glMatrix.vec3.fromValues(x, y, z));
+  }
+
+  setXYZ(x, y, z) {
+    this.translate(
+      x-this.position.x, 
+      y-this.position.y,
+      z-this.position.z
+    );
+    this.position = {
+      x: x, y: y, z: z
+    }
+  }
+
+  setAngle(value, x, y, z) {
+    this.model = glMatrix.mat4.create();
+    this.translate(this.position.x, this.position.y, this.position.z);
+    this.rotate(value, x, y, z);
   }
 
   draw() {
