@@ -2,10 +2,11 @@ class Hero extends Character {
 
   static XP_THRESHOLD = 10;
 
-  constructor() {
+  constructor(controller) {
     super(10, 10, 1, 0);
     this.level = 1;
     this.xp = 0;
+    this.controller = controller;
   }
 
   /* Methods */
@@ -34,7 +35,27 @@ class Hero extends Character {
 
   play(opponent) {
     /* Choose an action */
-    this.attack_character(opponent);
+    const action = this.controller.request_action();
+    if (action == null) {
+      return false;
+    }
+    if (action == "attack") {
+      console.log("attack");
+      this.attack_character(opponent);
+    } else if (action == "buff_attack") {
+      console.log("buff attack");
+      this.attack += 2;
+    } else if (action == "buff_defense") {
+      console.log("buff defense");
+      this.defense += 2;
+    } else if (action == "heal") {
+      console.log("heal");
+      this.gain_life(10);
+    } else {
+      throw new Error("Action not known by hero : " + action)
+    }
+    this.controller.reset_action();
+    return true;
   }
 
   /* Getter */

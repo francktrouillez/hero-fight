@@ -11,16 +11,16 @@ html, body {
     height: 100%;
 }
 
-#menu {
+#fight_menu {
     position: absolute;
     bottom: 100px;
     left: 200px;
     right: 200px;
-    justify-content: space-between;
+    justify-content: space-evenly;
     display: flex;
 }
 
-#attack_button {
+.menu_button {
     width: 100px;
     height: 100px;
 }

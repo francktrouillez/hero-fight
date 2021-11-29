@@ -1,20 +1,43 @@
 class Game {
-  constructor() {
+
+  static REST = 0;
+  static FIGHTING = 1;
+
+  constructor(controller) {
     this.round = 1;
-    this.hero = new Hero();
+    this.hero = new Hero(controller);
     this.opponent = null;
     this.is_game_over = false;
+    this.waiting = false;
+    this.state = Game.REST;
+    this.fight = null;
   }
 
-  start() {
-    while (!this.is_game_over) {
+  update() {
+    if (this.state == Game.REST) {
       this.go_to_next_round();
+    } else if (this.state == Game.FIGHTING) {
+      this.continue_fight();
     }
   }
 
+  continue_fight() {
+    this.fight.update();
+    if (this.fight.get_winner() == null) {
+      return;
+    }
+    if (this.fight.get_winner() == this.hero) {
+      this.hero.gain_xp(this.opponent.get_xp_value());
+      if (this.hero.get_level() > 50) {
+        this.game_over();
+      }
+    } else if (this.fight.get_winner() == this.opponent){
+      this.game_over();
+    }
+    this.state = Game.REST;
+  }
+
   go_to_next_round() {
-    console.log("level "+this.hero.get_level())
-    console.log("xp : " +this.hero.get_xp())
     this.round += 1;
     if (this.hero.get_level() < 5) {
       this.opponent = new A();
@@ -23,21 +46,12 @@ class Game {
     } else {
       this.opponent = new C();
     }
-    let fight = new Fight(this.hero, this.opponent);
-    fight.start();
-    if (fight.get_winner() == this.hero) {
-      this.hero.gain_xp(this.opponent.get_xp_value());
-      if (this.hero.get_level() > 50) {
-        this.game_over();
-      }
-    } else {
-      this.game_over();
-    }
+    this.fight = new Fight(this.hero, this.opponent, this);
+    this.state = Game.REST; 
   }
 
   game_over() {
     this.is_game_over = true;
-    console.log("game over");
   }
 
 

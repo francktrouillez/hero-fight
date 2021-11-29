@@ -1,21 +1,26 @@
 class Fight {
-  constructor(hero, monster) {
+  constructor(hero, monster, controller) {
     this.hero = hero;
     this.monster = monster;
     this.winner = null;
+    this.controller = controller;
   }
 
-  start() {
-    while(this.hero.get_life() > 0 && this.monster.get_life() > 0) {
-      this.hero.play(this.monster);
+  update() {
+    if(this.hero.get_life() > 0 && this.monster.get_life() > 0) {
+      if (!this.hero.play(this.monster)) {
+        return;
+      }
+      console.log(this.monster.get_life());
       if (this.monster.get_life() > 0) {
         this.monster.play(this.hero);
       }
-    }
-    if (this.hero.get_life() > 0) {
-      this.winner = this.hero;
     } else {
-      this.winner = this.monster;
+      if (this.hero.get_life() > 0) {
+        this.winner = this.hero;
+      } else {
+        this.winner = this.monster;
+      }
     }
   }
 
