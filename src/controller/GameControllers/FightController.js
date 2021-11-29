@@ -1,4 +1,4 @@
-class FightMenu {
+class FightController {
 
   constructor(document) {
     this.document = document;
@@ -9,8 +9,6 @@ class FightMenu {
     this.buff_attack = null;
     this.buff_defense = null;
     this.heal = null;
-
-    this.visible = true;
 
     this.next_action = null;
 
@@ -72,12 +70,10 @@ class FightMenu {
   }
 
   hide_menu() {
-    this.visible = false;
     this.fight_menu.style.visibility = "hidden";
   }
 
   show_menu() {
-    this.visible = true;
-    this.attack.html_button.style.visibility = "visible";
+    this.fight_menu.style.visibility = "visible";
   }
 }

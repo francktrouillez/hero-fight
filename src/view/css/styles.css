@@ -13,7 +13,7 @@ html, body {
 
 #fight_menu {
     position: absolute;
-    bottom: 100px;
+    bottom: 180px;
     left: 200px;
     right: 200px;
     justify-content: space-evenly;
@@ -24,3 +24,57 @@ html, body {
     width: 100px;
     height: 100px;
 }
+
+#bottom_ath {
+    position: absolute;
+    bottom: 50px;
+    left: 300px;
+    right: 300px;
+}
+
+#xp_bar {
+    width: 100%;
+}
+
+#bottom_right_ath {
+    position: absolute;
+    right: 50px;
+    bottom: 100px;
+}
+
+#top_right_ath {
+    position: absolute;
+    top: 100px;
+    right: 50px;
+}
+
+.info_ath {
+    width: 150px;
+    height: 50px;
+    justify-content: space-evenly;
+    display: flex;
+}
+
+.info_ath_text {
+    vertical-align: middle;
+    color: white;
+    font-size: 20;
+    font-weight: bold;
+    
+}
+
+.info_ath_img {
+    width: 50px;
+    height: 50px;
+}
+
+#lvl_text {
+    vertical-align: middle;
+    color: white;
+    font-size: 20;
+    font-weight: bold;
+}
+
+
+
+

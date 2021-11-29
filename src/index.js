@@ -50,7 +50,7 @@ async function main() {
 
   var cube_1 = new Cube(gl, tex_cat, new Float32Array(tex_positions), 
     function() {
-      return;
+      this.rotate(0.01, 0.3, 0.5, 0.1);
     }
   );
 
@@ -78,8 +78,6 @@ async function main() {
 
   var camera_controller = new CameraController(document, camera);
 
-  var fight_menu = new FightMenu(document);
-
   render_object_1 = new RenderObject(cube_1, program, camera, {
     "tex0": cube_1.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
@@ -101,11 +99,11 @@ async function main() {
 
   var render_objects = [render_object_1, render_object_2];
 
-  var game = new Game(fight_menu);
+  var game_controller = new GameController(document);
 
   function render() {
     // Model update
-    game.update();
+    game_controller.update();
 
     //Draw loop
     gl.clearColor(0.2, 0.2, 0.2, 1);

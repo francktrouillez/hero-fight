@@ -3,10 +3,9 @@ class Hero extends Character {
   static XP_THRESHOLD = 10;
 
   constructor(controller) {
-    super(10, 10, 1, 0);
-    this.level = 1;
+    super(10, 10, 1, 0, controller);
+    this.level = 0;
     this.xp = 0;
-    this.controller = controller;
   }
 
   /* Methods */
@@ -16,6 +15,7 @@ class Hero extends Character {
       return;
     }
     if (xp_received >= Hero.XP_THRESHOLD - this.xp) {
+      this.controller.xp_controller.set_full_xp();
       this.gain_level();
       let new_xp_received = xp_received - (Hero.XP_THRESHOLD - this.xp);
       this.xp = 0;
@@ -23,39 +23,43 @@ class Hero extends Character {
       return;
     }
     this.xp += xp_received;
+    this.controller.xp_controller.set_xp(this.xp);
   }
 
   gain_level() {
-    this.level += 1;
-    this.attack += 1;
-    this.defense += 1;
-    this.max_life += 5;
+    this.set_level(this.level + 1);
+    this.set_attack(this.attack + 1);
+    this.set_defense(this.defense + 1);
+    this.set_max_life(this.max_life + 5);
     this.gain_life(7);
   }
 
   play(opponent) {
     /* Choose an action */
-    const action = this.controller.request_action();
+    const action = this.controller.fight_controller.request_action();
     if (action == null) {
       return false;
     }
     if (action == "attack") {
-      console.log("attack");
       this.attack_character(opponent);
     } else if (action == "buff_attack") {
-      console.log("buff attack");
-      this.attack += 2;
+      this.set_buff_attack(this.buff_attack + 2);
     } else if (action == "buff_defense") {
-      console.log("buff defense");
-      this.defense += 2;
+      this.set_buff_defense(this.buff_defense + 2);
     } else if (action == "heal") {
-      console.log("heal");
       this.gain_life(10);
     } else {
       throw new Error("Action not known by hero : " + action)
     }
-    this.controller.reset_action();
+    this.controller.fight_controller.reset_action();
     return true;
+  }
+
+  /* Special setters (with controller)*/
+
+  set_level(new_level) {
+    this.level = new_level;
+    this.controller.level_controller.set_level(new_level);
   }
 
   /* Getter */
@@ -69,10 +73,6 @@ class Hero extends Character {
   }
 
   /* Setter */
-
-  set_level(new_level) {
-    this.level = new_level;
-  }
 
   set_xp(new_xp) {
     this.xp = new_xp

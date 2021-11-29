@@ -5,14 +5,15 @@ class Monster extends Character {
   static BUFF_DEFENSE = 2;
   static HEAL = 3;
 
-  constructor(life, max_life, attack, defense, xp_value) {
-    super(life, max_life, attack, defense);
-    this.xp_value = xp_value
+  constructor(life, max_life, attack, defense, xp_value, controller) {
+    super(life, max_life, attack, defense, controller);
+    this.xp_value = xp_value;
   }
 
   /* Methods */
 
   play(opponent) {
+    this.attack_character(opponent); return;
     let action = Math.floor(Math.random() * 4);
     if (action == Monster.ATTACK) {
       this.attack_character(opponent);

@@ -33,20 +33,75 @@
 	
 	<!-- Controller -->
 	<script type="text/javascript" src="./src/controller/Keyboard.js"></script>
-	<script type="text/javascript" src="./src/controller/Button.js"></script>
-	<script type="text/javascript" src="./src/controller/FightMenu.js"></script>
 		<!-- Keyboard controllers -->
 		<script type="text/javascript" src="./src/controller/KeyboardControllers/CameraController.js"></script>
+	
+	<script type="text/javascript" src="./src/controller/Button.js"></script>
 		<!-- Buttons -->
 		<script type="text/javascript" src="./src/controller/Buttons/InteractiveButton.js"></script>
+	
 
-	<!-- Buttons HTML -->
+
+	<script type="text/javascript" src="./src/controller/GameController.js"></script>
+	<!-- Game controllers -->
+	<script type="text/javascript" src="./src/controller/GameControllers/HeroController.js"></script>
+	<script type="text/javascript" src="./src/controller/GameControllers/OpponentController.js"></script>
+	<script type="text/javascript" src="./src/controller/GameControllers/FightController.js"></script>
+		<!-- Controllers for the stats -->
+		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/AttackController.js"></script>
+		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/DefenseController.js"></script>
+		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/LevelController.js"></script>
+		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/LifeController.js"></script>
+		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/XpController.js"></script>
+		
+
+	<!-- Fight menu -->
 	<div id="fight_menu">
 		<input type="image" class="menu_button" id="attack_button"/>
 		<input type="image" class="menu_button" id="buff_attack_button"/>
 		<input type="image" class="menu_button" id="buff_shield_button"/>
 		<input type="image" class="menu_button" id="heal_button"/>
 	</div>
+
+	<!-- ATH -->
+
+	<div id="bottom_ath">
+		<img alt="xp_bar" src="./src/view/assets/xp/xp_0.png" id="xp_bar"/>
+	</div>
+
+	<div id="bottom_right_ath">
+		<div class="info_ath">
+			<p class="info_ath_text" id="life_text"></p>
+			<img class="info_ath_img" alt="life" src="./src/view/assets/ath/life.png"/>
+		</div>
+		<div class="info_ath">
+			<p class="info_ath_text" id="attack_text"></p>
+			<img class="info_ath_img" alt="attack" src="./src/view/assets/ath/sword.png"/>
+		</div>
+		<div class="info_ath">
+			<p class="info_ath_text" id="defense_text"></p>
+			<img class="info_ath_img" alt="defense" src="./src/view/assets/ath/shield.png"/>
+		</div>
+		<div class="info_ath">
+			<p class="info_ath_text" id="level_text"></p>
+		</div>
+	</div>
+
+	<div id="top_right_ath">
+		<div class="info_ath">
+			<p class="info_ath_text" id="life_opponent_text"></p>
+			<img class="info_ath_img" alt="life" src="./src/view/assets/ath/dark_life.png"/>
+		</div>
+		<div class="info_ath">
+			<p class="info_ath_text" id="attack_opponent_text"></p>
+			<img class="info_ath_img" alt="life" src="./src/view/assets/ath/dark_sword.png"/>
+		</div>
+		<div class="info_ath">
+			<p class="info_ath_text" id="defense_opponent_text"></p>
+			<img class="info_ath_img" alt="life" src="./src/view/assets/ath/dark_shield.png"/>
+		</div>
+	</div>
+	
 
 
 	<!-- Main script -->
