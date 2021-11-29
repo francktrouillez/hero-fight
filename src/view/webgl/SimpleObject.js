@@ -10,6 +10,7 @@ class SimpleObject {
     this.indexes = indexes;
     this.num_triangles = num_triangles;
     this.update = update;
+    this.update_data = null;
 
     this.position_buffer = null;
     this.texture_buffer = null;
