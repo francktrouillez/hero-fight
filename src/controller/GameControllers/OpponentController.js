@@ -4,6 +4,8 @@ class OpponentController {
     this.attack_controller = null;
     this.defense_controller = null;
 
+    this.html_div = document.getElementById("top_right_ath");
+
     this.init_life_controller(document);
     this.init_attack_controller(document);
     this.init_defense_controller(document);
@@ -25,5 +27,13 @@ class OpponentController {
     this.defense_controller = new DefenseController(document, "defense_opponent_text");
     this.defense_controller.set_defense(0);
     this.defense_controller.set_buff_defense(0);
+  }
+
+  hide_stats() {
+    this.html_div.style.visibility = "hidden";
+  }
+
+  show_stats() {
+    this.html_div.style.visibility = "visible";
   }
 }

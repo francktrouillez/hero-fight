@@ -10,20 +10,20 @@ class Fight {
     if(this.hero.get_life() > 0 && this.monster.get_life() > 0) {
       this.hero.controller.fight_controller.show_menu();
       if (!this.hero.play(this.monster)) {
-        return;
+        return false;
       }
       this.hero.controller.fight_controller.hide_menu();
       if (this.monster.get_life() > 0) {
         this.monster.play(this.hero);
       }
     } else {
-      this.hero.reset_buffs();
       if (this.hero.get_life() > 0) {
         this.winner = this.hero;
       } else {
         this.winner = this.monster;
       }
     }
+    return true;
   }
 
 

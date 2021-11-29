@@ -99,7 +99,7 @@ async function main() {
 
   var render_objects = [render_object_1, render_object_2];
 
-  var game_controller = new GameController(document);
+  var game_controller = new GameController(document, render_objects);
 
   function render() {
     // Model update

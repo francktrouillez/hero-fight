@@ -4,8 +4,8 @@ class Hero extends Character {
 
   constructor(controller) {
     super(10, 10, 1, 0, controller);
-    this.level = 0;
-    this.xp = 0;
+    this.set_level(0);
+    this.set_xp(0);
   }
 
   /* Methods */

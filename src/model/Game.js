@@ -1,8 +1,11 @@
 class Game {
 
   static REST = 0;
-  static FIGHTING = 1;
-  static GETTING_XP = 2;
+  static ANIMATION_REST = 1;
+  static FIGHTING = 2;
+  static ANIMATION_FIGHTING = 3;
+  static GETTING_XP = 4;
+  static ANIMATION_GETTING_XP = 5;
 
   constructor(hero_controller, opponent_controller) {
     this.round = 1;
@@ -11,29 +14,70 @@ class Game {
     this.opponent = null;
     this.is_game_over = false;
     this.waiting = false;
-    this.state = Game.REST;
+    this.state = null;
     this.fight = null;
 
+    this.animating = false;
+
     this.pending_xp = 0;
+
+    this.switch_state(Game.REST)
   }
 
   update() {
     if (this.state == Game.REST) {
       this.go_to_next_round();
+    } else if (this.state == Game.ANIMATION_REST) {
+      this.wait_for_rest_animation();
     } else if (this.state == Game.FIGHTING) {
       this.continue_fight();
-    } else if (this.state = Game.GETTING_XP) {
+    } else if (this.state == Game.ANIMATION_FIGHTING) {
+      this.wait_for_fighting_animation();
+    } else if (this.state == Game.GETTING_XP) {
       this.continue_get_xp();
+    } else if (this.state == Game.ANIMATION_GETTING_XP) {
+      this.wait_for_getting_xp_animation();
+    }
+  }
+
+  wait_for_rest_animation() {
+    if (!this.animating) {
+      this.switch_state(Game.FIGHTING);
+    }
+  }
+
+  wait_for_fighting_animation() {
+    if (!this.animating) {
+      this.switch_state(Game.FIGHTING);
+    }
+  }
+
+  wait_for_getting_xp_animation() {
+    if (!this.animating) {
+      this.switch_state(Game.REST);
     }
   }
 
   switch_state(new_state) {
     if (new_state == Game.REST) {
+      this.hero.controller.fight_controller.hide_menu();
+      this.opponent_controller.hide_stats();
       this.state = Game.REST;
+    } else if (new_state == Game.ANIMATION_REST) {
+      this.animating = true;
+      this.state = Game.ANIMATION_REST;
     } else if (new_state == Game.FIGHTING) {
+      this.opponent_controller.show_stats();
       this.state = Game.FIGHTING;
+    } else if (new_state == Game.ANIMATION_FIGHTING){
+      this.animating = true;
+      this.state = Game.ANIMATION_FIGHTING;
     } else if (new_state == Game.GETTING_XP) {
+      this.opponent_controller.hide_stats();
       this.state = Game.GETTING_XP;
+    } else if (new_state == Game.ANIMATION_GETTING_XP) {
+      this.animating = true;
+      this.state = Game.ANIMATION_GETTING_XP;
     }
   }
 
@@ -48,14 +92,17 @@ class Game {
     } else if (this.fight.get_winner() == this.opponent){
       this.game_over();
     }
-    this.switch_state(Game.REST);
+    this.switch_state(Game.ANIMATION_GETTING_XP);
   }
 
   continue_fight() {
-    this.fight.update();
+    if (this.fight.update()) {
+      this.switch_state(Game.ANIMATION_FIGHTING);
+    }
     if (this.fight.get_winner() == null) {
       return;
     }
+    this.hero.reset_buffs();
     this.pending_xp = this.opponent.get_xp_value();
     this.switch_state(Game.GETTING_XP);
   }
@@ -70,7 +117,7 @@ class Game {
       this.opponent = new C(this.opponent_controller);
     }
     this.fight = new Fight(this.hero, this.opponent, this);
-    this.switch_state(Game.FIGHTING); 
+    this.switch_state(Game.ANIMATION_REST); 
   }
 
   game_over() {
