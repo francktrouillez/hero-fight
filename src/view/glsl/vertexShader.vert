@@ -1,5 +1,5 @@
 attribute vec3 aPosition;
-//attribute vec3 aNormal;
+attribute vec3 aNormal;
 attribute vec2 aTexcoord;
 
 uniform mat4 M;

@@ -136,11 +136,11 @@ class ComplexObject {
     this.gl.vertexAttribPointer(att_pos, 3, this.gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
 
     // Normals
-    /*this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normal_buffer);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normal_buffer);
     const att_normal = this.gl.getAttribLocation(program, 'aNormal');
     this.gl.enableVertexAttribArray(att_normal);
     this.gl.vertexAttribPointer(att_normal, 3, this.gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
-    */
+    
     // Texture
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.texture_buffer);
     const att_textcoord = this.gl.getAttribLocation(program, 'aTexcoord');
