@@ -1,4 +1,10 @@
 async function main() {
+
+  images = await charge_images([
+    "./src/view/assets/textures/cat.jpg",
+    "./src/view/assets/textures/Warrior_Full_Texture.png"
+  ]);
+
   // Boilerplate code
   const canvas = document.getElementById('webgl_canvas');
   const gl = canvas.getContext('webgl');
@@ -35,7 +41,7 @@ async function main() {
     }
   })
 
-  var tex_cat = new Texture(gl, "./src/view/assets/textures/cat.jpg");
+  var tex_cat = new Texture(gl, images["./src/view/assets/textures/cat.jpg"]);
 
   var tex_face = [
     0.0, 0.0,
@@ -48,9 +54,11 @@ async function main() {
     tex_positions = tex_positions.concat(tex_face);
   }
 
-  var cube_1 = new Cube(gl, tex_cat, new Float32Array(tex_positions), 
+  const model_obj = await read_file("./src/view/assets/models/Full_Warrior.obj")
+
+  var model_1 = new ComplexObject(gl, model_obj, 
     function() {
-      this.rotate(0.01, 0.3, 0.5, 0.1);
+      return;
     }
   );
 
@@ -62,7 +70,7 @@ async function main() {
 
   var camera = new Camera({
     eye: {
-      x: -10.0, y: 10.0, z: 10.0
+      x: -5.0, y: 5.0, z: 5.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
@@ -78,10 +86,10 @@ async function main() {
 
   var camera_controller = new CameraController(document, camera);
 
-  render_object_1 = new RenderObject(cube_1, program, camera, {
-    "tex0": cube_1.texture_object.gl_texture,
+  render_object_1 = new RenderObject(model_1, program, camera, {
+    "tex0": model_1.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
-    "model": cube_1.model,
+    "model": model_1.model,
     "view": camera.view,
     "proj": camera.projection
   });
@@ -94,7 +102,7 @@ async function main() {
     "proj": camera.projection
   });
 
-  cube_1.setXYZ(-4.0, 0.0, 0.0);
+  //cube_1.setXYZ(-4.0, 0.0, 0.0);
   cube_2.setXYZ(4.0, 0.0, 0.0);
 
   var render_objects = [render_object_1, render_object_2];

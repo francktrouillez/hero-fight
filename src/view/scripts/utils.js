@@ -23,3 +23,26 @@ function auto_resize_window(window, canvas, gl, aspect) {
  }
  resizeCanvas();
 }
+
+function wait_for_image(image) {
+  return new Promise(res => {
+    if (image.complete) {
+        return res();
+    }
+    image.onload = () => res();
+    image.onerror = () => res();
+  });
+}
+
+async function charge_images(urls) {
+  var image;
+  var images = {}
+  for (let i = 0; i < urls.length; i++) {
+    image = new Image();
+    image.crossOrigin = "anonymous";
+    image.src = urls[i];
+    await wait_for_image(image);
+    images[urls[i]] = image;
+  }
+  return images
+}
