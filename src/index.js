@@ -15,29 +15,47 @@ async function main() {
 
   auto_resize_window(window, canvas, gl, aspect);
 
-  const sourceV = await read_file("./src/view/glsl/vertexShader.vert");
-  const sourceF = await read_file("./src/view/glsl/fragmentShader.frag");
+  const sourceV = await read_file("./src/view/glsl/vertexShaderLight.vert");
+  const sourceF = await read_file("./src/view/glsl/fragmentShaderLight.frag");
+
+  //Defined the key representing each type of uniform
+  key_texture = "tex0";
+  key_aspect_ratio = "aspect_ratio";
+  key_model = "model";
+  key_view = "view";
+  key_projection = "proj";
+  key_light_pos = "light_pos";
+  key_ITMatrix = "ITMat";
 
   var program = new Program(gl, sourceV, sourceF, {
-    "model": {
+    key_model: {
       variable:"M",
       type: "mat4",
     },
-    "view": {
+    key_view: {
       variable:"V",
       type: "mat4",
     },
-    "proj": {
+    key_projection: {
       variable:"P",
       type: "mat4"
     },
-    "tex0": {
+    key_texture: {
       variable: "u_texture",
       type: "sampler2D"
     },
-    "aspect_ratio": {
+    key_aspect_ratio: {
       variable: "u_aspect_ratio",
       type: "vec2"
+    },
+    key_light_pos:
+    {
+      variable: "u_light_pos",
+      type: "vec3"
+    },
+    key_ITMatrix: {
+      variable:"itM",
+      type: "mat4",
     }
   })
 
@@ -62,11 +80,12 @@ async function main() {
     }
   );
 
+  /*
   var cube_2 = new Cube(gl, tex_cat, new Float32Array(tex_positions), 
     function() {
       return;
     }
-  );
+  );*/
 
   var camera = new Camera({
     eye: {
@@ -85,27 +104,35 @@ async function main() {
   });
 
   var camera_controller = new CameraController(document, camera);
+  
+  //Position the fix lights
+  const light_pos = glMatrix.vec3.fromValues(1.0, 0.0, 10,0);
 
   render_object_1 = new RenderObject(model_1, program, camera, {
-    "tex0": model_1.texture_object.gl_texture,
-    "aspect_ratio": aspect.ratio,
-    "model": model_1.model,
-    "view": camera.view,
-    "proj": camera.projection
+    key_texture: model_1.texture_object.gl_texture,
+    key_aspect_ratio: aspect.ratio,
+    key_model: model_1.model,
+    key_view: camera.view,
+    key_projection: camera.projection,
+    key_light_pos: light_pos,
+    key_ITMatrix: model_1.model
   });
-
+/*
   render_object_2 = new RenderObject(cube_2, program, camera, {
-    "tex0": cube_2.texture_object.gl_texture,
-    "aspect_ratio": aspect.ratio,
-    "model": cube_2.model,
-    "view": camera.view,
-    "proj": camera.projection
+    key_texture: cube_2.texture_object.gl_texture,
+    key_aspect_ratio: aspect.ratio,
+    key_model: cube_2.model,
+    key_view: camera.view,
+    key_projection: camera.projection,
+    key_light_pos: light_pos,
+    key_ITMatrix: cube_2.model
   });
+  */
 
   //cube_1.setXYZ(-4.0, 0.0, 0.0);
-  cube_2.setXYZ(4.0, 0.0, 0.0);
+  //cube_2.setXYZ(4.0, 0.0, 0.0);
 
-  var render_objects = [render_object_1, render_object_2];
+  var render_objects = [render_object_1]; //render_object_2];
 
   var game_controller = new GameController(document, render_objects);
 

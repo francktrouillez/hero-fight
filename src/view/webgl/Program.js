@@ -41,6 +41,8 @@ class Program {
   map_uniform(uniform_location, type, value) {
     if (type == "vec2") {
       this.gl.uniform2fv(uniform_location, value); return;
+    } else if (type=="vec3"){
+      this.gl.uniform3fv(uniform_location, value); return;
     } else if (type == "mat4") {
       this.gl.uniformMatrix4fv(uniform_location, false, value); return;
     } else if (type == "sampler2D") {
