@@ -18,24 +18,15 @@ async function main() {
   const sourceV = await read_file("./src/view/glsl/vertexShaderLight.vert");
   const sourceF = await read_file("./src/view/glsl/fragmentShaderLight.frag");
 
-  //Defined the key representing each type of uniform
-  key_texture = "tex0";
-  key_aspect_ratio = "aspect_ratio";
-  key_model = "model";
-  key_view = "view";
-  key_projection = "proj";
-  key_light_pos = "light_pos";
-  key_ITMatrix = "ITMat";
-  key_viewdir = "viewdir";
 
   var program = new Program(gl, sourceV, sourceF, {
     key_model: {
       variable:"M",
-      type: "mat4",
+      type: "mat4"
     },
     key_view: {
       variable:"V",
-      type: "mat4",
+      type: "mat4"
     },
     key_projection: {
       variable:"P",
@@ -49,18 +40,17 @@ async function main() {
       variable: "u_aspect_ratio",
       type: "vec2"
     },
-    key_light_pos:
-    {
-      variable: "u_light_pos",
-      type: "vec3"
-    },
     key_ITMatrix: {
       variable:"itM",
-      type: "mat4",
+      type: "mat4"
     },
-    key_viewdir:{
-      variable:"u_view_dir",
-      type: "vec3",
+    key_view_pos:{
+      variable:"u_view_pos",
+      type: "vec3"
+    },
+    key_point_ligths:{
+      variable: "u_sun",
+      type: "point_light"
     }
   })
 
@@ -110,8 +100,9 @@ async function main() {
 
   var camera_controller = new CameraController(document, camera);
   
-  //Position the fix lights
-  const light_pos = glMatrix.vec3.fromValues(0.0, 5.0, 0.0);
+  //Configure the Point lights
+  var sun_pos = glMatrix.vec3.fromValues(0.0, 5.0, 0.0);
+  var sun_list = [sun_pos, 0.0, 0.5, 0.0, 0.2, 1.0, 1.0];
 
   render_object_1 = new RenderObject(model_1, program, camera, {
     key_texture: model_1.texture_object.gl_texture,
@@ -119,9 +110,9 @@ async function main() {
     key_model: model_1.model,
     key_view: camera.view,
     key_projection: camera.projection,
-    key_light_pos: light_pos,
     key_ITMatrix: model_1.model,
-    key_viewdir: camera.position
+    key_view_pos: camera.position,
+    key_point_ligths: sun_list
   });
 /*
   render_object_2 = new RenderObject(cube_2, program, camera, {
