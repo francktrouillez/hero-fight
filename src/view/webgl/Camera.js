@@ -1,6 +1,7 @@
 class Camera {
 
   constructor(info) {
+    this.position = glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z);
     this.view = glMatrix.mat4.create();
     this.view = glMatrix.mat4.lookAt(this.view, 
       glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z), 
@@ -62,6 +63,10 @@ class Camera {
         this.rotateY(-0.05); return;
       }
     }, false);  
+  }
+
+  setPosition(pos){
+    this.position = pos;
   }
 
 }

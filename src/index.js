@@ -26,6 +26,7 @@ async function main() {
   key_projection = "proj";
   key_light_pos = "light_pos";
   key_ITMatrix = "ITMat";
+  key_viewdir = "viewdir";
 
   var program = new Program(gl, sourceV, sourceF, {
     key_model: {
@@ -56,6 +57,10 @@ async function main() {
     key_ITMatrix: {
       variable:"itM",
       type: "mat4",
+    },
+    key_viewdir:{
+      variable:"u_view_dir",
+      type: "vec3",
     }
   })
 
@@ -89,7 +94,7 @@ async function main() {
 
   var camera = new Camera({
     eye: {
-      x: -5.0, y: 5.0, z: 0.0
+      x: -5.0, y: 5.0, z: -5.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
@@ -106,7 +111,7 @@ async function main() {
   var camera_controller = new CameraController(document, camera);
   
   //Position the fix lights
-  const light_pos = glMatrix.vec3.fromValues(5.0, 0.0, 5.0);
+  const light_pos = glMatrix.vec3.fromValues(0.0, 5.0, 0.0);
 
   render_object_1 = new RenderObject(model_1, program, camera, {
     key_texture: model_1.texture_object.gl_texture,
@@ -115,7 +120,8 @@ async function main() {
     key_view: camera.view,
     key_projection: camera.projection,
     key_light_pos: light_pos,
-    key_ITMatrix: model_1.model
+    key_ITMatrix: model_1.model,
+    key_viewdir: camera.position
   });
 /*
   render_object_2 = new RenderObject(cube_2, program, camera, {
