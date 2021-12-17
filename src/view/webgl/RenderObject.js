@@ -8,10 +8,12 @@ class RenderObject {
 
   // Method used to calculate the inverse matrix called in render vefore updating the uniform variable
   updateITMatrix() {
+
     var itM = glMatrix.mat4.create();
     itM = glMatrix.mat4.invert(itM, this.object.model);
     itM = glMatrix.mat4.transpose(itM, itM);
-    this.uniform_map["ITMat"] = itM
+    this.uniform_map["ITMat"] = itM;
+    
   }
 
   render() {

@@ -89,7 +89,7 @@ async function main() {
 
   var camera = new Camera({
     eye: {
-      x: -5.0, y: 5.0, z: 5.0
+      x: -5.0, y: 5.0, z: 0.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
@@ -106,7 +106,7 @@ async function main() {
   var camera_controller = new CameraController(document, camera);
   
   //Position the fix lights
-  const light_pos = glMatrix.vec3.fromValues(1.0, 0.0, 10,0);
+  const light_pos = glMatrix.vec3.fromValues(5.0, 0.0, 5.0);
 
   render_object_1 = new RenderObject(model_1, program, camera, {
     key_texture: model_1.texture_object.gl_texture,

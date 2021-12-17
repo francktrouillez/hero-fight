@@ -23,12 +23,12 @@ class GameController {
       this.animating = true;
       if (this.game.state == Game.ANIMATION_REST) {
         this.animation_steps = 30;
-        this.render_objects[0].object.update_data = {
+        /*this.render_objects[0].object.update_data = {
           up: 15,
           down: 15
         }
         this.render_objects[0].object.update = function() {
-          this.rotate(Math.PI/30, 0.0, 0.0, 1.0);
+          //this.rotate(Math.PI/30, 0.0, 0.0, 1.0);
           if (this.update_data.up > 0) {
             this.translate(0.0, 0.0, 0.05);
             this.update_data.up -= 1;
@@ -36,7 +36,7 @@ class GameController {
             this.translate(0.0, 0.0, -0.05);
             this.update_data.down -= 1;
           }
-        }
+        }*/
       } else if (this.game.state == Game.ANIMATION_FIGHTING) {
         this.animation_steps = 30;
         this.render_objects[0].object.update_data = {
