@@ -49,8 +49,8 @@ async function main() {
       type: "vec3"
     },
     key_point_ligths:{
-      variable: "u_sun",
-      type: "point_light"
+      variable: "u_point_ligths_list",
+      type: "point_lights"
     }
   })
 
@@ -84,7 +84,7 @@ async function main() {
 
   var camera = new Camera({
     eye: {
-      x: -5.0, y: 5.0, z: -5.0
+      x: -5.0, y: 4.0, z: -5.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
@@ -101,8 +101,26 @@ async function main() {
   var camera_controller = new CameraController(document, camera);
   
   //Configure the Point lights
-  var sun_pos = glMatrix.vec3.fromValues(0.0, 5.0, 0.0);
-  var sun_list = [sun_pos, 0.0, 0.5, 0.0, 0.2, 1.0, 1.0];
+  var sun_pos = glMatrix.vec3.fromValues(0.0, 10.0, 0.0);
+  var sun_ambient = glMatrix.vec3.fromValues(0.3,0.3,0.3);
+  var sun_diffuse = glMatrix.vec3.fromValues(0.5,0.5,0.5);
+  var null_vec = glMatrix.vec3.fromValues(0.0,0.0,0.0);
+  //             pos, constant, linear, quadratic, ambient, diffuse, specular
+  var sun_list = [sun_pos, 0.0, 0.2, 0.0, sun_ambient, sun_diffuse, null_vec];
+
+  var light1_pos = glMatrix.vec3.fromValues(-5.0,0.0,0.0);
+  var light1_color = glMatrix.vec3.fromValues(0.6,0.6,0.6);
+  var light1_specular = glMatrix.vec3.fromValues(255.0,255.0,255.0);
+  var light1_list = [light1_pos, 0.0, 1.0, 0.0, null_vec, light1_color, light1_specular];
+
+  var light2_pos = glMatrix.vec3.fromValues(5.0,0.0,0.0);
+  var light2_color = glMatrix.vec3.fromValues(0.0,0.0,0.0);
+  var light2_list = [light2_pos, 0.0, 2.0, 0.0, null_vec, null_vec, null_vec];
+
+  var light3_pos = glMatrix.vec3.fromValues(0.0,2.0,-5.0);
+  var light3_color = glMatrix.vec3.fromValues(0.6,0.6,0.6);
+  var light3_list = [light3_pos, 0.0, 1.0, 0.0, null_vec, light3_color, light3_color];
+  let point_lights_list = [sun_list, light1_list, light2_list, light3_list];
 
   render_object_1 = new RenderObject(model_1, program, camera, {
     key_texture: model_1.texture_object.gl_texture,
@@ -112,7 +130,7 @@ async function main() {
     key_projection: camera.projection,
     key_ITMatrix: model_1.model,
     key_view_pos: camera.position,
-    key_point_ligths: sun_list
+    key_point_ligths: point_lights_list
   });
 /*
   render_object_2 = new RenderObject(cube_2, program, camera, {
