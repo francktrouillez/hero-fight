@@ -16,6 +16,10 @@ class RenderObject {
     
   }
 
+  update_uniform(key, new_value){
+    this.uniform_map[key] = new_value;
+  }
+
   render() {
     this.object.update();
     this.program.use();

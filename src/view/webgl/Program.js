@@ -60,33 +60,33 @@ class Program {
   // Function used to map the special type object point lights which is a struct defined in fragement shader
   map_point_light(key, point_light, index){
     //First vec3 is the position
-    let pos = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".position" ;
-    var uniform_location = this.gl.getUniformLocation(this.program, pos);
+    let loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".position" ;
+    var uniform_location = this.gl.getUniformLocation(this.program, loc);
     this.map_uniform(uniform_location, "vec3", point_light[0]);
 
     //The next 6 uniforms are the multiple parameters of the light, first 3 attenuation floats and final 3 vec3 the constant for each part of the light
-    pos = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".constant" ;
-    uniform_location = this.gl.getUniformLocation(this.program, pos);
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".constant" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
     this.map_uniform(uniform_location, "float", point_light[1]);
 
-    pos = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".linear" ;
-    uniform_location = this.gl.getUniformLocation(this.program, pos);
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".linear" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
     this.map_uniform(uniform_location, "float", point_light[2]);
 
-    pos = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".quadratic" ;
-    uniform_location = this.gl.getUniformLocation(this.program, pos);
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".quadratic" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
     this.map_uniform(uniform_location, "float", point_light[3]);
 
-    pos = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".ambient" ;
-    uniform_location = this.gl.getUniformLocation(this.program, pos);
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".ambient" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
     this.map_uniform(uniform_location, "vec3", point_light[4]);
 
-    pos = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".diffuse" ;
-    uniform_location = this.gl.getUniformLocation(this.program, pos);
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".diffuse" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
     this.map_uniform(uniform_location, "vec3", point_light[5]);
 
-    pos = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".specular" ;
-    uniform_location = this.gl.getUniformLocation(this.program, pos);
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".specular" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
     this.map_uniform(uniform_location, "vec3", point_light[6]);
   }
 
