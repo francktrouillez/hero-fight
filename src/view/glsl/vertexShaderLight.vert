@@ -8,8 +8,6 @@ uniform mat4 V;
 uniform mat4 P;
 uniform vec2 u_aspect_ratio;
 
-
-varying vec4 vColor;
 varying vec2 vTexcoord;
 varying vec3 vnormal;
 varying vec3 vfrag_coord;

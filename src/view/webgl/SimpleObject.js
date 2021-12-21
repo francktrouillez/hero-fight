@@ -1,14 +1,14 @@
 class SimpleObject {
 
-  constructor(gl, texture_object, positions, textures, indexes, num_triangles, update) {
+  constructor(gl, texture_object, positions, textures, normals, num_vertex, update) {
     this.gl = gl;
 
     this.texture_object = texture_object;
 
     this.positions = positions;
     this.textures = textures;
-    this.indexes = indexes;
-    this.num_triangles = num_triangles;
+    this.num_vertex = num_vertex;
+    this.normals = normals;
     this.update = update;
     this.update_data = null;
 
@@ -32,12 +32,11 @@ class SimpleObject {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.texture_buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, this.textures, this.gl.STATIC_DRAW);
 
-    this.index_buffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.index_buffer);
-    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, this.indexes, this.gl.STATIC_DRAW);
+    this.normal_buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normal_buffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, this.normals, this.gl.STATIC_DRAW);
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
-    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
   }
 
   init_model() {
@@ -62,8 +61,11 @@ class SimpleObject {
     this.gl.enableVertexAttribArray(att_textcoord);
     this.gl.vertexAttribPointer(att_textcoord, 2, this.gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
 
-    // Indexes
-    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.index_buffer);
+    // Normals
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normal_buffer);
+    const att_normal = this.gl.getAttribLocation(program, 'aNormal');
+    this.gl.enableVertexAttribArray(att_normal);
+    this.gl.vertexAttribPointer(att_normal, 3, this.gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
   }
 
   translate(x, y, z) {
@@ -95,6 +97,6 @@ class SimpleObject {
   }
 
   draw() {
-    this.gl.drawElements(this.gl.TRIANGLES, this.num_triangles, this.gl.UNSIGNED_SHORT, 0);
+    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.num_vertex);
   }
 }

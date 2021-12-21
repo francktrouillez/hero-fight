@@ -11,7 +11,6 @@ class Camera {
     )
     this.projection = glMatrix.mat4.create();
     this.projection = glMatrix.mat4.perspective(this.projection, info.fov, info.aspect, info.near, info.far);
-    //this.bind_listener(document);
   }
   
   zoom(value) {
@@ -30,42 +29,6 @@ class Camera {
     this.view = glMatrix.mat4.rotate(this.view, this.view, value, glMatrix.vec3.fromValues(1.0, 0.0, 0.0));
   }
     
-  bind_listener(document) {
-    document.addEventListener('keydown', (event) => {
-      const key = event.key;
-      if (key === 'ArrowDown') {
-        this.move({x: 0.0, y: 0.05}); return;
-      }
-      else if (key === 'ArrowUp') {
-        this.move({x: 0.0, y: -0.05}); return;
-      }
-      else if (key === 'ArrowLeft') {
-        this.move({x: 0.05, y: 0.0}); return;
-      }
-      else if (key === 'ArrowRight') {
-        this.move({x: -0.05, y: 0.0}); return;
-      }
-      else if (key === '+') {
-        this.zoom(0.05); return;
-      }
-      else if (key === '-') {
-        this.zoom(-0.05); return;
-      }
-      else if (key == 'z') {
-        this.rotateX(0.05); return;
-      }
-      else if (key == 'q') {
-        this.rotateY(0.05); return;
-      }
-      else if (key == 's') {
-        this.rotateX(-0.05); return;
-      }
-      else if (key == 'd') {
-        this.rotateY(-0.05); return;
-      }
-    }, false);  
-  }
-
   set_position(pos){
     this.position = pos;
   }
