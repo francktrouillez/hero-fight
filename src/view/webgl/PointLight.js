@@ -17,6 +17,8 @@ class PointLight {
       this.pos = value;
     }
 
+    get_position(){return this.pos;}
+
     // Method used to get all the parameters of this light at once, this is used to update the uniform of the fragment shader
     get_values_list(){
         return [this.pos, this.constant, this.linear, this.quadratic, this.ambient, this.diffuse, this.specular];

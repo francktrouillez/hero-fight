@@ -3,19 +3,13 @@ class Camera {
   constructor(info) {
     // Position is useful for the lights ATTENTION needs to be updated accordingly to the movement of the cam
     this.position = glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z);
-    this.center = glMatrix.vec3.fromValues(info.center.x, info.center.y, info.center.z);
-    this.up = glMatrix.vec3.fromValues(info.up.x, info.up.y, info.up.z);
     this.view = glMatrix.mat4.create();
     this.view = glMatrix.mat4.lookAt(this.view, 
-      this.position, 
-      this.center, 
-      this.up
+      glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z), 
+      glMatrix.vec3.fromValues(info.center.x, info.center.y, info.center.z), 
+      glMatrix.vec3.fromValues(info.up.x, info.up.y, info.up.z)
     )
     this.projection = glMatrix.mat4.create();
-    this.fov = info.fov;
-    this.aspect = info.aspect;
-    this.near = info.near;
-    this.far = info.far;
     this.projection = glMatrix.mat4.perspective(this.projection, info.fov, info.aspect, info.near, info.far);
     //this.bind_listener(document);
   }
@@ -80,43 +74,12 @@ class Camera {
     return this.position;
   }
 
-  deg2rad(deg) {
-    var PI = Math.PI;
-    var rad = deg * (PI / 180.0);
-    return rad;
+  get_view_matrix(){
+    return this.view;
   }
 
-  update_camera_vectors() {
-    yawr = deg2rad(yaw)
-    pitchr = deg2rad(pitch)
-
-    fx = Math.cos(yawr) * Math.cos(pitchr);
-    fy = Math.sin(pitchr);
-    fz = Math.sin(yawr) * Math.cos(pitchr);
-
-    front = glMatrix.vec3.fromValues(fx, fy, fz);
-    front = glMatrix.vec3.normalize(front, front);
-
-    // recompute right, up
-    right = glMatrix.vec3.cross(right, front, world_up);
-    right = glMatrix.vec3.normalize(right, right);
-
-    up = glMatrix.vec3.cross(up, right, front);
-    up = glMatrix.vec3.normalize(up, up);
+  get_projection_matrix(){
+    return this.projection;
   }
-
-  get_view_matrix() {
-    center = glMatrix.vec3.create();
-    center = glMatrix.vec3.add(this.center, this.position, front);
-    View = glMatrix.mat4.create();
-    View = glMatrix.mat4.lookAt(View, position, center, up);
-    return View;
-}
-
-get_projection() {
-  var projection = glMatrix.mat4.create();
-  projection = glMatrix.mat4.perspective(projection, this.fov, this.aspect, this.near, this.far);
-  return projection;
-}
 
 }

@@ -97,6 +97,7 @@ class Program {
         let point_lights = map[key];
         for (let i=0; i<point_lights.length; i++){
           this.map_point_light(key,point_lights[i],i);
+          console.log(point_lights[i][0]);
         }
       }
       else{

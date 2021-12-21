@@ -33,16 +33,16 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragCoord, vec3 viewDir,
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
     // attenuation
-    float distance    = length(light.position - fragCoord);
+    float distance   = length(light.position - fragCoord);
     float attenuation = 1.0;
     if( (light.constant != 0.0) || (light.linear != 0.0) || (light.quadratic != 0.0) ){
       attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     }
 
     // combine results
-    vec3 ambient  = vec3( light.ambient * texelColor.rgb);
-    vec3 diffuse  = vec3( light.diffuse  * diff * texelColor.rgb) ;
-    vec3 specular = vec3( light.specular * spec * texelColor.rgb) ;
+    vec3 ambient  = vec3( light.ambient ); //texelColor.rgb);
+    vec3 diffuse  = vec3( light.diffuse  * diff); //* texelColor.rgb) ;
+    vec3 specular = vec3( light.specular * spec ); //* texelColor.rgb) ;
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;

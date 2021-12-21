@@ -90,7 +90,7 @@ async function main() {
 
   var camera = new Camera({
     eye: {
-      x: -5.0, y: 4.0, z: -5.0
+      x: -7.0, y: 3.0, z: 0.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
@@ -115,33 +115,24 @@ async function main() {
   var sun = new PointLight(sun_pos, 0.0, 0.0, 0.0, sun_ambient, sun_diffuse, null_vec);
 
   var teta_light1 = 0.0;
-  var radius_light1 = 8.0;
+  var radius_light1 = 2.0;
   //var light1_pos = glMatrix.vec3.fromValues(radius_light1*Math.cos(teta_light1), 0.0,radius_light1*Math.sin(teta_light1));
-  var light1_pos = glMatrix.vec3.fromValues(radius_light1*Math.cos(teta_light1), 0.0,radius_light1*Math.sin(teta_light1));
+  var light1_pos = glMatrix.vec3.fromValues(0.0, 0.0, 0.0);
   var light1_color = glMatrix.vec3.fromValues(0.6,0.6,0.6);
-  var light1_specular = glMatrix.vec3.fromValues(50.0,50.0,200.0);
-  var light1 = new PointLight(light1_pos, 0.0, 2.0, 0.0, null_vec, light1_color, light1_specular);
+  var light1_specular = glMatrix.vec3.fromValues(50.0,50.0,250.0);
+  var light1 = new PointLight(light1_pos, 0.0, 3.0, 0.0, null_vec, light1_color, light1_specular);
 
   var teta_light2 = Math.PI;
   var radius_light2 = 8.0;
   var light2_pos = glMatrix.vec3.fromValues(radius_light2*Math.cos(teta_light2), 0.0,radius_light2*Math.sin(teta_light2));
   var light2_color = glMatrix.vec3.fromValues(0.6,0.6,0.6);
   var light2_specular = glMatrix.vec3.fromValues(200.0,50.0,50.0);
-  var light2 = new PointLight(light2_pos, 0.0, 2.0, 0.0, null_vec, light2_color, light2_specular);
+  var light2 = new PointLight(light2_pos, 0.0, 1.0, 0.0, null_vec, null_vec, null_vec);
 
-  var light3_pos = glMatrix.vec3.fromValues(0.0,6.0,0.0);
+  var light3_pos = glMatrix.vec3.fromValues(0.0,0.0,0.0);
   var light3_color = glMatrix.vec3.fromValues(0.6,0.6,0.6);
-  var light3_specular = glMatrix.vec3.fromValues(50.0,200.0,50.0);
-  var light3 = new PointLight(light3_pos, 0.0, 2.0, 0.0, null_vec, light3_color, light3_specular);
-
-  console.log("Blue");
-  console.log(light1_pos);
-  console.log("Red");
-  console.log(light2_pos);
-  console.log("Green");
-  console.log(light3_pos);
-  console.log("Cam");
-  console.log(camera.get_position());
+  var light3_specular = glMatrix.vec3.fromValues(50.0,250.0,50.0);
+  var light3 = new PointLight(light3_pos, 0.0, 1.0, 0.0, null_vec, null_vec, null_vec);
 
   //Fill the list used to regroup all the light and send it to the render object dict to update the uniform accordingly
   let point_lights_list = [sun.get_values_list(), light1.get_values_list(), light2.get_values_list(), light3.get_values_list()];
@@ -151,7 +142,7 @@ async function main() {
     key_aspect_ratio: aspect.ratio,
     key_model: model_1.model,
     key_view: camera.get_view_matrix(),
-    key_projection: camera.get_projection(),
+    key_projection: camera.get_projection_matrix(),
     key_ITMatrix: model_1.model,
     key_view_pos: camera.get_position(),
     key_point_ligths: point_lights_list
@@ -162,7 +153,7 @@ async function main() {
     key_aspect_ratio: aspect.ratio,
     key_model: model_2.model,
     key_view: camera.get_view_matrix(),
-    key_projection: camera.get_projection(),
+    key_projection: camera.get_projection_matrix(),
     key_ITMatrix: model_2.model,
     key_view_pos: camera.get_position(),
     key_point_ligths: point_lights_list
@@ -173,6 +164,7 @@ async function main() {
 
   var game_controller = new GameController(document, render_objects);
 
+  var pos_light1 = -1.0;
   function render() {
     // Model update
     game_controller.update();
@@ -187,12 +179,12 @@ async function main() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
     // Update the uniforms
-    teta_light1 += 0.0;
-    teta_light2 += 0.0;
-    if(teta_light1 >= 2*Math.PI){teta_light1 = 0.0;}
-    if(teta_light2 >= 2*Math.PI){teta_light2 = 0.0;}
-    light1.set_position(glMatrix.vec3.fromValues(radius_light1*Math.cos(teta_light1), 0.0,radius_light1*Math.sin(teta_light1)));
-    light2.set_position(glMatrix.vec3.fromValues(radius_light2*Math.cos(teta_light2), 0.0,radius_light2*Math.sin(teta_light2)));
+    pos_light1 += 0.001;
+    //teta_light2 += 0.0;
+    //if(teta_light1 >= 2*Math.PI){teta_light1 = 0.0;}
+    //if(teta_light2 >= 2*Math.PI){teta_light2 = 0.0;}
+    light1.set_position(glMatrix.vec3.fromValues(0.0, 0.0, pos_light1));
+    //light2.set_position(glMatrix.vec3.fromValues(radius_light2*Math.cos(teta_light2), 0.0,radius_light2*Math.sin(teta_light2)));
     point_lights_list = [sun.get_values_list(), light1.get_values_list(), light2.get_values_list(), light3.get_values_list()];
 
     for (const render_object of render_objects) {
