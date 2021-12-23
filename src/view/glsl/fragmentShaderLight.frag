@@ -9,10 +9,21 @@ struct PointLight {
     float quadratic;  
 
     //Parameters for the intensity/color of each part of the light
+    float ambient;
+    float diffuse;
+    float specular;
+
+    vec3 color;
+}; 
+
+// Used to influence how the object react to the different component of the ligth
+struct Material {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+    float shininess;
 }; 
+  
 
 varying vec2 vTexcoord;
 varying vec3 vnormal;
@@ -23,15 +34,16 @@ uniform vec3 u_view_pos;
 
 #define NB_POINT_LIGHTS 4
 uniform PointLight u_point_ligths_list[NB_POINT_LIGHTS];
+uniform Material u_material;
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragCoord, vec3 viewDir, float shininess, vec4 texelColor)
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragCoord, vec3 viewDir, vec4 texelColor)
 {
     vec3 lightDir = normalize(light.position - fragCoord);
     // diffuse light
     float diff = max(dot(normal, lightDir), 0.0);
     // specular light
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_material.shininess);
     // attenuation
     float distance = length(light.position - fragCoord);
     float attenuation = 1.0;
@@ -40,14 +52,14 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragCoord, vec3 viewDir,
     }
 
     // combine results
-    vec3 ambient  = light.ambient ;
-    vec3 diffuse  = light.diffuse  * diff  ;
-    vec3 specular = light.specular * spec  ;
+    vec3 ambient  = light.ambient * u_material.ambient * light.color;
+    vec3 diffuse  = light.diffuse  * diff * u_material.diffuse * light.color ;
+    vec3 specular = light.specular * spec  * u_material.specular * light.color;
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
 
-    return vec3( (ambient + diffuse + specular ));
+    return vec3( (ambient + diffuse + specular )*texelColor.rgb); 
 } 
 
 
@@ -60,7 +72,7 @@ void main() {
 
   vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
   for(int i=0; i<NB_POINT_LIGHTS; ++i){
-    lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, 32.0, texelColor);
+    lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, texelColor);
   }
 
   //vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));

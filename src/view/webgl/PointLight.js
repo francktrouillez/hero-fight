@@ -1,5 +1,5 @@
 class PointLight {
-    constructor(position, constant, linear, quadratic, ambient, diffuse, specular) {
+    constructor(position, constant, linear, quadratic, ambient, diffuse, specular, light_color) {
         this.pos = position;
 
         // Paramters linked to the attenuation
@@ -11,6 +11,8 @@ class PointLight {
         this.ambient = ambient;
         this.diffuse = diffuse;
         this.specular = specular;
+
+        this.color = light_color;
     }
   
     set_position(value) {
@@ -18,10 +20,5 @@ class PointLight {
     }
 
     get_position(){return this.pos;}
-
-    // Method used to get all the parameters of this light at once, this is used to update the uniform of the fragment shader
-    get_values_list(){
-        return [this.pos, this.constant, this.linear, this.quadratic, this.ambient, this.diffuse, this.specular];
-    }
   
   }
