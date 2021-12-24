@@ -9,8 +9,6 @@ class Camera {
       glMatrix.vec3.fromValues(info.center.x, info.center.y, info.center.z), 
       glMatrix.vec3.fromValues(info.up.x, info.up.y, info.up.z)
     )
-    console.log("Original view");
-    console.log(this.view);
     this.projection = glMatrix.mat4.create();
     this.projection = glMatrix.mat4.perspective(this.projection, info.fov, info.aspect, info.near, info.far);
   }

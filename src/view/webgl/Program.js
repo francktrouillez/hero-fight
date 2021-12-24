@@ -116,6 +116,14 @@ class Program {
     this.map_uniform(uniform_location, "float", material.shininess);
   }
 
+  // Method used to calculate the inverse matrix called in render vefore updating the uniform variable
+  updateITMatrix(map) {
+    var itM = glMatrix.mat4.create();
+    itM = glMatrix.mat4.invert(itM, map["key_model"]);
+    itM = glMatrix.mat4.transpose(itM, itM);
+    map["key_ITMatrix"] = itM;
+  }
+
 
   manage_uniforms(map) {
     for (let key in this.uniforms_map) {
@@ -130,9 +138,15 @@ class Program {
       else if(this.uniforms_map[key].type == "material"){
         this.map_material(key, map[key]);
       }
+      //If it was the turn of the uniform itmatrix
+      else if(key == "key_ITMatrix"){
+        this.updateITMatrix(map);
+        const uniform_location = this.gl.getUniformLocation(this.program, this.uniforms_map[key].variable);
+        this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key]);
+      }
       else{
         const uniform_location = this.gl.getUniformLocation(this.program, this.uniforms_map[key].variable);
-        this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key])
+        this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key]);
       }
     }
   }

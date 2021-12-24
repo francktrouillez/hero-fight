@@ -28,6 +28,9 @@ class ComplexObject {
     this.position = null;
     this.init_model();
 
+    console.log("Model in complexe obj");
+    console.log(this.model);
+
   }
 
   load_obj(obj_content) {
@@ -168,6 +171,10 @@ class ComplexObject {
     this.position = {
       x: x, y: y, z: z
     }
+  }
+
+  scale(value){
+    this.model = glMatrix.mat4.scale(this.model, this.model, glMatrix.vec3.fromValues(value,value,value));
   }
 
   setAngle(value, x, y, z) {

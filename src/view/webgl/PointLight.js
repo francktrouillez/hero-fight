@@ -1,6 +1,6 @@
 class PointLight {
-    constructor(position, constant, linear, quadratic, ambient, diffuse, specular, light_color) {
-        this.pos = position;
+    constructor(position_init, constant, linear, quadratic, ambient, diffuse, specular, light_color) {
+        this.pos = position_init;
 
         // Paramters linked to the attenuation
         this.constant = constant;
