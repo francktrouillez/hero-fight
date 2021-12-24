@@ -45,5 +45,7 @@ def parse_frame(lines):
       out += line
   return out
 
-for i in range(41):
-  write_file("idle/"+ str(i) + ".obj", parse_frame(read_file("raw/" + str(i) + ".obj")), )
+for i in range(19):
+  write_file("filtered/"+ str(i) + ".obj", parse_obj(read_file("raw/" + str(i) + ".obj"), "Warrior_Full_Texture", 1))
+
+#write_file("WarriorSimple.obj", parse_obj(read_file("raw/Warrior.obj"), "Warrior_Full_Texture", 1))

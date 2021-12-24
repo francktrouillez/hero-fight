@@ -7,10 +7,12 @@ class Fight {
   }
 
   update() {
+    var action
     if(this.hero.get_life() > 0 && this.monster.get_life() > 0) {
       this.hero.controller.fight_controller.show_menu();
-      if (!this.hero.play(this.monster)) {
-        return false;
+      action = this.hero.play(this.monster)
+      if (action == -1) {
+        return -1;
       }
       this.hero.controller.fight_controller.hide_menu();
       if (this.monster.get_life() > 0) {
@@ -23,7 +25,7 @@ class Fight {
         this.winner = this.monster;
       }
     }
-    return true;
+    return action;
   }
 
 

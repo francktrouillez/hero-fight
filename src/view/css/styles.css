@@ -75,6 +75,44 @@ html, body {
     font-weight: bold;
 }
 
+#loading_screen {
+    position:absolute;
+    top:0px;
+    right:0px;
+    bottom:0px;
+    left:0px;
+    background-color: black;
+    justify-content: space-evenly;
+    display: flex;
+}
+
+#loading_info {
+    position: absolute;
+    bottom: 200px;
+    right: 200px;
+    left:200px;
+    height:200px;
+    justify-content: space-evenly;
+    display: flex;
+}
+
+#loading_text {
+    vertical-align: middle;
+    color: white;
+    font-size: 70px;
+    font-weight: bold;
+}
+
+#loading_img_container {
+    position: absolute;
+    top: 150px;
+    height: 300px;
+}
+
+#loading_gif {
+    vertical-align: middle;
+}
+
 
 
 

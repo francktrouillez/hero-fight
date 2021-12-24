@@ -38,7 +38,7 @@ class Hero extends Character {
     /* Choose an action */
     const action = this.controller.fight_controller.request_action();
     if (action == null) {
-      return false;
+      return -1;
     }
     if (action == "attack") {
       this.attack_character(opponent);
@@ -52,7 +52,7 @@ class Hero extends Character {
       throw new Error("Action not known by hero : " + action)
     }
     this.controller.fight_controller.reset_action();
-    return true;
+    return action;
   }
 
   /* Special setters (with controller)*/

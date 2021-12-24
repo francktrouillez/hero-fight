@@ -1,5 +1,7 @@
 async function main() {
 
+  var fps = 60;
+
   images = await charge_images([
     "./src/view/assets/textures/cat.jpg",
     "./src/view/assets/textures/Warrior_Full_Texture.png"
@@ -55,9 +57,20 @@ async function main() {
   }
 
   const model_obj = await read_file("./src/view/assets/models/Warrior/Warrior.obj")
-  var obj_animation_map = {"idle":[]}
-  for (let i = 0; i <= 20; i+=4) {
+  var obj_animation_map = {
+    "idle": [],
+    "attack": [],
+    "buff": []
+  
+  }
+  for (let i = 0; i <= 15; i++) {
     obj_animation_map["idle"].push(await(read_file("./src/view/assets/models/Warrior/idle/" + i + ".obj")))
+  }
+  for (let i = 0; i <= 20; i++) {
+    obj_animation_map["attack"].push(await(read_file("./src/view/assets/models/Warrior/attack/" + i + ".obj")))
+  }
+  for (let i = 0; i <= 18; i++) {
+    obj_animation_map["buff"].push(await(read_file("./src/view/assets/models/Warrior/punch/" + i + ".obj")))
   }
 
   var model_1 = new AnimatedObject(gl, model_obj, obj_animation_map);
@@ -86,7 +99,7 @@ async function main() {
 
   var camera_controller = new CameraController(document, camera);
 
-  render_object_1 = new RenderObject(model_1, program, camera, {
+  hero_render_object = new RenderObject(model_1, program, camera, {
     "tex0": model_1.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
     "model": model_1.model,
@@ -94,7 +107,7 @@ async function main() {
     "proj": camera.projection
   });
 
-  render_object_2 = new RenderObject(cube_2, program, camera, {
+  opponent_render_object = new RenderObject(cube_2, program, camera, {
     "tex0": cube_2.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
     "model": cube_2.model,
@@ -105,13 +118,15 @@ async function main() {
   //cube_1.setXYZ(-4.0, 0.0, 0.0);
   cube_2.setXYZ(4.0, 0.0, 0.0);
 
-  var render_objects = [render_object_1, render_object_2];
-
+  var render_objects = {
+    "hero": hero_render_object,
+    "opponent": opponent_render_object
+  }
   var game_controller = new GameController(document, render_objects);
 
   function render() {
     // Model update
-    game_controller.update();
+    game_controller.update(fps);
 
     //Draw loop
     gl.clearColor(0.2, 0.2, 0.2, 1);
@@ -122,12 +137,15 @@ async function main() {
   
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
-    for (const render_object of render_objects) {
-      render_object.render();
-    }    
+    for (var render_id in render_objects) {
+      render_objects[render_id].render();
+    }
+    
     window.requestAnimationFrame(render); // While(True) loop!
   }
   
+  document.getElementById('loading_screen').style.visibility = "hidden";
+
   render();
 
 

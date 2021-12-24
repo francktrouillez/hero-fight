@@ -3,7 +3,8 @@ class Game {
   static REST = 0;
   static ANIMATION_REST = 1;
   static FIGHTING = 2;
-  static ANIMATION_FIGHTING = 3;
+  static ANIMATION_FIGHTING_ATTACK = 3;
+  static ANIMATION_FIGHTING_BUFF = 6;
   static GETTING_XP = 4;
   static ANIMATION_GETTING_XP = 5;
 
@@ -31,7 +32,9 @@ class Game {
       this.wait_for_rest_animation();
     } else if (this.state == Game.FIGHTING) {
       this.continue_fight();
-    } else if (this.state == Game.ANIMATION_FIGHTING) {
+    } else if (this.state == Game.ANIMATION_FIGHTING_ATTACK) {
+      this.wait_for_fighting_animation();
+    } else if (this.state == Game.ANIMATION_FIGHTING_BUFF) {
       this.wait_for_fighting_animation();
     } else if (this.state == Game.GETTING_XP) {
       this.continue_get_xp();
@@ -69,9 +72,12 @@ class Game {
     } else if (new_state == Game.FIGHTING) {
       this.opponent_controller.show_stats();
       this.state = Game.FIGHTING;
-    } else if (new_state == Game.ANIMATION_FIGHTING){
+    } else if (new_state == Game.ANIMATION_FIGHTING_ATTACK){
       this.animating = true;
-      this.state = Game.ANIMATION_FIGHTING;
+      this.state = Game.ANIMATION_FIGHTING_ATTACK;
+    } else if (new_state == Game.ANIMATION_FIGHTING_BUFF){
+      this.animating = true;
+      this.state = Game.ANIMATION_FIGHTING_BUFF;
     } else if (new_state == Game.GETTING_XP) {
       this.opponent_controller.hide_stats();
       this.state = Game.GETTING_XP;
@@ -96,8 +102,13 @@ class Game {
   }
 
   continue_fight() {
-    if (this.fight.update()) {
-      this.switch_state(Game.ANIMATION_FIGHTING);
+    const action = this.fight.update()
+    if (action != -1) {
+      if (action == "attack") {
+        this.switch_state(Game.ANIMATION_FIGHTING_ATTACK);
+      } else {
+        this.switch_state(Game.ANIMATION_FIGHTING_BUFF);
+      }
     }
     if (this.fight.get_winner() == null) {
       return;
