@@ -14,7 +14,7 @@ def extend_str(str, end_value):
     str += "0"
   return str
 
-def parse(lines, new_tex, first_tex_counter):
+def parse_obj(lines, new_tex, first_tex_counter):
   out = ""
   for line in lines:
     elements = line.split(' ')
@@ -37,4 +37,13 @@ def parse(lines, new_tex, first_tex_counter):
   out = "usemtl "+ new_tex + '\n' + out
   return out
 
-write_file("Full_Warrior.obj", parse(read_file("Warrior.obj"), "Warrior_Full_Texture", 1), )
+def parse_frame(lines):
+  out = ""
+  for line in lines:
+    elements = line.split(' ')
+    if elements[0] == 'v' or elements[0] == "vn":
+      out += line
+  return out
+
+for i in range(41):
+  write_file("idle/"+ str(i) + ".obj", parse_frame(read_file("raw/" + str(i) + ".obj")), )

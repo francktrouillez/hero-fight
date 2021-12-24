@@ -54,13 +54,13 @@ async function main() {
     tex_positions = tex_positions.concat(tex_face);
   }
 
-  const model_obj = await read_file("./src/view/assets/models/Full_Warrior.obj")
+  const model_obj = await read_file("./src/view/assets/models/Warrior/Warrior.obj")
+  var obj_animation_map = {"idle":[]}
+  for (let i = 0; i <= 20; i+=4) {
+    obj_animation_map["idle"].push(await(read_file("./src/view/assets/models/Warrior/idle/" + i + ".obj")))
+  }
 
-  var model_1 = new ComplexObject(gl, model_obj, 
-    function() {
-      return;
-    }
-  );
+  var model_1 = new AnimatedObject(gl, model_obj, obj_animation_map);
 
   var cube_2 = new Cube(gl, tex_cat, new Float32Array(tex_positions), 
     function() {

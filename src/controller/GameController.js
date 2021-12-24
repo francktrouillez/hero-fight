@@ -22,20 +22,17 @@ class GameController {
     } else if (this.game.animating) {
       this.animating = true;
       if (this.game.state == Game.ANIMATION_REST) {
-        this.animation_steps = 30;
+        this.animation_steps = 300;
         this.render_objects[0].object.update_data = {
-          up: 15,
-          down: 15
+          animation: "idle",
+          frame_id: 0,
+          max_frame: 5
         }
         this.render_objects[0].object.update = function() {
-          this.rotate(Math.PI/30, 0.0, 0.0, 1.0);
-          if (this.update_data.up > 0) {
-            this.translate(0.0, 0.0, 0.05);
-            this.update_data.up -= 1;
-          } else if (this.update_data.down > 0){
-            this.translate(0.0, 0.0, -0.05);
-            this.update_data.down -= 1;
-          }
+          var frame_buffers = this.obj_vertex_animation[this.update_data.animation][this.update_data.frame_id]
+          this.position_buffer = frame_buffers["positions"]
+          this.normal_buffer = frame_buffers["normals"]
+          this.update_data.frame_id = (this.update_data.frame_id + 1)%this.update_data.max_frame
         }
       } else if (this.game.state == Game.ANIMATION_FIGHTING) {
         this.animation_steps = 30;
