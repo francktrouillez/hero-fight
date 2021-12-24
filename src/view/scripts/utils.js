@@ -46,3 +46,11 @@ async function charge_images(urls) {
   }
   return images
 }
+
+function charge_audios(urls) {
+  var audios = {}
+  for (const url of urls) {
+    audios[url] = new Audio(url)
+  }
+  return audios
+}

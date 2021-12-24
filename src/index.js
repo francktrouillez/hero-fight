@@ -7,6 +7,10 @@ async function main() {
     "./src/view/assets/textures/Warrior_Full_Texture.png"
   ]);
 
+  audios = charge_audios([
+    "./src/view/assets/sounds/sword_slash.mp3",
+  ])
+
   // Boilerplate code
   const canvas = document.getElementById('webgl_canvas');
   const gl = canvas.getContext('webgl');

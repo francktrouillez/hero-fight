@@ -63,7 +63,7 @@ class GameController {
           }
         }
       } else if (this.game.state == Game.ANIMATION_FIGHTING_ATTACK) {
-        this.animation_steps = fps/30*30;
+        this.animation_steps = fps/30*20;
         this.render_objects["hero"].object.update_data = {
           animation: "attack",
           frame_id: 0,
@@ -71,6 +71,7 @@ class GameController {
           max_renders: 20*parseInt(fps/30),
           renders_per_frames: parseInt(fps/30)
         }
+        audios["./src/view/assets/sounds/sword_slash.mp3"].play();
         this.render_objects["hero"].object.update = function() {
           if (this.update_data.frame_id > this.update_data.max_renders) {
             return;
@@ -84,7 +85,7 @@ class GameController {
           this.update_data.frame_id += this.update_data.increment
         }
       } else if (this.game.state == Game.ANIMATION_FIGHTING_BUFF) {
-        this.animation_steps = fps/30*60;
+        this.animation_steps = fps/30*18;
         this.render_objects["hero"].object.update_data = {
           animation: "buff",
           frame_id: 0,
@@ -107,7 +108,7 @@ class GameController {
           }
         }
       } else if (this.game.state == Game.ANIMATION_GETTING_XP) {
-        this.animation_steps = 30;
+        this.animation_steps = 0;
         // this.render_objects[0].object.update_data = {
         //   front: 15,
         //   back: 15
