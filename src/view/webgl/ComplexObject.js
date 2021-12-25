@@ -17,7 +17,6 @@ class ComplexObject {
     this.normal_buffer = null
     this.texture_buffer = null;
 
-
     this.init_buffers();
 
     this.update = update;
@@ -27,6 +26,9 @@ class ComplexObject {
     this.model = null;
     this.position = null;
     this.init_model();
+
+    console.log("Model in complexe obj");
+    console.log(this.model);
 
   }
 
@@ -168,6 +170,14 @@ class ComplexObject {
     this.position = {
       x: x, y: y, z: z
     }
+  }
+
+  // Scale the position on the space of the object by th sent value
+  scale(value){
+    for(let pos in this.positions){
+      this.positions[pos] = this.positions[pos] * value;
+    }
+    this.init_buffers();
   }
 
   setAngle(value, x, y, z) {
