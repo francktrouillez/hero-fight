@@ -7,7 +7,6 @@ class Wisp extends PointLight{
 
         //This is the complex object that will hold all values concerning the display aspect of the wisp
         this.object = object;
-
         this.modify_model();
     }
 
@@ -26,9 +25,6 @@ class Wisp extends PointLight{
     move(value){
         this.pos = glMatrix.vec3.add(this.pos,this.pos,value);
         this.object.translate(value[0],value[1],value[2]);    
-
-        console.log("Coord");
-        console.log(this.object.position);
     }
   
 }
