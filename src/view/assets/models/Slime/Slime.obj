@@ -1,6 +1,6 @@
 usemtl Slime_Texture
-vt 0.000000 0.000000
-vt 0.500000 0.000000
+vt 0.250000 0.500000
+vt 0.750000 0.500000
 # Blender v2.93.6 OBJ File: 'Slime.blend'
 # www.blender.org
 mtllib 5.mtl

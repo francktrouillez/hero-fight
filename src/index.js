@@ -4,7 +4,8 @@ async function main() {
 
   images = await charge_images([
     "./src/view/assets/textures/cat.jpg",
-    "./src/view/assets/textures/Warrior_Full_Texture.png"
+    "./src/view/assets/textures/Warrior_Full_Texture.png",
+    "./src/view/assets/textures/Slime_Texture.png"
   ]);
 
   audios = charge_audios([
@@ -60,30 +61,40 @@ async function main() {
     tex_positions = tex_positions.concat(tex_face);
   }
 
-  const model_obj = await read_file("./src/view/assets/models/Warrior/Warrior.obj")
-  var obj_animation_map = {
+  const hero_obj = await read_file("./src/view/assets/models/Warrior/Warrior.obj")
+  var obj_animation_map_hero = {
     "idle": [],
     "attack": [],
     "buff": []
   
   }
   for (let i = 0; i <= 15; i++) {
-    obj_animation_map["idle"].push(await(read_file("./src/view/assets/models/Warrior/idle/" + i + ".obj")))
+    obj_animation_map_hero["idle"].push(await(read_file("./src/view/assets/models/Warrior/idle/" + i + ".obj")))
   }
   for (let i = 0; i <= 20; i++) {
-    obj_animation_map["attack"].push(await(read_file("./src/view/assets/models/Warrior/attack/" + i + ".obj")))
+    obj_animation_map_hero["attack"].push(await(read_file("./src/view/assets/models/Warrior/attack/" + i + ".obj")))
   }
   for (let i = 0; i <= 18; i++) {
-    obj_animation_map["buff"].push(await(read_file("./src/view/assets/models/Warrior/punch/" + i + ".obj")))
+    obj_animation_map_hero["buff"].push(await(read_file("./src/view/assets/models/Warrior/punch/" + i + ".obj")))
   }
 
-  var model_1 = new AnimatedObject(gl, model_obj, obj_animation_map);
+  var model_1 = new AnimatedObject(gl, hero_obj, obj_animation_map_hero);
 
-  var cube_2 = new Cube(gl, tex_cat, new Float32Array(tex_positions), 
-    function() {
-      return;
-    }
-  );
+  const slime_obj = await read_file("./src/view/assets/models/Slime/Slime.obj")
+  var obj_animation_map_slime = {
+    "idle": [],
+    "attack": []
+  
+  }
+  for (let i = 0; i <= 20; i++) {
+    obj_animation_map_slime["idle"].push(await(read_file("./src/view/assets/models/Slime/idle/" + i + ".obj")))
+  }
+  for (let i = 0; i <= 15; i++) {
+    obj_animation_map_slime["attack"].push(await(read_file("./src/view/assets/models/slime/attack/" + i + ".obj")))
+  }
+
+  var model_2 = new AnimatedObject(gl, slime_obj, obj_animation_map_slime);
+
 
   var camera = new Camera({
     eye: {
@@ -111,16 +122,18 @@ async function main() {
     "proj": camera.projection
   });
 
-  opponent_render_object = new RenderObject(cube_2, program, camera, {
-    "tex0": cube_2.texture_object.gl_texture,
+  opponent_render_object = new RenderObject(model_2, program, camera, {
+    "tex0": model_2.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
-    "model": cube_2.model,
+    "model": model_2.model,
     "view": camera.view,
     "proj": camera.projection
   });
 
-  //cube_1.setXYZ(-4.0, 0.0, 0.0);
-  cube_2.setXYZ(4.0, 0.0, 0.0);
+  model_1.setXYZ(-4.0, 0.0, 0.0);
+  model_1.rotate(90, 0.0, 1.0, 0.0);
+  model_2.setXYZ(4.0, 0.0, 0.0);
+  model_2.rotate(180*3.14/180, 0.0, 1.0, 0.0);
 
   var render_objects = {
     "hero": hero_render_object,

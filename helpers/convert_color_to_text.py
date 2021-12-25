@@ -16,10 +16,10 @@ def extend_str(str, end_value):
 
 def parse_obj(lines, new_tex, number_of_colors):
   out = ""
-  text_x = 0
   step_tex = 1/number_of_colors
+  text_x = step_tex/2
   for _ in range(number_of_colors):
-    out += "vt " + extend_str(str(round(float(text_x), 6)), 8) + " 0.000000\n"
+    out += "vt " + extend_str(str(round(float(text_x), 6)), 8) + " 0.500000\n"
     text_x += step_tex
   
   text_counter = 0
@@ -44,7 +44,7 @@ def parse_obj(lines, new_tex, number_of_colors):
   return out
 
 
-for i in range(21):
+for i in range(16):
   write_file("filtered/"+ str(i) + ".obj", parse_obj(read_file("raw/" + str(i) + ".obj"), "Slime_Texture", 2))
 
 #write_file("WarriorSimple.obj", parse_obj(read_file("raw/Warrior.obj"), "Warrior_Full_Texture", 1))

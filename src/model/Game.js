@@ -4,6 +4,8 @@ class Game {
   static ANIMATION_REST = 1;
   static FIGHTING = 2;
   static ANIMATION_FIGHTING_ATTACK = 3;
+  static ANIMATION_FIGHTING_ATTACK_WITH_MONSTER = 7;
+  static ANIMATION_FIGHTING_MONSTER = 8;
   static ANIMATION_FIGHTING_BUFF = 6;
   static GETTING_XP = 4;
   static ANIMATION_GETTING_XP = 5;
@@ -34,8 +36,13 @@ class Game {
       this.continue_fight();
     } else if (this.state == Game.ANIMATION_FIGHTING_ATTACK) {
       this.wait_for_fighting_animation();
-    } else if (this.state == Game.ANIMATION_FIGHTING_BUFF) {
+    } else if (this.state == Game.ANIMATION_FIGHTING_ATTACK_WITH_MONSTER) {
+      this.wait_for_attack_animation();
+    } else if (this.state == Game.ANIMATION_FIGHTING_MONSTER) {
+      console.log("update monster")
       this.wait_for_fighting_animation();
+    } else if (this.state == Game.ANIMATION_FIGHTING_BUFF) {
+      this.wait_for_attack_animation();
     } else if (this.state == Game.GETTING_XP) {
       this.continue_get_xp();
     } else if (this.state == Game.ANIMATION_GETTING_XP) {
@@ -52,6 +59,12 @@ class Game {
   wait_for_fighting_animation() {
     if (!this.animating) {
       this.switch_state(Game.FIGHTING);
+    }
+  }
+
+  wait_for_attack_animation() {
+    if (!this.animating) {
+      this.switch_state(Game.ANIMATION_FIGHTING_MONSTER);
     }
   }
 
@@ -75,6 +88,12 @@ class Game {
     } else if (new_state == Game.ANIMATION_FIGHTING_ATTACK){
       this.animating = true;
       this.state = Game.ANIMATION_FIGHTING_ATTACK;
+    } else if (new_state == Game.ANIMATION_FIGHTING_ATTACK_WITH_MONSTER){
+      this.animating = true;
+      this.state = Game.ANIMATION_FIGHTING_ATTACK_WITH_MONSTER;
+    } else if (new_state == Game.ANIMATION_FIGHTING_MONSTER){
+      this.animating = true;
+      this.state = Game.ANIMATION_FIGHTING_MONSTER;
     } else if (new_state == Game.ANIMATION_FIGHTING_BUFF){
       this.animating = true;
       this.state = Game.ANIMATION_FIGHTING_BUFF;
@@ -103,10 +122,15 @@ class Game {
 
   continue_fight() {
     const action = this.fight.update()
-    if (action != -1) {
-      if (action == "attack") {
+    if (action[0] != -1) {
+      if (action[0] == "attack" && action[1] == null) {
+        console.log("attack only")
         this.switch_state(Game.ANIMATION_FIGHTING_ATTACK);
+      } else if (action[0] == "attack" && action[1] != null){
+        console.log("attack with monster")
+        this.switch_state(Game.ANIMATION_FIGHTING_ATTACK_WITH_MONSTER);
       } else {
+        console.log("buff")
         this.switch_state(Game.ANIMATION_FIGHTING_BUFF);
       }
     }

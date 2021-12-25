@@ -36,6 +36,22 @@ class GameController {
             this.update_data.increment = 1;
           }
         }
+        this.render_objects["opponent"].object.update_data = {
+          animation: "idle",
+          frame_id: 0,
+          increment: 1,
+          max_renders: 20*parseInt(fps/30),
+          renders_per_frames: parseInt(fps/30)*2
+        }
+        this.render_objects["opponent"].object.update = function() {
+          const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
+          var frame_buffers = this.obj_vertex_animation[this.update_data.animation][id_frame]
+          this.position_buffer = frame_buffers["positions"]
+          this.normal_buffer = frame_buffers["normals"]
+          this.texture_buffer = frame_buffers["textures"]
+          this.num_vertex = this.triangles_index_map[this.update_data.animation][id_frame].length * 3;
+          this.update_data.frame_id = (this.update_data.frame_id + 1)%(this.update_data.max_renders*2)
+        }
       }
     } else if (this.game.animating) {
       this.animating = true;
@@ -62,7 +78,23 @@ class GameController {
             this.update_data.increment = 1;
           }
         }
-      } else if (this.game.state == Game.ANIMATION_FIGHTING_ATTACK) {
+        this.render_objects["opponent"].object.update_data = {
+          animation: "idle",
+          frame_id: 0,
+          increment: 1,
+          max_renders: 20*parseInt(fps/30),
+          renders_per_frames: parseInt(fps/30)*2
+        }
+        this.render_objects["opponent"].object.update = function() {
+          const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
+          var frame_buffers = this.obj_vertex_animation[this.update_data.animation][id_frame]
+          this.position_buffer = frame_buffers["positions"]
+          this.normal_buffer = frame_buffers["normals"]
+          this.texture_buffer = frame_buffers["textures"]
+          this.num_vertex = this.triangles_index_map[this.update_data.animation][id_frame].length * 3;
+          this.update_data.frame_id = (this.update_data.frame_id + 1)%(this.update_data.max_renders*2)
+        }
+      } else if (this.game.state == Game.ANIMATION_FIGHTING_ATTACK || this.game.state == Game.ANIMATION_FIGHTING_ATTACK_WITH_MONSTER) {
         this.animation_steps = fps/30*20;
         this.render_objects["hero"].object.update_data = {
           animation: "attack",
@@ -73,6 +105,28 @@ class GameController {
         }
         audios["./src/view/assets/sounds/sword_slash.mp3"].play();
         this.render_objects["hero"].object.update = function() {
+          if (this.update_data.frame_id > this.update_data.max_renders) {
+            return;
+          }
+          const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
+          var frame_buffers = this.obj_vertex_animation[this.update_data.animation][id_frame]
+          this.position_buffer = frame_buffers["positions"]
+          this.normal_buffer = frame_buffers["normals"]
+          this.texture_buffer = frame_buffers["textures"]
+          this.num_vertex = this.triangles_index_map[this.update_data.animation][id_frame].length * 3;
+          this.update_data.frame_id += this.update_data.increment
+        }
+      } else if (this.game.state == Game.ANIMATION_FIGHTING_MONSTER) {
+        console.log("anim gamecontroller")
+        this.animation_steps = fps/30*15;
+        this.render_objects["opponent"].object.update_data = {
+          animation: "attack",
+          frame_id: 0,
+          increment: 1,
+          max_renders: 15*parseInt(fps/30),
+          renders_per_frames: parseInt(fps/30)
+        }
+        this.render_objects["opponent"].object.update = function() {
           if (this.update_data.frame_id > this.update_data.max_renders) {
             return;
           }

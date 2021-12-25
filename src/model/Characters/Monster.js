@@ -13,7 +13,7 @@ class Monster extends Character {
   /* Methods */
 
   play(opponent) {
-    this.attack_character(opponent); return;
+    this.attack_character(opponent); return "attack";
     let action = Math.floor(Math.random() * 4);
     if (action == Monster.ATTACK) {
       this.attack_character(opponent);
