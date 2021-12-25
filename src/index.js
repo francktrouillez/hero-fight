@@ -131,7 +131,7 @@ async function main() {
   });
 
   model_1.setXYZ(-4.0, 0.0, 0.0);
-  model_1.rotate(90, 0.0, 1.0, 0.0);
+  model_1.rotate(90*3.14/180, 0.0, 1.0, 0.0);
   model_2.setXYZ(4.0, 0.0, 0.0);
   model_2.rotate(180*3.14/180, 0.0, 1.0, 0.0);
 
