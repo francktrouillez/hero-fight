@@ -37,14 +37,6 @@ def parse_obj(lines, new_tex, first_tex_counter):
   out = "usemtl "+ new_tex + '\n' + out
   return out
 
-def parse_frame(lines):
-  out = ""
-  for line in lines:
-    elements = line.split(' ')
-    if elements[0] == 'v' or elements[0] == "vn":
-      out += line
-  return out
-
 for i in range(19):
   write_file("filtered/"+ str(i) + ".obj", parse_obj(read_file("raw/" + str(i) + ".obj"), "Warrior_Full_Texture", 1))
 
