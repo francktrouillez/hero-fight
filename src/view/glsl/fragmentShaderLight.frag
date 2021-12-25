@@ -60,6 +60,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragCoord, vec3 viewDir,
     specular *= attenuation;
 
     return vec3( (ambient + diffuse + specular )*texelColor.rgb); 
+    return reflectDir;
 } 
 
 
@@ -75,10 +76,6 @@ void main() {
     lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, texelColor);
   }
 
-  //vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
-  //gl_FragColor = vec4(texelColor.rgb+lights_vec, texelColor.a);
-
-  
   gl_FragColor = vec4(lights_vec,texelColor.a);
       
 }

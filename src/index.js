@@ -23,6 +23,9 @@ async function main() {
   const sourceSimpleV = await read_file("./src/view/glsl/vertexShader.vert");
   const sourceSimpleF = await read_file("./src/view/glsl/fragmentShader.frag");
 
+  const cubemapV = await read_file("./src/view/glsl/vertexShader_cubemap.vert");
+  const cubemapF = await read_file("./src/view/glsl/fragmentShader_cubemap.frag");
+
 
   var program = new Program(gl, sourceV, sourceF, {
     key_model: {
@@ -86,6 +89,42 @@ async function main() {
     }
   })
 
+  var cubemap_program = new Program(gl, cubemapV, cubemapF, {
+    key_model: {
+      variable:"M",
+      type: "mat4"
+    },
+    key_view: {
+      variable:"V",
+      type: "mat4"
+    },
+    key_projection: {
+      variable:"P",
+      type: "mat4"
+    },
+    key_texture: {
+      variable: "u_cubemap",
+      type: "samplerCube"
+    },
+    key_aspect_ratio: {
+      variable: "u_aspect_ratio",
+      type: "vec2"
+    }
+  })
+
+
+  // Construct the cubemap
+  const cubemap_model = await read_file("./src/view/assets/models/cube.obj");
+  var cubemap_object = new ComplexObject(gl, cubemap_model, 
+   function() {
+     return;
+   }
+  );
+
+  // Cubemap texture
+  var texCube = await make_texture_cubemap(gl, './src/view/assets/textures/cubemaps/Sky');
+  cubemap_object.setTexture(texCube);
+
   // Construct a base floor
   const floor_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
                                       glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
@@ -121,7 +160,7 @@ async function main() {
  //Wisp 1
  var wisp_pos = glMatrix.vec3.fromValues(0.0,1.0,0.0);
  var wisp_color = glMatrix.vec3.fromValues(0.0,255.0,0.0);
- var wisp1 = new Wisp(wisp_pos, 0.0, 3.0, 0.0, 0.0, 0.05, 0.05, wisp_color, wisp1_object);
+ var wisp1 = new Wisp(wisp_pos, 0.0, 3.0, 0.0, 0.0, 0.05, 0.1, wisp_color, wisp1_object);
 
  //Wisp 2
  var wisp2_object = new ComplexObject(gl, wisp_model, 
@@ -243,7 +282,15 @@ async function main() {
     key_projection: camera.get_projection_matrix()
   });
 
-  var render_objects = [render_object_1, render_object_floor];
+  render_object_cubemap = new RenderObject(cubemap_object, cubemap_program, camera, {
+    key_texture: cubemap_object.texture_object.gl_texture,
+    key_aspect_ratio: aspect.ratio,
+    key_model: cubemap_object.model,
+    key_view: camera.get_view_matrix(),
+    key_projection: camera.get_projection_matrix()
+  });
+
+  var render_objects = [render_object_1,render_object_cubemap, render_object_floor];
   var render_simple_objects = [render_object_wisp1, render_object_wisp2, render_object_wisp3];
 
   var game_controller = new GameController(document, render_objects);
@@ -274,7 +321,7 @@ async function main() {
 
 
     for (const render_object of render_objects) {
-      render_object.update_uniform("key_point_ligths", point_lights_list);
+      //render_object.update_uniform("key_point_ligths", point_lights_list);
       render_object.render();
     }  
     // Same loop but for displaying simple object without light
