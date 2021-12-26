@@ -26,10 +26,6 @@ class ComplexObject {
     this.model = null;
     this.position = null;
     this.init_model();
-
-    console.log("Model in complexe obj");
-    console.log(this.model);
-
   }
 
   load_obj(obj_content) {
@@ -184,6 +180,10 @@ class ComplexObject {
     this.model = glMatrix.mat4.create();
     this.translate(this.position.x, this.position.y, this.position.z);
     this.rotate(value, x, y, z);
+  }
+
+  setTexture(value){
+    this.texture_object = value;
   }
 
   

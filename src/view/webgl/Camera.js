@@ -14,11 +14,14 @@ class Camera {
   }
   
   zoom(value) {
+    this.position = glMatrix.vec3.add(this.position, this.position, glMatrix.vec3.fromValues(0.0, 0.0, value));
     this.view = glMatrix.mat4.translate(this.view, this.view, glMatrix.vec3.fromValues(0.0, 0.0, value));
   }
   
   move(values) {
+    this.position = glMatrix.vec3.add(this.position, this.position, glMatrix.vec3.fromValues(values.x, values.y, 0.0));
     this.view = glMatrix.mat4.translate(this.view, this.view, glMatrix.vec3.fromValues(values.x, values.y, 0.0));
+
   }
   
   rotateY(value) {

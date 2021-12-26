@@ -52,6 +52,11 @@ class Program {
       this.gl.bindTexture(this.gl.TEXTURE_2D, value);
       this.gl.uniform1i(uniform_location, 0);
       return;
+    } else if (type == "samplerCube") {
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, value);
+      this.gl.uniform1i(uniform_location, 0);
+      return;
     } else {
       throw new Error('Unable to map uniform of type '+type);
     }
@@ -127,6 +132,11 @@ class Program {
 
   manage_uniforms(map) {
     for (let key in this.uniforms_map) {
+
+      if(key == "key_view_pos"){
+        console.log(map[key]);
+      }
+
       // Load the uniforms for the point lights
       if(this.uniforms_map[key].type == "point_lights"){
         let point_lights = map[key];
