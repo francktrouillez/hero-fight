@@ -224,7 +224,7 @@ async function main() {
   
   //Configure the Point lights
   var sun_pos = glMatrix.vec3.fromValues(0.0, 10.0, 0.0);
-  var sun_ambient = 0.1;
+  var sun_ambient = 0.15;
   var sun_diffuse = 0.6;
   var sun_color = glMatrix.vec3.fromValues(1.0,1.0,1.0);
   //             pos, constant, linear, quadratic, ambient, diffuse, specular, color
