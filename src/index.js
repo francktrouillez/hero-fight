@@ -206,7 +206,7 @@ async function main() {
   // Definition of the camera
   var camera = new Camera({
     eye: {
-      x: 12.0, y: 5.0, z: 0.0
+      x: 15.0, y: 4.0, z: 0.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
