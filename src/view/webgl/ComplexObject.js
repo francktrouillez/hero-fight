@@ -167,8 +167,8 @@ class ComplexObject {
   }
 
   // Scale the position on the space of the object by th sent value
-  scale(x, y, z) {
-    this.model = glMatrix.mat4.scale(this.model, this.model, glMatrix.vec3.fromValues(x, y, z))
+  scale(value) {
+    this.model = glMatrix.mat4.scale(this.model, this.model, glMatrix.vec3.fromValues(value, value, value))
   }
 
   setAngle(value, x, y, z) {

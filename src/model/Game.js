@@ -39,7 +39,6 @@ class Game {
     } else if (this.state == Game.ANIMATION_FIGHTING_ATTACK_WITH_MONSTER) {
       this.wait_for_attack_animation();
     } else if (this.state == Game.ANIMATION_FIGHTING_MONSTER) {
-      console.log("update monster")
       this.wait_for_fighting_animation();
     } else if (this.state == Game.ANIMATION_FIGHTING_BUFF) {
       this.wait_for_attack_animation();

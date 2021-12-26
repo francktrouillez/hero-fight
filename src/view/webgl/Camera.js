@@ -2,6 +2,8 @@ class Camera {
 
   constructor(info) {
     this.info = info
+    // Position is useful for the lights ATTENTION needs to be updated accordingly to the movement of the cam
+    this.position = glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z);
     this.view = glMatrix.mat4.create();
     this.view = glMatrix.mat4.lookAt(this.view, 
       glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z), 
@@ -13,11 +15,14 @@ class Camera {
   }
   
   zoom(value) {
+    this.position = glMatrix.vec3.add(this.position, this.position, glMatrix.vec3.fromValues(0.0, 0.0, value));
     this.view = glMatrix.mat4.translate(this.view, this.view, glMatrix.vec3.fromValues(0.0, 0.0, value));
   }
   
   move(values) {
+    this.position = glMatrix.vec3.add(this.position, this.position, glMatrix.vec3.fromValues(values.x, values.y, 0.0));
     this.view = glMatrix.mat4.translate(this.view, this.view, glMatrix.vec3.fromValues(values.x, values.y, 0.0));
+
   }
   
   rotateY(value) {
@@ -26,6 +31,22 @@ class Camera {
   
   rotateX(value) {
     this.view = glMatrix.mat4.rotate(this.view, this.view, value, glMatrix.vec3.fromValues(1.0, 0.0, 0.0));
+  }
+    
+  set_position(pos){
+    this.position = pos;
+  }
+
+  get_position(){
+    return this.position;
+  }
+
+  get_view_matrix(){
+    return this.view;
+  }
+
+  get_projection_matrix(){
+    return this.projection;
   }
 
   set_aspect_ratio(width, height) {

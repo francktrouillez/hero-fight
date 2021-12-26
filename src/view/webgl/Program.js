@@ -41,9 +41,18 @@ class Program {
   map_uniform(uniform_location, type, value) {
     if (type == "vec2") {
       this.gl.uniform2fv(uniform_location, value); return;
+    } else if (type=="vec3"){
+      this.gl.uniform3fv(uniform_location, value); return;
+    } else if(type == "float"){
+      this.gl.uniform1f(uniform_location, value); return;
     } else if (type == "mat4") {
       this.gl.uniformMatrix4fv(uniform_location, false, value); return;
     } else if (type == "sampler2D") {
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, value);
+      this.gl.uniform1i(uniform_location, 0);
+      return;
+    } else if (type == "samplerCube") {
       this.gl.activeTexture(this.gl.TEXTURE0);
       this.gl.bindTexture(this.gl.TEXTURE_2D, value);
       this.gl.uniform1i(uniform_location, 0);
@@ -53,10 +62,102 @@ class Program {
     }
   }
 
+  // Function used to map the special type object point lights which is a struct defined in fragment shader
+  map_point_light(key, point_light, index){
+    //First vec3 is the position
+    let loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".position" ;
+    var uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "vec3", point_light.pos);
+
+    //The next 6 uniforms are the multiple parameters of the light, first 3 attenuation floats and 3 floats the constant for each part of the light
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".constant" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "float", point_light.constant);
+
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".linear" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "float", point_light.linear);
+
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".quadratic" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "float", point_light.quadratic);
+
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".ambient" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "float", point_light.ambient);
+
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".diffuse" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "float", point_light.diffuse);
+
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".specular" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "float", point_light.specular);
+
+    // The last is a vec3 which is the color of the ligth
+    loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".color" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "vec3", point_light.color);
+  }
+
+  // Function used to map the special type object material
+  map_material(key, material){
+    //First 3  vec3 are the three component of how it reacts to the light
+    let loc = this.uniforms_map[key].variable + ".ambient" ;
+    var uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "vec3", material.ambient);
+
+    loc = this.uniforms_map[key].variable + ".diffuse" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "vec3", material.diffuse);
+
+    loc = this.uniforms_map[key].variable + ".specular" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "vec3", material.specular);
+
+    //Last element is the float representing the shininess
+    loc = this.uniforms_map[key].variable + ".shininess" ;
+    uniform_location = this.gl.getUniformLocation(this.program, loc);
+    this.map_uniform(uniform_location, "float", material.shininess);
+  }
+
+  // Method used to calculate the inverse matrix called in render vefore updating the uniform variable
+  updateITMatrix(map) {
+    var itM = glMatrix.mat4.create();
+    itM = glMatrix.mat4.invert(itM, map["key_model"]);
+    itM = glMatrix.mat4.transpose(itM, itM);
+    map["key_ITMatrix"] = itM;
+  }
+
+
   manage_uniforms(map) {
     for (let key in this.uniforms_map) {
-      const uniform_location = this.gl.getUniformLocation(this.program, this.uniforms_map[key].variable);
-      this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key])
+
+      if(key == "key_view_pos"){
+        //console.log(map[key]);
+      }
+
+      // Load the uniforms for the point lights
+      if(this.uniforms_map[key].type == "point_lights"){
+        let point_lights = map[key];
+        for (let i=0; i<point_lights.length; i++){
+          this.map_point_light(key,point_lights[i],i);
+        }
+      }
+      // Load the uniforms for the material
+      else if(this.uniforms_map[key].type == "material"){
+        this.map_material(key, map[key]);
+      }
+      //If it was the turn of the uniform itmatrix
+      else if(key == "key_ITMatrix"){
+        this.updateITMatrix(map);
+        const uniform_location = this.gl.getUniformLocation(this.program, this.uniforms_map[key].variable);
+        this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key]);
+      }
+      else{
+        const uniform_location = this.gl.getUniformLocation(this.program, this.uniforms_map[key].variable);
+        this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key]);
+      }
     }
   }
 }

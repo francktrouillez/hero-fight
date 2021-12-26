@@ -76,10 +76,7 @@ class GameController {
             renders_per_frames: parseInt(fps/30)
           }
           this.render_objects["skeleton"].object.update = function() {
-            console.log(this.update_data)
-            console.log(this.obj_vertex_animation[this.update_data.animation].length)
             const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
-            console.log(id_frame)
             var frame_buffers = this.obj_vertex_animation[this.update_data.animation][id_frame]
             this.position_buffer = frame_buffers["positions"]
             this.normal_buffer = frame_buffers["normals"]

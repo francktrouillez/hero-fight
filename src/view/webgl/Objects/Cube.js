@@ -33,6 +33,8 @@ class Cube extends SimpleObject {
     -1.0,  1.0, -1.0,
   ]
 
+  //Need to define normal per vertex
+
   static VERTEX_INDICES = [
     0,  1,  2,      0,  2,  3,    // front
     4,  5,  6,      4,  6,  7,    // back
