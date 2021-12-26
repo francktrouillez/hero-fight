@@ -117,6 +117,7 @@ class Game {
     } else if (this.fight.get_winner() == this.opponent){
       this.game_over();
     }
+    this.opponent = null;
     this.switch_state(Game.ANIMATION_GETTING_XP);
   }
 
@@ -144,9 +145,9 @@ class Game {
 
   go_to_next_round() {
     this.round += 1;
-    if (this.hero.get_level() < 5) {
+    if (this.hero.get_level() < 1) {
       this.opponent = new A(this.opponent_controller);
-    } else if (this.hero.get_level() < 10) {
+    } else if (this.hero.get_level() < 2) {
       this.opponent = new B(this.opponent_controller);
     } else {
       this.opponent = new C(this.opponent_controller);

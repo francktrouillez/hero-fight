@@ -44,7 +44,7 @@ def parse_obj(lines, new_tex, number_of_colors):
   return out
 
 
-for i in range(16):
-  write_file("filtered/"+ str(i) + ".obj", parse_obj(read_file("raw/" + str(i) + ".obj"), "Slime_Texture", 2))
+#for i in range(41):
+#  write_file("filtered/"+ str(i) + ".obj", parse_obj(read_file("raw/" + str(i) + ".obj"), "Dragon_Texture", 6))
 
-#write_file("WarriorSimple.obj", parse_obj(read_file("raw/Warrior.obj"), "Warrior_Full_Texture", 1))
+write_file("Wisp.obj", parse_obj(read_file("raw/Wisp.obj"), "Wisp_Texture", 1))

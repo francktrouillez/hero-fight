@@ -5,7 +5,10 @@ async function main() {
   images = await charge_images([
     "./src/view/assets/textures/cat.jpg",
     "./src/view/assets/textures/Warrior_Full_Texture.png",
-    "./src/view/assets/textures/Slime_Texture.png"
+    "./src/view/assets/textures/Slime_Texture.png",
+    "./src/view/assets/textures/Skeleton_Texture.png",
+    "./src/view/assets/textures/Dragon_Texture.png",
+    "./src/view/assets/textures/Wisp_Texture.png"
   ]);
 
   audios = charge_audios([
@@ -78,7 +81,7 @@ async function main() {
     obj_animation_map_hero["buff"].push(await(read_file("./src/view/assets/models/Warrior/punch/" + i + ".obj")))
   }
 
-  var model_1 = new AnimatedObject(gl, hero_obj, obj_animation_map_hero);
+  var model_hero = new AnimatedObject(gl, hero_obj, obj_animation_map_hero);
 
   const slime_obj = await read_file("./src/view/assets/models/Slime/Slime.obj")
   var obj_animation_map_slime = {
@@ -93,7 +96,42 @@ async function main() {
     obj_animation_map_slime["attack"].push(await(read_file("./src/view/assets/models/Slime/attack/" + i + ".obj")))
   }
 
-  var model_2 = new AnimatedObject(gl, slime_obj, obj_animation_map_slime);
+  var model_slime = new AnimatedObject(gl, slime_obj, obj_animation_map_slime);
+
+  const skeleton_obj = await read_file("./src/view/assets/models/Skeleton/Skeleton.obj")
+  var obj_animation_map_skeleton = {
+    "idle": [],
+    "attack": []
+  
+  }
+  for (let i = 0; i <= 80; i++) {
+    obj_animation_map_skeleton["idle"].push(await(read_file("./src/view/assets/models/Skeleton/idle/" + i + ".obj")))
+  }
+  for (let i = 0; i <= 28; i++) {
+    obj_animation_map_skeleton["attack"].push(await(read_file("./src/view/assets/models/Skeleton/attack/" + i + ".obj")))
+  }
+
+  var model_skeleton = new AnimatedObject(gl, skeleton_obj, obj_animation_map_skeleton);
+
+
+  const dragon_obj = await read_file("./src/view/assets/models/Dragon/Dragon.obj")
+  var obj_animation_map_dragon = {
+    "idle": [],
+    "attack": []
+  
+  }
+  for (let i = 0; i <= 40; i++) {
+    obj_animation_map_dragon["idle"].push(await(read_file("./src/view/assets/models/Dragon/idle/" + i + ".obj")))
+  }
+  for (let i = 0; i <= 40; i++) {
+    obj_animation_map_dragon["attack"].push(await(read_file("./src/view/assets/models/Dragon/attack/" + i + ".obj")))
+  }
+
+  var model_dragon = new AnimatedObject(gl, dragon_obj, obj_animation_map_dragon);
+
+  const wisp_obj = await read_file("./src/view/assets/models/Wisp/Wisp.obj");
+
+  var model_wisp = new ComplexObject(gl, wisp_obj);
 
 
   var camera = new Camera({
@@ -114,30 +152,70 @@ async function main() {
 
   var camera_controller = new CameraController(document, camera);
 
-  hero_render_object = new RenderObject(model_1, program, camera, {
-    "tex0": model_1.texture_object.gl_texture,
+  hero_render_object = new RenderObject(model_hero, program, camera, {
+    "tex0": model_hero.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
-    "model": model_1.model,
+    "model": model_hero.model,
     "view": camera.view,
     "proj": camera.projection
   });
 
-  opponent_render_object = new RenderObject(model_2, program, camera, {
-    "tex0": model_2.texture_object.gl_texture,
+  slime_render_object = new RenderObject(model_slime, program, camera, {
+    "tex0": model_slime.texture_object.gl_texture,
     "aspect_ratio": aspect.ratio,
-    "model": model_2.model,
+    "model": model_slime.model,
     "view": camera.view,
     "proj": camera.projection
   });
 
-  model_1.setXYZ(-4.0, 0.0, 0.0);
-  model_1.rotate(90*3.14/180, 0.0, 1.0, 0.0);
-  model_2.setXYZ(4.0, 0.0, 0.0);
-  model_2.rotate(180*3.14/180, 0.0, 1.0, 0.0);
+  skeleton_render_object = new RenderObject(model_skeleton, program, camera, {
+    "tex0": model_skeleton.texture_object.gl_texture,
+    "aspect_ratio": aspect.ratio,
+    "model": model_skeleton.model,
+    "view": camera.view,
+    "proj": camera.projection
+  });
+
+  dragon_render_object = new RenderObject(model_dragon, program, camera, {
+    "tex0": model_dragon.texture_object.gl_texture,
+    "aspect_ratio": aspect.ratio,
+    "model": model_dragon.model,
+    "view": camera.view,
+    "proj": camera.projection
+  });
+
+  wisp_render_object = new RenderObject(model_wisp, program, camera, {
+    "tex0": model_wisp.texture_object.gl_texture,
+    "aspect_ratio": aspect.ratio,
+    "model": model_wisp.model,
+    "view": camera.view,
+    "proj": camera.projection
+  });
+
+  model_hero.setXYZ(-4.0, 0.0, 0.0);
+  model_hero.rotate(90*3.14/180, 0.0, 1.0, 0.0);
+
+  model_slime.setXYZ(4.0, 0.0, 0.0);
+  model_slime.rotate(180*3.14/180, 0.0, 1.0, 0.0);
+  model_slime.scale(0.5, 0.5, 0.5);
+
+  model_skeleton.setXYZ(4.0, 0.0, 0.0);
+  model_skeleton.rotate(270*3.14/180, 0.0, 1.0, 0.0);
+  model_skeleton.scale(0.5, 0.5, 0.5);
+
+  model_dragon.setXYZ(4.0, 0.0, 0.0);
+  model_dragon.rotate(270*3.14/180, 0.0, 1.0, 0.0);
+  model_dragon.scale(0.9, 0.9, 0.9);
+
+  model_wisp.scale(0.05, 0.05, 0.05)
+
 
   var render_objects = {
     "hero": hero_render_object,
-    "opponent": opponent_render_object
+    "slime": slime_render_object,
+    "skeleton": skeleton_render_object,
+    "dragon": dragon_render_object,
+    "wisp": wisp_render_object
   }
   var game_controller = new GameController(document, render_objects);
 

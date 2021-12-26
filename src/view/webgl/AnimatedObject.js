@@ -33,8 +33,10 @@ class AnimatedObject {
 
     this.init_buffers();
 
-    this.update = null;
+    this.update = function() {};
+    this.num_vertex = 0;
     this.update_data = null;
+
     this.model = null;
     this.position = null;
     this.init_model();
@@ -238,6 +240,10 @@ class AnimatedObject {
     this.model = glMatrix.mat4.create();
     this.translate(this.position.x, this.position.y, this.position.z);
     this.rotate(value, x, y, z);
+  }
+
+  scale(x, y, z) {
+    this.model = glMatrix.mat4.scale(this.model, this.model, glMatrix.vec3.fromValues(x, y, z))
   }
 
 }
