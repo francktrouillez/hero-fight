@@ -90,7 +90,7 @@ async function main() {
     obj_animation_map_slime["idle"].push(await(read_file("./src/view/assets/models/Slime/idle/" + i + ".obj")))
   }
   for (let i = 0; i <= 15; i++) {
-    obj_animation_map_slime["attack"].push(await(read_file("./src/view/assets/models/slime/attack/" + i + ".obj")))
+    obj_animation_map_slime["attack"].push(await(read_file("./src/view/assets/models/Slime/attack/" + i + ".obj")))
   }
 
   var model_2 = new AnimatedObject(gl, slime_obj, obj_animation_map_slime);
