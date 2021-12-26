@@ -4,8 +4,7 @@ async function read_file(file) {
   return text;
 }
 
-function auto_resize_window(window, canvas, gl, aspect) {
-  // aspect ratio of the window -> Without that, ratio not respected
+function auto_resize_window(window, canvas, gl, camera) {
 
  window.addEventListener('resize', resizeCanvas, false);
          
@@ -13,13 +12,7 @@ function auto_resize_window(window, canvas, gl, aspect) {
    canvas.width = window.innerWidth;
    canvas.height = window.innerHeight;
    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-   aspect_ratio = [1.0, 1.0];
-   if (gl.canvas.width > gl.canvas.height) {
-     aspect_ratio[0] = gl.canvas.height/gl.canvas.width;
-   } else {
-     aspect_ratio[1] = gl.canvas.width/gl.canvas.height;
-   }
-   aspect.ratio = aspect_ratio;
+   camera.set_aspect_ratio(gl.canvas.width, gl.canvas.height);
  }
  resizeCanvas();
 }

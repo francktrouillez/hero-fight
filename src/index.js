@@ -3,7 +3,6 @@ async function main() {
   var fps = 60;
 
   images = await charge_images([
-    "./src/view/assets/textures/cat.jpg",
     "./src/view/assets/textures/Warrior_Full_Texture.png",
     "./src/view/assets/textures/Slime_Texture.png",
     "./src/view/assets/textures/Skeleton_Texture.png",
@@ -19,12 +18,6 @@ async function main() {
   const canvas = document.getElementById('webgl_canvas');
   const gl = canvas.getContext('webgl');
   
-  var aspect = {
-    ratio: [1.0, 1.0]
-  }
-
-  auto_resize_window(window, canvas, gl, aspect);
-
   const sourceV = await read_file("./src/view/glsl/vertexShader.vert");
   const sourceF = await read_file("./src/view/glsl/fragmentShader.frag");
 
@@ -44,25 +37,8 @@ async function main() {
     "tex0": {
       variable: "u_texture",
       type: "sampler2D"
-    },
-    "aspect_ratio": {
-      variable: "u_aspect_ratio",
-      type: "vec2"
     }
   })
-
-  var tex_cat = new Texture(gl, images["./src/view/assets/textures/cat.jpg"]);
-
-  var tex_face = [
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-  ]
-  var tex_positions = []
-  for (let i = 0; i < 6; i++) {
-    tex_positions = tex_positions.concat(tex_face);
-  }
 
   const hero_obj = await read_file("./src/view/assets/models/Warrior/Warrior.obj")
   var obj_animation_map_hero = {
@@ -150,11 +126,12 @@ async function main() {
     far: 100.0
   });
 
+  auto_resize_window(window, canvas, gl, camera);
+
   var camera_controller = new CameraController(document, camera);
 
   hero_render_object = new RenderObject(model_hero, program, camera, {
     "tex0": model_hero.texture_object.gl_texture,
-    "aspect_ratio": aspect.ratio,
     "model": model_hero.model,
     "view": camera.view,
     "proj": camera.projection
@@ -162,7 +139,6 @@ async function main() {
 
   slime_render_object = new RenderObject(model_slime, program, camera, {
     "tex0": model_slime.texture_object.gl_texture,
-    "aspect_ratio": aspect.ratio,
     "model": model_slime.model,
     "view": camera.view,
     "proj": camera.projection
@@ -170,7 +146,6 @@ async function main() {
 
   skeleton_render_object = new RenderObject(model_skeleton, program, camera, {
     "tex0": model_skeleton.texture_object.gl_texture,
-    "aspect_ratio": aspect.ratio,
     "model": model_skeleton.model,
     "view": camera.view,
     "proj": camera.projection
@@ -178,7 +153,6 @@ async function main() {
 
   dragon_render_object = new RenderObject(model_dragon, program, camera, {
     "tex0": model_dragon.texture_object.gl_texture,
-    "aspect_ratio": aspect.ratio,
     "model": model_dragon.model,
     "view": camera.view,
     "proj": camera.projection
@@ -186,7 +160,6 @@ async function main() {
 
   wisp_render_object = new RenderObject(model_wisp, program, camera, {
     "tex0": model_wisp.texture_object.gl_texture,
-    "aspect_ratio": aspect.ratio,
     "model": model_wisp.model,
     "view": camera.view,
     "proj": camera.projection
