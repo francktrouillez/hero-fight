@@ -54,7 +54,7 @@ function generate_program_lights(gl, number_of_lights) {
     },
     key_point_ligths:{
       variable: "u_point_ligths_list",
-      type: "point_lights"
+      type: "lights"
     }
   })
 
@@ -133,7 +133,7 @@ async function generate_cubemap(gl, program, camera) {
   return render_object_cubemap;
 }
 
-function generate_floor(gl, program, camera, point_lights_list) {
+function generate_floor(gl, program, camera, lights_list) {
   // Construct a base floor
   const floor_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
                                       glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
@@ -167,7 +167,7 @@ function generate_floor(gl, program, camera, point_lights_list) {
     key_ITMatrix: floor.model,
     key_view_pos: camera.get_position(),
     key_material: floor_material,
-    key_point_ligths: point_lights_list
+    key_point_ligths: lights_list
   });
 
   return render_object_floor;

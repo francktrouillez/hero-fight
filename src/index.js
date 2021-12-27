@@ -50,9 +50,9 @@ async function main() {
   const canvas = document.getElementById('webgl_canvas');
   const gl = canvas.getContext('webgl');
  
-  var program = generate_program_lights(gl, 4);
+  var program_full_lights = generate_program_lights(gl, 4);
 
-  var simple_program = generate_program_lights(gl, 1);
+  var program_only_sun = generate_program_lights(gl, 1);
 
   var cubemap_program = generate_program_cubemap(gl);
 
@@ -64,18 +64,19 @@ async function main() {
   var sun = new Sun()
 
  // Create the model of the wisp and the multiple values as a pointlight
- var wisp_1 = new WispRender(gl, simple_program, camera, [sun]);
+ var wisp_1 = new WispRender(gl, program_only_sun, camera, [sun]);
  wisp_1.object.setXYZ(0.0, 1.0, 0.0)
  wisp_1.object.update_data = {
    t: 0,
    speed: 0.1
  }
  wisp_1.object.update = function() {
-   this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI)
-   this.setXYZ(0.0, Math.sin(this.update_data.t) + 1.0, 0.0)
+   this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI);
+   this.setXYZ(0.0, Math.sin(this.update_data.t) + 1.0, 0.0);
+   this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
  }
 
- var wisp_2 = new WispRender(gl, simple_program, camera, [sun]);
+ var wisp_2 = new WispRender(gl, program_only_sun, camera, [sun]);
  wisp_2.object.setXYZ(0.0, 2.0, 8.0)
  wisp_2.object.update_data = {
    t: 0,
@@ -86,9 +87,10 @@ async function main() {
    this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI)
    const radius = this.update_data.radius
    this.setXYZ(radius*Math.sin(this.update_data.t), 2.0 , radius*Math.cos(this.update_data.t))
+   this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
  }
 
- var wisp_3 = new WispRender(gl, simple_program, camera, [sun]);
+ var wisp_3 = new WispRender(gl, program_only_sun, camera, [sun]);
  wisp_3.object.setXYZ(8.0, 2.0, 0.0)
  wisp_3.object.update_data = {
    t: Math.PI,
@@ -98,19 +100,20 @@ async function main() {
  wisp_3.object.update = function() {
    this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI)
    const radius = this.update_data.radius
-   this.setXYZ(radius*Math.sin(this.update_data.t), 2.0 , radius*Math.cos(this.update_data.t))
+   this.setXYZ(radius*Math.sin(this.update_data.t), 2.0 , radius*Math.cos(this.update_data.t));
+   this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
  }
   
   //Fill the list used to regroup all the light and send it to the render object dict to update the uniform accordingly
-  let point_lights_list = [sun, wisp_1.object.light, wisp_2.object.light, wisp_3.object.light];
+  let lights_list = [sun, wisp_1.object.light, wisp_2.object.light, wisp_3.object.light];
   
   var render_objects = {
-    "hero": new HeroRender(gl, program, camera, point_lights_list),
-    "slime": new SlimeRender(gl, program, camera, point_lights_list),
-    "skeleton": new SkeletonRender(gl, program, camera, point_lights_list),
-    "dragon": new DragonRender(gl, program, camera, point_lights_list),
+    "hero": new HeroRender(gl, program_full_lights, camera, lights_list),
+    "slime": new SlimeRender(gl, program_full_lights, camera, lights_list),
+    "skeleton": new SkeletonRender(gl, program_full_lights, camera, lights_list),
+    "dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
     "cubemap": await generate_cubemap(gl, cubemap_program, camera),
-    "floor": generate_floor(gl, program, camera, point_lights_list),
+    "floor": generate_floor(gl, program_full_lights, camera, lights_list),
     "wisp1": wisp_1,
     "wisp2": wisp_2,
     "wisp3": wisp_3,

@@ -63,41 +63,41 @@ class Program {
   }
 
   // Function used to map the special type object point lights which is a struct defined in fragment shader
-  map_point_light(key, point_light, index){
+  map_light(key, light, index){
     //First vec3 is the position
     let loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".position" ;
     var uniform_location = this.gl.getUniformLocation(this.program, loc);
-    this.map_uniform(uniform_location, "vec3", point_light.pos);
+    this.map_uniform(uniform_location, "vec3", light.pos);
 
     //The next 6 uniforms are the multiple parameters of the light, first 3 attenuation floats and 3 floats the constant for each part of the light
     loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".constant" ;
     uniform_location = this.gl.getUniformLocation(this.program, loc);
-    this.map_uniform(uniform_location, "float", point_light.constant);
+    this.map_uniform(uniform_location, "float", light.constant);
 
     loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".linear" ;
     uniform_location = this.gl.getUniformLocation(this.program, loc);
-    this.map_uniform(uniform_location, "float", point_light.linear);
+    this.map_uniform(uniform_location, "float", light.linear);
 
     loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".quadratic" ;
     uniform_location = this.gl.getUniformLocation(this.program, loc);
-    this.map_uniform(uniform_location, "float", point_light.quadratic);
+    this.map_uniform(uniform_location, "float", light.quadratic);
 
     loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".ambient" ;
     uniform_location = this.gl.getUniformLocation(this.program, loc);
-    this.map_uniform(uniform_location, "float", point_light.ambient);
+    this.map_uniform(uniform_location, "float", light.ambient);
 
     loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".diffuse" ;
     uniform_location = this.gl.getUniformLocation(this.program, loc);
-    this.map_uniform(uniform_location, "float", point_light.diffuse);
+    this.map_uniform(uniform_location, "float", light.diffuse);
 
     loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".specular" ;
     uniform_location = this.gl.getUniformLocation(this.program, loc);
-    this.map_uniform(uniform_location, "float", point_light.specular);
+    this.map_uniform(uniform_location, "float", light.specular);
 
     // The last is a vec3 which is the color of the ligth
     loc = this.uniforms_map[key].variable + "[" + String(index) +"]" + ".color" ;
     uniform_location = this.gl.getUniformLocation(this.program, loc);
-    this.map_uniform(uniform_location, "vec3", point_light.color);
+    this.map_uniform(uniform_location, "vec3", light.color);
   }
 
   // Function used to map the special type object material
@@ -138,10 +138,10 @@ class Program {
       }
 
       // Load the uniforms for the point lights
-      if(this.uniforms_map[key].type == "point_lights"){
-        let point_lights = map[key];
-        for (let i=0; i<point_lights.length; i++){
-          this.map_point_light(key,point_lights[i],i);
+      if(this.uniforms_map[key].type == "lights"){
+        let lights = map[key];
+        for (let i=0; i<lights.length; i++){
+          this.map_light(key,lights[i],i);
         }
       }
       // Load the uniforms for the material

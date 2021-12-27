@@ -32,8 +32,8 @@ varying vec3 vfrag_coord;
 uniform sampler2D u_texture;
 uniform vec3 u_view_pos;
 
-#define NB_POINT_LIGHTS 4
-uniform PointLight u_point_ligths_list[NB_POINT_LIGHTS];
+#define NB_LIGHTS 4
+uniform PointLight u_point_ligths_list[NB_LIGHTS];
 uniform Material u_material;
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragCoord, vec3 viewDir, vec4 texelColor)
@@ -72,7 +72,7 @@ void main() {
   vec3 view_dir = normalize(u_view_pos-vfrag_coord);
 
   vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
-  for(int i=0; i<NB_POINT_LIGHTS; ++i){
+  for(int i=0; i<NB_LIGHTS; ++i){
     lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, texelColor);
   }
 
