@@ -10,7 +10,8 @@ async function main() {
     "./src/view/assets/textures/Wisp_Texture.png",
     "./src/view/assets/textures/blue_fire.jpeg",
     "./src/view/assets/textures/Blue_fire.png",
-    "./src/view/assets/textures/grass_floor.jpg",
+    "./src/view/assets/textures/bumpmap/grass_DIFFUSE.jpg",
+    "./src/view/assets/textures/bumpmap/grass_NORMAL.jpg"
   ]);
 
   audios = load_audios([
@@ -24,14 +25,34 @@ async function main() {
     "./src/view/glsl/vertexShader.vert",
     "./src/view/glsl/fragmentShader.frag",
     "./src/view/glsl/vertexShader_cubemap.vert",
-    "./src/view/glsl/fragmentShader_cubemap.frag"
+    "./src/view/glsl/bummap/fragmentShaderBump.frag",
+    "./src/view/glsl/bummap/vertexShaderBump.vert"
   ])
-
+  /*
   obj_files = await load_objs([
     "./src/view/assets/models/Warrior/Warrior.obj",
     ["./src/view/assets/models/Warrior/idle/", 15],
     ["./src/view/assets/models/Warrior/attack/", 20],
     ["./src/view/assets/models/Warrior/punch/", 18],
+    "./src/view/assets/models/Slime/Slime.obj",
+    ["./src/view/assets/models/Slime/idle/", 20],
+    ["./src/view/assets/models/Slime/attack/", 15],
+    "./src/view/assets/models/Skeleton/Skeleton.obj",
+    ["./src/view/assets/models/Skeleton/idle/", 80],
+    ["./src/view/assets/models/Skeleton/attack/", 28],
+    "./src/view/assets/models/Dragon/Dragon.obj",
+    ["./src/view/assets/models/Dragon/idle/", 40],
+    ["./src/view/assets/models/Dragon/attack/", 40],
+    "./src/view/assets/models/Wisp/Wisp.obj",
+    "./src/view/assets/models/cube.obj",
+    "./src/view/assets/models/sphere_smooth.obj"
+  ])*/
+
+  obj_files = await load_objs([
+    "./src/view/assets/models/Warrior/Warrior.obj",
+    ["./src/view/assets/models/Warrior/idle/", 5],
+    ["./src/view/assets/models/Warrior/attack/", 5],
+    ["./src/view/assets/models/Warrior/punch/", 5],
     "./src/view/assets/models/Slime/Slime.obj",
     ["./src/view/assets/models/Slime/idle/", 20],
     ["./src/view/assets/models/Slime/attack/", 15],
@@ -55,6 +76,8 @@ async function main() {
   var program_only_sun = generate_program_lights(gl, 1);
 
   var cubemap_program = generate_program_cubemap(gl);
+
+  var bumpmap_program = generate_program_bumpmap(gl);
 
   // Definition of the camera
   var camera = generate_camera(gl, canvas);
@@ -114,6 +137,7 @@ async function main() {
     "dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
     "cubemap": await generate_cubemap(gl, cubemap_program, camera),
     "floor": generate_floor(gl, program_full_lights, camera, lights_list),
+    "bumpmap": generate_bumpmap(gl,bumpmap_program,camera, lights_list),
     "wisp1": wisp_1,
     "wisp2": wisp_2,
     "wisp3": wisp_3,

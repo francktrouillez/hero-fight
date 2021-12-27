@@ -114,6 +114,48 @@ function generate_program_cubemap(gl) {
   return cubemap_program;
 }
 
+function generate_program_bumpmap(gl) {
+  const bumpmapV = shaders["./src/view/glsl/bumpmapping/vertexShaderBump.vert"];
+  const bumpmapF = shaders["./src/view/glsl/bumpmapping/fragmentShaderBump.frag"];
+
+  var bumpmap_program = new Program(gl, bumpmapV, bumpmapF, {
+    key_model: {
+      variable:"M",
+      type: "mat4"
+    },
+    key_view: {
+      variable:"V",
+      type: "mat4"
+    },
+    key_projection: {
+      variable:"P",
+      type: "mat4"
+    },
+    key_texture: {
+      variable: "u_texture",
+      type: "sampler2D"
+    },
+    key_texture_normal: {
+      variable: "u_normalMap",
+      type: "sampler2D"
+    },
+    key_view_pos:{
+      variable:"u_view_pos",
+      type: "vec3"
+    },
+    key_material:{
+      variable:"u_material",
+      type: "material"
+    },
+    key_point_ligths:{
+      variable: "u_point_ligths_list",
+      type: "point_lights"
+    }
+  })
+
+  return bumpmap_program;
+}
+
 async function generate_cubemap(gl, program, camera) {
    // Construct the cubemap
    const cubemap_model = obj_files["./src/view/assets/models/cube.obj"];
@@ -131,6 +173,38 @@ async function generate_cubemap(gl, program, camera) {
   });
 
   return render_object_cubemap;
+}
+
+function generate_bumpmap(gl, program, camera, point_lights_list) {
+  // Construct a base floor
+  const bumpmap_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
+                                      glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
+                                      glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
+                                      32.0 );
+  var tex_diffuse = new Texture(gl, images["./src/view/assets/textures/bumpmap/grass_DIFFUSE.jpg"]);
+  var tex_normal = new Texture(gl,images["./src/view/assets/textures/bumpmap/grass_NORMAL.jpg"] );
+
+  var bumpmap = new FloorBumpmapping(gl, tex_diffuse, tex_normal, 
+    function() {
+      return;
+    }
+  );
+
+  bumpmap.setXYZ(0.0,1.0,0.0);
+  bumpmap.rotate(Math.PI/2, 1.0, 0.0, 0.0);
+
+  render_object_bumpmap = new RenderObject(bumpmap, program, camera, {
+    key_texture: bumpmap.texture_diffuse.gl_texture,
+    key_texture: bumpmap.texture_normals.gl_texture,
+    key_model: bumpmap.model,
+    key_view: camera.get_view_matrix(),
+    key_projection: camera.get_projection_matrix(),
+    key_view_pos: camera.get_position(),
+    key_material: bumpmap_material,
+    key_point_ligths: point_lights_list
+  });
+
+  return render_object_bumpmap;
 }
 
 function generate_floor(gl, program, camera, lights_list) {
