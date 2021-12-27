@@ -58,22 +58,14 @@ async function main() {
 
  // Create the model of the wisp and the multiple values as a pointlight
  const wisp_model = obj_files["./src/view/assets/models/sphere_smooth.obj"];
- var wisp1_object = new ComplexObject(gl, wisp_model, 
-   function() {
-     return;
-   }
- );
+ var wisp1_object = new ComplexObject(gl, wisp_model);
  //Wisp 1
  var wisp_pos = glMatrix.vec3.fromValues(0.0,1.0,0.0);
  var wisp_color = glMatrix.vec3.fromValues(0.0,255.0,0.0);
  var wisp1 = new Wisp(wisp_pos, 0.0, 3.0, 0.0, 0.0, 0.05, 0.1, wisp_color, wisp1_object);
 
  //Wisp 2
- var wisp2_object = new ComplexObject(gl, wisp_model, 
-  function() {
-    return;
-  }
-);
+ var wisp2_object = new ComplexObject(gl, wisp_model);
  var teta_wisp2 = 0.0;
  var radius_wisp2 = 8.0;
  var wisp2_pos = glMatrix.vec3.fromValues(radius_wisp2*Math.cos(teta_wisp2), 0.0,radius_wisp2*Math.sin(teta_wisp2));
@@ -81,11 +73,7 @@ async function main() {
  var wisp2 = new Wisp(wisp2_pos, 0.0, 1.0, 0.0, 0.0, 0.05, 0.1, wisp2_color, wisp2_object);
 
  //Wisp 3
- var wisp3_object = new ComplexObject(gl, wisp_model, 
-  function() {
-    return;
-  }
-);
+ var wisp3_object = new ComplexObject(gl, wisp_model);
  var teta_wisp3 = Math.PI;
  var radius_wisp3 = 8.0;
  var wisp3_pos = glMatrix.vec3.fromValues(radius_wisp3*Math.cos(teta_wisp3), 0.0,radius_wisp3*Math.sin(teta_wisp3));
