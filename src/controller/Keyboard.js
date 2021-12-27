@@ -7,6 +7,7 @@ class Keyboard {
   bind_listener(document) {
     document.addEventListener('keydown', (event) => {
       const key = event.key;
+      console.log(key)
       try {
         if (key === 'ArrowDown') {
           this.press_down();
