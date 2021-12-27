@@ -26,6 +26,7 @@ class Camera {
   }
   
   rotateY(value) {
+    // TODO
     this.view = glMatrix.mat4.rotate(this.view, this.view, value, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
   }
   

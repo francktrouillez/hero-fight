@@ -27,26 +27,6 @@ function wait_for_image(image) {
   });
 }
 
-async function charge_images(urls) {
-  var image;
-  var images = {}
-  for (let i = 0; i < urls.length; i++) {
-    image = new Image();
-    image.crossOrigin = "anonymous";
-    image.src = urls[i];
-    await wait_for_image(image);
-    images[urls[i]] = image;
-  }
-  return images
-}
-
-function charge_audios(urls) {
-  var audios = {}
-  for (const url of urls) {
-    audios[url] = new Audio(url)
-  }
-  return audios
-}
 function make_texture_cubemap(gl, folder_url, width=512, height=512) {
   var texture = gl.createTexture();
   
