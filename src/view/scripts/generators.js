@@ -19,9 +19,9 @@ function generate_camera(gl, canvas) {
   return camera;
 }
 
-function generate_program_lights(gl) {
+function generate_program_lights(gl, number_of_lights) {
   const sourceV = shaders["./src/view/glsl/vertexShaderLight.vert"];
-  const sourceF = shaders["./src/view/glsl/fragmentShaderLight.frag"];
+  const sourceF = shaders["./src/view/glsl/fragmentShaderLight" + number_of_lights + ".frag"];
 
   var program = new Program(gl, sourceV, sourceF, {
     key_model: {
@@ -60,6 +60,7 @@ function generate_program_lights(gl) {
 
   return program;
 }
+
 
 function generate_program_simple(gl) {
   const sourceSimpleV = shaders["./src/view/glsl/vertexShader.vert"];
@@ -170,170 +171,4 @@ function generate_floor(gl, program, camera, point_lights_list) {
   });
 
   return render_object_floor;
-}
-
-function generate_hero(gl, program, camera, point_lights_list) {
-  const hero_obj = obj_files["./src/view/assets/models/Warrior/Warrior.obj"]
-
-  var obj_animation_map_hero = {
-    "idle": [],
-    "attack": [],
-    "buff": []
-  
-  }
-  for (let i = 0; i <= 15; i++) {
-    obj_animation_map_hero["idle"].push(obj_files["./src/view/assets/models/Warrior/idle/" + i + ".obj"])
-  }
-  for (let i = 0; i <= 20; i++) {
-    obj_animation_map_hero["attack"].push(obj_files["./src/view/assets/models/Warrior/attack/" + i + ".obj"])
-  }
-  for (let i = 0; i <= 18; i++) {
-    obj_animation_map_hero["buff"].push(obj_files["./src/view/assets/models/Warrior/punch/" + i + ".obj"])
-  }
-
-  var model_hero = new AnimatedObject(gl, hero_obj, obj_animation_map_hero);
-  
-  // Creation of warriors objects and material
-  const warrior_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        32.0 );
-  
-  // Creating render objects link to the objects created above
-  hero_render_object = new RenderObject(model_hero, program, camera, {
-    key_texture: model_hero.texture_object.gl_texture,
-    key_model: model_hero.model,
-    key_view: camera.get_view_matrix(),
-    key_projection: camera.get_projection_matrix(),
-    key_ITMatrix: model_hero.model,
-    key_view_pos: camera.get_position(),
-    key_material: warrior_material,
-    key_point_ligths: point_lights_list
-  });
-
-  model_hero.setXYZ(-4.0, 0.0, 0.0);
-  model_hero.rotate(90*3.14/180, 0.0, 1.0, 0.0);
-
-  return hero_render_object
-}
-
-function generate_slime(gl, program, camera, point_lights_list) {
-  const slime_obj = obj_files["./src/view/assets/models/Slime/Slime.obj"]
-  var obj_animation_map_slime = {
-    "idle": [],
-    "attack": []
-  
-  }
-  for (let i = 0; i <= 20; i++) {
-    obj_animation_map_slime["idle"].push(obj_files["./src/view/assets/models/Slime/idle/" + i + ".obj"])
-  }
-  for (let i = 0; i <= 15; i++) {
-    obj_animation_map_slime["attack"].push(obj_files["./src/view/assets/models/Slime/attack/" + i + ".obj"])
-  }
-
-  var model_slime = new AnimatedObject(gl, slime_obj, obj_animation_map_slime);
-
-  const slime_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        32.0 );
-
-  slime_render_object = new RenderObject(model_slime, program, camera, {
-    key_texture: model_slime.texture_object.gl_texture,
-    key_model: model_slime.model,
-    key_view: camera.get_view_matrix(),
-    key_projection: camera.get_projection_matrix(),
-    key_ITMatrix: model_slime.model,
-    key_view_pos: camera.get_position(),
-    key_material: slime_material,
-    key_point_ligths: point_lights_list
-  });
-
-  model_slime.setXYZ(4.0, 0.0, 0.0);
-  model_slime.rotate(180*3.14/180, 0.0, 1.0, 0.0);
-  model_slime.scale(0.5, 0.5, 0.5);
-
-  return slime_render_object;
-}
-
-function generate_skeleton(gl, program, camera, point_lights_list) {
-  const skeleton_obj = obj_files["./src/view/assets/models/Skeleton/Skeleton.obj"]
-  var obj_animation_map_skeleton = {
-    "idle": [],
-    "attack": []
-  
-  }
-  for (let i = 0; i <= 80; i++) {
-    obj_animation_map_skeleton["idle"].push(obj_files["./src/view/assets/models/Skeleton/idle/" + i + ".obj"])
-  }
-  for (let i = 0; i <= 28; i++) {
-    obj_animation_map_skeleton["attack"].push(obj_files["./src/view/assets/models/Skeleton/attack/" + i + ".obj"])
-  }
-
-  var model_skeleton = new AnimatedObject(gl, skeleton_obj, obj_animation_map_skeleton);
-
-  const skeleton_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        32.0 );
-  
-  skeleton_render_object = new RenderObject(model_skeleton, program, camera, {
-    key_texture: model_skeleton.texture_object.gl_texture,
-    key_model: model_skeleton.model,
-    key_view: camera.get_view_matrix(),
-    key_projection: camera.get_projection_matrix(),
-    key_ITMatrix: model_skeleton.model,
-    key_view_pos: camera.get_position(),
-    key_material: skeleton_material,
-    key_point_ligths: point_lights_list
-  });
-
-
-  model_skeleton.setXYZ(4.0, 0.0, 0.0);
-  model_skeleton.rotate(270*3.14/180, 0.0, 1.0, 0.0);
-  model_skeleton.scale(0.5, 0.5, 0.5);
-
-  return skeleton_render_object;
-
-}
-
-function generate_dragon(gl, program, camera, point_lights_list) {
-  const dragon_obj = obj_files["./src/view/assets/models/Dragon/Dragon.obj"]
-  var obj_animation_map_dragon = {
-    "idle": [],
-    "attack": []
-  
-  }
-  for (let i = 0; i <= 40; i++) {
-    obj_animation_map_dragon["idle"].push(obj_files["./src/view/assets/models/Dragon/idle/" + i + ".obj"])
-  }
-  for (let i = 0; i <= 40; i++) {
-    obj_animation_map_dragon["attack"].push(obj_files["./src/view/assets/models/Dragon/attack/" + i + ".obj"])
-  }
-
-  var model_dragon = new AnimatedObject(gl, dragon_obj, obj_animation_map_dragon);
-
-  const dragon_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        32.0 );
-
-  dragon_render_object = new RenderObject(model_dragon, program, camera, {
-    key_texture: model_dragon.texture_object.gl_texture,
-    key_model: model_dragon.model,
-    key_view: camera.get_view_matrix(),
-    key_projection: camera.get_projection_matrix(),
-    key_ITMatrix: model_dragon.model,
-    key_view_pos: camera.get_position(),
-    key_material: dragon_material,
-    key_point_ligths: point_lights_list
-  });
-
-  model_dragon.setXYZ(4.0, 0.0, 0.0);
-  model_dragon.rotate(270*3.14/180, 0.0, 1.0, 0.0);
-  model_dragon.scale(0.9, 0.9, 0.9);
-
-  return dragon_render_object;
-
-
 }

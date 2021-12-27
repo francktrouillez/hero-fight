@@ -1,6 +1,6 @@
-// A wisp is a pointlight which will have a complexe object as an attribute and use simple shader to display it
+// A wisp is a light which will have a complexe object as an attribute and use simple shader to display it
 
-class Wisp extends PointLight{
+class Wisp extends Light{
 
     constructor(position_init, constant, linear, quadratic, ambient, diffuse, specular, light_color, object) {
         super(position_init, constant, linear, quadratic, ambient, diffuse, specular, light_color);

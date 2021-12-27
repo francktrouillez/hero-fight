@@ -1,15 +1,5 @@
 class AnimatedObject {
   constructor(gl, base_obj, obj_animation_map) {
-    /* Structure of obj_animation_map
-    {
-      name_animation: [
-        obj_content_frame_1,
-        obj_content_frame_2,
-        ...
-      ],
-      ...
-    }
-    */
     this.gl = gl;
 
     this.positions_data_map = null;
@@ -242,8 +232,8 @@ class AnimatedObject {
     this.rotate(value, x, y, z);
   }
 
-  scale(x, y, z) {
-    this.model = glMatrix.mat4.scale(this.model, this.model, glMatrix.vec3.fromValues(x, y, z))
+  scale(value) {
+    this.model = glMatrix.mat4.scale(this.model, this.model, glMatrix.vec3.fromValues(value, value, value))
   }
 
 }

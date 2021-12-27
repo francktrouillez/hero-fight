@@ -1,6 +1,6 @@
-class PointLight {
+class Light {
     constructor(position_init, constant, linear, quadratic, ambient, diffuse, specular, light_color) {
-        this.pos = position_init;
+        this.pos = glMatrix.vec3.fromValues(position_init[0], position_init[1], position_init[2]);
 
         // Paramters linked to the attenuation
         this.constant = constant;
@@ -12,13 +12,15 @@ class PointLight {
         this.diffuse = diffuse;
         this.specular = specular;
 
-        this.color = light_color;
+        this.color = glMatrix.vec3.fromValues(light_color[0], light_color[1], light_color[2]);
     }
   
-    set_position(value) {
-      this.pos = value;
+    set_position(x, y, z) {
+      this.pos = glMatrix.vec3.fromValues(x, y, z);
     }
 
-    get_position(){return this.pos;}
+    get_position(){
+      return this.pos;
+    }
   
   }
