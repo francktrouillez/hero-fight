@@ -28,31 +28,12 @@ async function main() {
     "./src/view/glsl/bummap/fragmentShaderBump.frag",
     "./src/view/glsl/bummap/vertexShaderBump.vert"
   ])
-  /*
+  
   obj_files = await load_objs([
     "./src/view/assets/models/Warrior/Warrior.obj",
     ["./src/view/assets/models/Warrior/idle/", 15],
     ["./src/view/assets/models/Warrior/attack/", 20],
     ["./src/view/assets/models/Warrior/punch/", 18],
-    "./src/view/assets/models/Slime/Slime.obj",
-    ["./src/view/assets/models/Slime/idle/", 20],
-    ["./src/view/assets/models/Slime/attack/", 15],
-    "./src/view/assets/models/Skeleton/Skeleton.obj",
-    ["./src/view/assets/models/Skeleton/idle/", 80],
-    ["./src/view/assets/models/Skeleton/attack/", 28],
-    "./src/view/assets/models/Dragon/Dragon.obj",
-    ["./src/view/assets/models/Dragon/idle/", 40],
-    ["./src/view/assets/models/Dragon/attack/", 40],
-    "./src/view/assets/models/Wisp/Wisp.obj",
-    "./src/view/assets/models/cube.obj",
-    "./src/view/assets/models/sphere_smooth.obj"
-  ])*/
-
-  obj_files = await load_objs([
-    "./src/view/assets/models/Warrior/Warrior.obj",
-    ["./src/view/assets/models/Warrior/idle/", 5],
-    ["./src/view/assets/models/Warrior/attack/", 5],
-    ["./src/view/assets/models/Warrior/punch/", 5],
     "./src/view/assets/models/Slime/Slime.obj",
     ["./src/view/assets/models/Slime/idle/", 20],
     ["./src/view/assets/models/Slime/attack/", 15],
@@ -131,7 +112,7 @@ async function main() {
   let lights_list = [sun, wisp_1.object.light, wisp_2.object.light, wisp_3.object.light];
   
   var render_objects = {
-    "hero": new HeroRender(gl, program_full_lights, camera, lights_list),
+    //"hero": new HeroRender(gl, program_full_lights, camera, lights_list),
     "slime": new SlimeRender(gl, program_full_lights, camera, lights_list),
     "skeleton": new SkeletonRender(gl, program_full_lights, camera, lights_list),
     "dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
