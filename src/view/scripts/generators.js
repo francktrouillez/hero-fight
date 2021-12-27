@@ -115,8 +115,8 @@ function generate_program_cubemap(gl) {
 }
 
 function generate_program_bumpmap(gl) {
-  const bumpmapV = shaders["./src/view/glsl/bumpmapping/vertexShaderBump.vert"];
-  const bumpmapF = shaders["./src/view/glsl/bumpmapping/fragmentShaderBump.frag"];
+  const bumpmapV = shaders["./src/view/glsl/bumpmap/vertexShaderBump.vert"];
+  const bumpmapF = shaders["./src/view/glsl/bumpmap/fragmentShaderBump.frag"];
 
   var bumpmap_program = new Program(gl, bumpmapV, bumpmapF, {
     key_model: {
@@ -131,13 +131,13 @@ function generate_program_bumpmap(gl) {
       variable:"P",
       type: "mat4"
     },
-    key_texture: {
+    key_texture_diffuse: {
       variable: "u_texture",
       type: "sampler2D"
     },
     key_texture_normal: {
       variable: "u_normalMap",
-      type: "sampler2D"
+      type: "sampler2D_1"
     },
     key_view_pos:{
       variable:"u_view_pos",
@@ -149,7 +149,7 @@ function generate_program_bumpmap(gl) {
     },
     key_point_ligths:{
       variable: "u_point_ligths_list",
-      type: "point_lights"
+      type: "lights"
     }
   })
 
@@ -175,8 +175,7 @@ async function generate_cubemap(gl, program, camera) {
   return render_object_cubemap;
 }
 
-function generate_bumpmap(gl, program, camera, point_lights_list) {
-  // Construct a base floor
+async function generate_bumpmap(gl, program, camera, point_lights_list) {
   const bumpmap_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
                                       glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
                                       glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
@@ -194,8 +193,8 @@ function generate_bumpmap(gl, program, camera, point_lights_list) {
   bumpmap.rotate(Math.PI/2, 1.0, 0.0, 0.0);
 
   render_object_bumpmap = new RenderObject(bumpmap, program, camera, {
-    key_texture: bumpmap.texture_diffuse.gl_texture,
-    key_texture: bumpmap.texture_normals.gl_texture,
+    key_texture_diffuse: bumpmap.texture_diffuse.gl_texture,
+    key_texture_normal: bumpmap.texture_normals.gl_texture,
     key_model: bumpmap.model,
     key_view: camera.get_view_matrix(),
     key_projection: camera.get_projection_matrix(),
