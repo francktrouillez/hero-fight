@@ -13,47 +13,22 @@ class BumpmappingObject {
     this.update_data = null;
 
     
-    // Calculate the different tangent/bitangent vectors for each triangle and associate one to each vertex
+    // Calculate the different tangent/bitangent vectors for each triangle and associate one to each face
+    let vectors = this.generate_tangents_bitangents_vectors(this.positions, this.textures, this.num_vertex);
+    let vectors_tangents = vectors[0]
+    let vectors_bitangents = vectors[1];
 
-    // TODO automatically create vectors for each triangle
-    // positions def
-    var pos1 = new glMatrix.vec3.fromValues(-10.0, 10.0, 0.0);
-    var pos2 = new glMatrix.vec3.fromValues(-10.0, -10.0, 0.0);
-    var pos3 = new glMatrix.vec3.fromValues(10.0, -10.0, 0.0);
-    var pos4 = new glMatrix.vec3.fromValues(10.0, 10.0, 0.0);
-    
-    // texture coordinates def
-    var uv1 =  glMatrix.vec2.fromValues(0.0,1.0);
-    var uv2 =  glMatrix.vec2.fromValues(0.0,0.0);
-    var uv3 =  glMatrix.vec2.fromValues(1.0,0.0);
-    var uv4 =  glMatrix.vec2.fromValues(1.0,1.0);
-  
-    // Triangles with 1 = 0,1,2 and 2 = 0,2,3
-    let vectors_triangles_tangents = [];
-    let vectors_triangles_bitangents = [];
-    let vectors_first_triangle = this.generate_vectors([pos1,pos2,pos3], [uv1,uv2,uv3]);
-    let vectors_second_triangle = this.generate_vectors([pos1,pos3,pos4], [uv1,uv3,uv4]);
+    let vectors_normals = []
+    for(var i=0; i<(num_vertex/3);++i){
+      var normal = glMatrix.vec3.create();
+      normal = glMatrix.vec3.cross(normal, vectors_tangents[i],vectors_bitangents[i]);
+      vectors_normals.push(normal);
+    }
 
-    vectors_triangles_tangents.push(vectors_first_triangle[0]);
-    vectors_triangles_tangents.push(vectors_second_triangle[0]);
-
-    vectors_triangles_bitangents.push(vectors_first_triangle[1]);
-    vectors_triangles_bitangents.push(vectors_second_triangle[1]);
-
-    // Calculate the normal vectors
-    var normal_first = glMatrix.vec3.create();
-    var normal_second = glMatrix.vec3.create();
-    normal_first = glMatrix.vec3.cross(normal_first, vectors_triangles_tangents[0],vectors_triangles_bitangents[0]);
-    normal_second = glMatrix.vec3.cross(normal_second, vectors_triangles_tangents[1], vectors_triangles_bitangents[1]);
-    let vectors_triangles_normals = [normal_first, normal_second];
-
-    this.normals = this.float32Array_from_vec3s(vectors_triangles_normals);
-    this.tangents = this.float32Array_from_vec3s(vectors_triangles_tangents);
-    this.bitangents = this.float32Array_from_vec3s(vectors_triangles_bitangents);
-
-    console.log(this.normals);
-    console.log(this.tangents);
-    console.log(this.bitangents);
+    // Add one tangent/bitangent and normal vector for each vertex with the corresponding vector of the face the vertex is part of
+    this.normals = this.float32Array_from_vec3s(vectors_normals);
+    this.tangents = this.float32Array_from_vec3s(vectors_tangents);
+    this.bitangents = this.float32Array_from_vec3s(vectors_bitangents);
     
     // Buffers
     this.position_buffer = null;
@@ -167,7 +142,48 @@ class BumpmappingObject {
     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.num_vertex);
   }
 
-  // Generate and return the tangent and bitangent vectors for a given triangle
+  generate_tangents_bitangents_vectors(pos, tex, num_vertex){
+    let vectors_triangles_tangents = [];
+    let vectors_triangles_bitangents = [];
+
+    var pos1 = glMatrix.vec3.create();
+    var pos2 = glMatrix.vec3.create();
+    var pos3 = glMatrix.vec3.create();
+    let positions = [];
+
+    var tex1 = glMatrix.vec2.create();
+    var tex2 = glMatrix.vec2.create();
+    var tex3 = glMatrix.vec2.create();
+    let textures = [];
+
+    // For each triangle/face
+    for(var counter=0; counter<(num_vertex/3); ++counter){
+
+      var counter_vertex = counter*9;
+      pos1 = glMatrix.vec3.fromValues( pos[counter_vertex], pos[counter_vertex+1], pos[counter_vertex+2] );
+      pos2 = glMatrix.vec3.fromValues( pos[counter_vertex+3], pos[counter_vertex+4], pos[counter_vertex+5] );
+      pos3 = glMatrix.vec3.fromValues( pos[counter_vertex+6], pos[counter_vertex+7], pos[counter_vertex+8] );
+
+      var counter_texture = counter*6;
+      tex1 = glMatrix.vec2.fromValues( tex[counter_texture], tex[counter_texture+1]);
+      tex2 = glMatrix.vec2.fromValues( tex[counter_texture+2], tex[counter_texture+3]);
+      tex3 = glMatrix.vec2.fromValues( tex[counter_texture+4], tex[counter_texture+5]);
+
+      positions = [pos1, pos2, pos3];
+      textures = [tex1, tex2, tex3];
+
+      var resulting_vectors = this.generate_vectors(positions, textures);
+      vectors_triangles_tangents.push(resulting_vectors[0]);
+      vectors_triangles_bitangents.push(resulting_vectors[1]);
+
+      positions = []
+      textures = []
+    }
+
+    return [vectors_triangles_tangents, vectors_triangles_bitangents]
+  }
+
+  // Generate and return the tangent and bitangent vectors for a given triangle 3 vertexes and 3 textures
   generate_vectors(positions, textures){
     var tangent = glMatrix.vec3.create();
     var bitangent = glMatrix.vec3.create();
