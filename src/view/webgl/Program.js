@@ -55,7 +55,7 @@ class Program {
     } else if (type == "sampler2D_1") {
       this.gl.activeTexture(this.gl.TEXTURE1);
       this.gl.bindTexture(this.gl.TEXTURE_2D, value);
-      this.gl.uniform1i(uniform_location, 0);
+      this.gl.uniform1i(uniform_location, 1);
       return;
     } else if (type == "samplerCube") {
       this.gl.activeTexture(this.gl.TEXTURE0);

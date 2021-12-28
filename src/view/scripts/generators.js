@@ -1,7 +1,7 @@
 function generate_camera(gl, canvas) {
   var camera = new Camera({
     eye: {
-      x: 15.0, y: 4.0, z: 0.0
+      x: 0.0, y: 7.0, z: 15.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
@@ -177,9 +177,9 @@ async function generate_cubemap(gl, program, camera) {
 
 async function generate_bumpmap(gl, program, camera, point_lights_list) {
   const bumpmap_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                      glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                      glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                      32.0 );
+                                      glMatrix.vec3.fromValues(0.5, 0.5, 0.5),
+                                      glMatrix.vec3.fromValues(0.5, 0.5, 0.5),
+                                      32.0 );                                 
   var tex_diffuse = new Texture(gl, images["./src/view/assets/textures/bumpmap/grass_DIFFUSE.jpg"]);
   var tex_normal = new Texture(gl,images["./src/view/assets/textures/bumpmap/grass_NORMAL.jpg"] );
 
@@ -188,9 +188,7 @@ async function generate_bumpmap(gl, program, camera, point_lights_list) {
       return;
     }
   );
-
-  bumpmap.setXYZ(0.0,1.0,0.0);
-  bumpmap.rotate(Math.PI/2, 1.0, 0.0, 0.0);
+  bumpmap.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
 
   render_object_bumpmap = new RenderObject(bumpmap, program, camera, {
     key_texture_diffuse: bumpmap.texture_diffuse.gl_texture,

@@ -27,6 +27,7 @@ struct Material {
 
 varying vec2 vTexcoord;
 varying vec3 vfrag_coord;
+varying mat3 vTBN;
 
 uniform sampler2D u_texture;
 uniform sampler2D u_normalMap;  
@@ -71,7 +72,9 @@ void main() {
   // We need to calculate the normal from the texture in range [0,1]
   vec3 normal = texture2D(u_normalMap, vec2(vTexcoord.x, 1.0-vTexcoord.y)).rgb;
   // transform normal vector to range [-1,1]
-  normal = normalize(normal * 2.0 - 1.0);  
+  normal = normal * 2.0 - 1.0; 
+  // Form the matrix TBN to correct the normals 
+  normal = normalize(vTBN * normal); 
   
   vec3 view_dir = normalize(u_view_pos-vfrag_coord);
 

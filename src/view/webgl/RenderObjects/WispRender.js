@@ -9,9 +9,9 @@ class WispRender extends RenderObject {
         linear: 1.0,
         quadratic: 0.0,
         ambient: 0.0,
-        diffuse: 0.05,
-        specular: 0.1,
-        light_color: [0, 0, 255]
+        diffuse: 0.01,
+        specular: 0.05,
+        light_color: [255.0, 255.0, 255.0]
       }),
       program,
       camera,
