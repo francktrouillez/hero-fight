@@ -3,7 +3,6 @@ class Camera {
   constructor(info) {
     this.info = info
     // Position is useful for the lights ATTENTION needs to be updated accordingly to the movement of the cam
-    this.position = glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z);
     this.view = glMatrix.mat4.create();
     this.view = glMatrix.mat4.lookAt(this.view, 
       glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z), 
@@ -13,21 +12,8 @@ class Camera {
     this.projection = glMatrix.mat4.create();
     this.projection = glMatrix.mat4.perspective(this.projection, info.fov, info.aspect, info.near, info.far);
   }
-  
-  zoom(value) {
-    this.position = glMatrix.vec3.add(this.position, this.position, glMatrix.vec3.fromValues(0.0, 0.0, value));
-    this.view = glMatrix.mat4.translate(this.view, this.view, glMatrix.vec3.fromValues(0.0, 0.0, value));
-  }
-  
-  move(values) {
-    this.position = glMatrix.vec3.add(this.position, this.position, glMatrix.vec3.fromValues(values.x, values.y, 0.0));
-    this.view = glMatrix.mat4.translate(this.view, this.view, glMatrix.vec3.fromValues(values.x, values.y, 0.0));
-
-  }
 
   refresh_camera() {
-    console.log(this.info)
-    this.view = glMatrix.mat4.create();
     this.view = glMatrix.mat4.lookAt(this.view, 
       glMatrix.vec3.fromValues(this.info.eye.x, this.info.eye.y, this.info.eye.z), 
       glMatrix.vec3.fromValues(this.info.center.x, this.info.center.y, this.info.center.z), 
@@ -35,48 +21,158 @@ class Camera {
     )
   }
 
-  _step_rotateY(value) {
+  
+  
+  zoom(value) {
+    this.info.eye.z += value;
+    this.info.center.z += value;
+    
+    this.refresh_camera();
+  }
+  
+  move(values) {
+    this.info.eye.x += values.x;
+    this.info.center.x += values.x;
+
+    this.info.eye.y += values.y;
+    this.info.center.y += values.y;
+
+    this.refresh_camera();
+
+  }
+
+  rotateRelX(value) {
     const eye = this.info.eye;
     const center = this.info.center;
-    var increment_x = 1;
-    var increment_z = 1
-    if (center.x > eye.x) {
-      increment_z = -1;
+    const up = this.info.up;
+    const vect_eye_to_center = {
+      x: center.x - eye.x,
+      y: center.y - eye.y,
+      z: center.z - eye.z
     }
-    if (center.z < eye.z) {
-      increment_x = -1;
+    const radius = norm(vect_eye_to_center);
+    const rel_y = up;
+    const rel_z = {
+      x: -vect_eye_to_center.x/radius,
+      y: -vect_eye_to_center.y/radius,
+      z: -vect_eye_to_center.z/radius
     }
-    this.info.center.x = this.info.center.x + value * increment_x;
-    this.info.center.z = this.info.center.z + value * increment_z;
-  }
-  
-  rotateY(value) {
-    const step = 0.01;
-    if (Math.abs(value) < step) {
-      console.log("value too low");
-      return;
+
+    const new_rel_y = {
+      x: Math.cos(value) * rel_y.x + Math.sin(value) * rel_z.x,
+      y: Math.cos(value) * rel_y.y + Math.sin(value) * rel_z.y,
+      z: Math.cos(value) * rel_y.z + Math.sin(value) * rel_z.z,
     }
-    var mult = 1;
-    if (value < 0) {
-      mult = -1;
+
+    const new_rel_z = {
+      x: Math.cos(value) * rel_z.x - Math.sin(value) * rel_y.x,
+      y: Math.cos(value) * rel_z.y - Math.sin(value) * rel_y.y,
+      z: Math.cos(value) * rel_z.z - Math.sin(value) * rel_y.z,
     }
-    for (let i = 0; i < Math.abs(value); i += step) {
-      this._step_rotateY(mult*step);
+
+    this.info.up = {
+      x: new_rel_y.x,
+      y: new_rel_y.y,
+      z: new_rel_y.z
     }
-    this.refresh_camera()
-    //this.view = glMatrix.mat4.rotate(this.view, this.view, value, glMatrix.vec3.fromValues(0.0, 1.0, 0.0));
-  }
-  
-  rotateX(value) {
-    this.view = glMatrix.mat4.rotate(this.view, this.view, value, glMatrix.vec3.fromValues(1.0, 0.0, 0.0));
-  }
+
+    this.info.center = {
+      x: this.info.eye.x - radius * new_rel_z.x,
+      y: this.info.eye.y - radius * new_rel_z.y,
+      z: this.info.eye.z - radius * new_rel_z.z,
+    }
     
-  set_position(pos){
-    this.position = pos;
+    this.refresh_camera();
+  }
+  
+  rotateRelY(value) {
+    const eye = this.info.eye;
+    const center = this.info.center;
+    const up = this.info.up;
+    const vect_eye_to_center = {
+      x: center.x - eye.x,
+      y: center.y - eye.y,
+      z: center.z - eye.z
+    }
+    const radius = norm(vect_eye_to_center);
+    const rel_x = get_perpendicular_vector(vect_eye_to_center, up);
+    const rel_z = {
+      x: -vect_eye_to_center.x/radius,
+      y: -vect_eye_to_center.y/radius,
+      z: -vect_eye_to_center.z/radius
+    }
+
+    const new_rel_z = {
+      x: Math.cos(value) * rel_z.x + Math.sin(value) * rel_x.x,
+      y: Math.cos(value) * rel_z.y + Math.sin(value) * rel_x.y,
+      z: Math.cos(value) * rel_z.z + Math.sin(value) * rel_x.z,
+    }
+
+    this.info.center = {
+      x: this.info.eye.x - radius * new_rel_z.x,
+      y: this.info.eye.y - radius * new_rel_z.y,
+      z: this.info.eye.z - radius * new_rel_z.z,
+    }
+    
+    this.refresh_camera();
+  }
+
+  rotateRelZ(value) {
+    const eye = this.info.eye;
+    const center = this.info.center;
+    const up = this.info.up;
+    const vect_eye_to_center = {
+      x: center.x - eye.x,
+      y: center.y - eye.y,
+      z: center.z - eye.z
+    }
+    const rel_x = get_perpendicular_vector(vect_eye_to_center, up);
+    const rel_y = up;
+
+    const new_rel_y = {
+      x: Math.cos(value) * rel_y.x - Math.sin(value) * rel_x.x,
+      y: Math.cos(value) * rel_y.y - Math.sin(value) * rel_x.y,
+      z: Math.cos(value) * rel_y.z - Math.sin(value) * rel_x.z,
+    }
+
+    this.info.up = {
+      x: new_rel_y.x,
+      y: new_rel_y.y,
+      z: new_rel_y.z
+    }
+    
+    this.refresh_camera();
+  }
+
+  set_eye(eye_pos) {
+    this.info.eye = {
+      x: eye_pos.x,
+      y: eye_pos.y,
+      z: eye_pos.z
+    }
+    this.refresh_camera();
+  }
+
+  set_center(center_pos) {
+    this.info.center = {
+      x: center_pos.x,
+      y: center_pos.y,
+      z: center_pos.z
+    }
+    this.refresh_camera();
+  }
+
+  set_up(up_pos) {
+    this.info.up = {
+      x: up_pos.x,
+      y: up_pos.y,
+      z: up_pos.z
+    }
+    this.refresh_camera();
   }
 
   get_position(){
-    return this.position;
+    return glMatrix.vec3.fromValues(this.info.eye.x, this.info.eye.y, this.info.eye.z);
   }
 
   get_view_matrix(){

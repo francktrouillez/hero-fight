@@ -5,10 +5,10 @@ class Mirror extends ComplexObject {
     this.main_camera = main_camera;
     this.mirror_camera = new Camera({
       eye: {
-        x: 15.0, y: 4.0, z: 0.0
+        x: 0.0, y: 0.0, z: 0.0
       },
       center: {
-        x: 0.0, y: 0.0, z: 0.0
+        x: 0.0, y: 0.0, z: 1.0
       },
       up: {
         x: 0.0, y: 1.0, z: 0.0
@@ -18,72 +18,80 @@ class Mirror extends ComplexObject {
       near: 0.01,
       far: 100.0
     })
-    this.frame_buffer = null;
+    this.normal_surface = {
+      x: 0.0,
+      y: 0.0,
+      z: -1.0
+    }
+    this.texture_buffer = null;
     this.gl_texture = gl.createTexture() 
   }
 
   init_buffers() {
     super.init_buffers();
-    this.frame_buffer = this.gl.createFramebuffer();
-    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.frame_buffer);
+    this.texture_buffer = this.gl.createFramebuffer();
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.texture_buffer);
     this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.COLOR_ATTACHMENT0, this.gl.TEXTURE_2D, this.gl_texture, 0);
+  }
+
+  update_mirror() {
 
   }
 
-  init_model() {
-    this.model = glMatrix.mat4.create();
-    this.position = {
-      x: 0, y: 0, z: 0
-    }
-  }
-
-  activate(program) {
-    const sizeofFloat = Float32Array.BYTES_PER_ELEMENT;
-      
-    //Vertex positions
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.position_buffer);
-    const att_pos = this.gl.getAttribLocation(program, 'aPosition');
-    this.gl.enableVertexAttribArray(att_pos);
-    this.gl.vertexAttribPointer(att_pos, 3, this.gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
-
-    // Texture
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.texture_buffer);
-    const att_textcoord = this.gl.getAttribLocation(program, 'aTexcoord');
-    this.gl.enableVertexAttribArray(att_textcoord);
-    this.gl.vertexAttribPointer(att_textcoord, 2, this.gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
-
-    // Normals
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normal_buffer);
-    const att_normal = this.gl.getAttribLocation(program, 'aNormal');
-    this.gl.enableVertexAttribArray(att_normal);
-    this.gl.vertexAttribPointer(att_normal, 3, this.gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
+  generate_mirrored_image() {
+    this.gl.bindFramebuffer(gl.FRAMEBUFFER, this.texture_buffer);
+    super.activate(program);
   }
 
   translate(x, y, z) {
-    this.position.x += x;
-    this.position.y += y;
-    this.position.z += z;
-    this.model = glMatrix.mat4.translate(this.model, this.model, glMatrix.vec3.fromValues(x, y, z));
+    super.translate(x, y, z);
+    this.mirror_camera.set_eye(this.position);
   }
 
   rotate(value, x, y, z) {
-    this.model = glMatrix.mat4.rotate(this.model, this.model, value, glMatrix.vec3.fromValues(x, y, z));
+    super.rotate(value, x, y, z);
+    const rotation_axis = {
+      x: x,
+      y: y,
+      z: z
+    }
+    const rel_x = get_perpendicular_vector(rotation_axis, this.normal_surface);
+    const rel_y = normalize(rotation_axis);
+    const rel_z = get_perpendicular_vector(rel_x, rel_y);
+
+    const theta = get_theta(this.normal_surface, rel_z);
+
+    const new_rel_y = rel_y
+
+    const new_rel_z = {
+      x: Math.cos(value) * rel_z.x + Math.sin(value) * rel_x.x,
+      y: Math.cos(value) * rel_z.y + Math.sin(value) * rel_x.y,
+      z: Math.cos(value) * rel_z.z + Math.sin(value) * rel_x.z,
+    }
+
+    this.normal_surface = {
+      x: Math.cos(theta) * new_rel_z.x + Math.sin(theta) * new_rel_y.x,
+      y: Math.cos(theta) * new_rel_z.y + Math.sin(theta) * new_rel_y.y,
+      z: Math.cos(theta) * new_rel_z.z + Math.sin(theta) * new_rel_y.z,
+    }
+
+
+
   }
 
   setXYZ(x, y, z) {
-    this.translate(
-      x-this.position.x, 
-      y-this.position.y,
-      z-this.position.z
-    );
-    this.position = {
-      x: x, y: y, z: z
-    }
+    super.setXYZ(x, y, z)
+    this.mirror_camera.set_eye(this.position);
   }
 
   setAngle(value, x, y, z) {
     this.model = glMatrix.mat4.create();
     this.translate(this.position.x, this.position.y, this.position.z);
+    this.normal_surface = {
+      x: 0.0,
+      y: 0.0,
+      z: -1.0
+    }
     this.rotate(value, x, y, z);
   }
 

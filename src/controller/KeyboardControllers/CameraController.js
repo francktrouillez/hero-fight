@@ -29,18 +29,18 @@ class CameraController extends Keyboard {
   }
 
   press_z() {
-    this.camera.rotateX(0.05);
+    this.camera.rotateRelX(0.05);
   }
 
   press_q() {
-    this.camera.rotateY(0.05);
+    this.camera.rotateRelY(0.05);
   }
 
   press_s() {
-    this.camera.rotateX(-0.05);
+    this.camera.rotateRelX(-0.05);
   }
 
   press_d() {
-    this.camera.rotateY(-0.05);
+    this.camera.rotateRelY(-0.05);
   }
 }
