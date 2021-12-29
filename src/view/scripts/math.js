@@ -2,12 +2,16 @@ function dot_product(u, v) {
   return u.x * v.x + u.y * v.y + u.z * v.z
 }
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(value, max));
+}
+
 function get_theta(u, v) {
   const product = dot_product(u, v);
   const norm_u = norm(u);
   const norm_v = norm(v);
   const cos_theta = product/(norm_u*norm_v);
-  const theta = Math.acos(cos_theta);
+  const theta = Math.acos(clamp(cos_theta, -1, 1));
   return Math.abs(theta);
 }
 

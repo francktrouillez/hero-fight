@@ -11,6 +11,7 @@ async function main() {
     "./src/view/assets/textures/blue_fire.jpeg",
     "./src/view/assets/textures/Blue_fire.png",
     "./src/view/assets/textures/grass_floor.jpg",
+    "./src/view/assets/textures/Floor.png",
   ]);
 
   audios = load_audios([
@@ -43,6 +44,8 @@ async function main() {
     ["./src/view/assets/models/Dragon/attack/", 40],
     "./src/view/assets/models/Wisp/Wisp.obj",
     "./src/view/assets/models/Plane/Plane.obj",
+    "./src/view/assets/models/Disk/Disk.obj",
+    "./src/view/assets/models/Floor/Floor.obj",
     "./src/view/assets/models/cube.obj",
     "./src/view/assets/models/sphere_smooth.obj"
   ])
@@ -106,9 +109,10 @@ async function main() {
  }
   
   //Fill the list used to regroup all the light and send it to the render object dict to update the uniform accordingly
-  let lights_list = [sun,
+  let lights_list = [
+    sun,
     wisp_1.object.light,
-    wisp_2.object.light,
+    //wisp_2.object.light,
     //wisp_3.object.light
   ];
   
@@ -118,9 +122,9 @@ async function main() {
     //"skeleton": new SkeletonRender(gl, program_full_lights, camera, lights_list),
     //"dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
     "cubemap": await generate_cubemap(gl, cubemap_program, camera),
-    //"floor": generate_floor(gl, program_full_lights, camera, lights_list),
+    "floor": new FloorRender(gl, program_full_lights, camera, lights_list),//generate_floor(gl, program_full_lights, camera, lights_list),
     "wisp1": wisp_1,
-    "wisp2": wisp_2,
+    //"wisp2": wisp_2,
     //"wisp3": wisp_3,
   }
 
@@ -129,6 +133,11 @@ async function main() {
   }
 
   var game_controller = new GameController(document, render_objects);
+
+  /*var test_controller = new TestController(document, {
+    mirror: render_mirrors["mirror_1"],
+    render_objects: render_objects
+  })*/
 
   function render() {
     // Model update
@@ -143,11 +152,8 @@ async function main() {
   
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    //render_mirrors["mirror_1"].mirror.rotate(0.01, 0.0, 1.0, 0.0)
-
-
     for (var render_id in render_mirrors) {
-      render_mirrors[render_id].render_mirror(render_objects);
+      render_mirrors[render_id].render_mirror(render_objects , ["floor"]);
     }
   
     for (var render_id in render_objects) {

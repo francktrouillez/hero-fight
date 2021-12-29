@@ -62,6 +62,7 @@ class Mirror extends ComplexObject {
       y: -vect_eye_to_mirror.y,
       z: -vect_eye_to_mirror.z
     })
+
     if (height_camera < 0) {
       console.log("camera under the mirror");
     }
@@ -92,11 +93,13 @@ class Mirror extends ComplexObject {
 
     this.mirror_camera.set_near(near);
 
+
     const optical_axis_mirror = normalize({
       x: this.mirror_camera.info.center.x - mirror_eye.x,
       y: this.mirror_camera.info.center.y - mirror_eye.y,
       z: this.mirror_camera.info.center.z - mirror_eye.z,
     })
+
 
     this.mirror_camera.set_eye({
       x: this.fake_eye.x - dist * optical_axis_mirror.x,
@@ -139,7 +142,6 @@ class Mirror extends ComplexObject {
     const rel_y = get_perpendicular_vector(rel_x, optical_axis_mirror);
 
     this.mirror_camera.set_up(rel_y);
-    console.log(this.mirror_camera.info.eye, this.mirror_camera.info.center, this.mirror_camera.info.up)
     
     const bottom_left = {
       x: center_image_plan.x - r * (rel_x.x + rel_y.x),
@@ -158,9 +160,10 @@ class Mirror extends ComplexObject {
       }
       texture_new_positions.push([
         dot_product(ref_to_position, rel_x)/(2*r),
-        dot_product(ref_to_position, rel_y)/(2*r),
+        1 - dot_product(ref_to_position, rel_y)/(2*r),
       ])
     }
+
     
     this.textures = []
     for (const triangle of this.triangles) {

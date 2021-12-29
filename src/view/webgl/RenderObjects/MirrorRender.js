@@ -2,7 +2,7 @@ class MirrorRender extends RenderObject {
   constructor(gl, program, camera, lights_list) {
 
     var uniform_map = {}
-    var mirror = new Mirror(gl, obj_files["./src/view/assets/models/Plane/Plane.obj"], camera)
+    var mirror = new Mirror(gl, obj_files["./src/view/assets/models/Disk/Disk.obj"], camera)
 
     super(
       mirror,
@@ -11,8 +11,8 @@ class MirrorRender extends RenderObject {
       uniform_map
     )
     this.mirror = mirror;
-    //mirror.setXYZ(0.0, 1.0, 0.0);
-    //mirror.rotate(-Math.PI/8, 0.0, 0.0, 1.0);
+    mirror.setXYZ(0.0, 0.01, 0.0);
+    //mirror.rotate(-Math.PI/2, 0.0, 0.0, 1.0);
 
     this.uniform_map.key_texture = this.mirror.gl_texture;
     this.uniform_map.key_model = this.object.model;
@@ -21,13 +21,16 @@ class MirrorRender extends RenderObject {
     this.uniform_map.key_projection = camera.get_projection_matrix();
     this.uniform_map.key_view_pos = camera.get_position();
     this.uniform_map.key_point_ligths = lights_list;
-    this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [0.05, 0.05, 0.05], [0.05, 0.05, 0.05], 32.0);
+    this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [0.5, 0.5, 0.5], [0.0, 0.0, 0.0], 32.0);
   }
 
-  render_mirror(render_objects) {
+  render_mirror(render_objects, excluded_objects) {
     this.mirror.update_mirror("reflexion");
     this.mirror.activate_frame_buffer();
     for (var render_id in render_objects) {
+      if (excluded_objects.includes(render_id)){
+        continue;
+      }
       render_objects[render_id].update_uniform("key_view", this.mirror.mirror_camera.get_view_matrix());
       render_objects[render_id].update_uniform("key_projection", this.mirror.mirror_camera.get_projection_matrix());
       render_objects[render_id].update_uniform("key_view_pos", this.mirror.mirror_camera.get_position());
