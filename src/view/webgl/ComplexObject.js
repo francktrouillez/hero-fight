@@ -3,9 +3,12 @@ class ComplexObject {
   constructor(gl, obj_content) {
     this.gl = gl;
 
+    this.positions_data = null;
+
     this.positions = null;
     this.normals = null;
     this.textures = null;
+    this.triangles = [];
 
     this.texture_object = null;
 
@@ -32,7 +35,7 @@ class ComplexObject {
 
     var lines = obj_content.split("\n");
 
-    var temp_positions = [];
+    this.positions_data = [];
     var temp_normals = [];
     var temp_textures = [];
 
@@ -44,7 +47,7 @@ class ComplexObject {
       var parts = lines[i].trimRight().split(' ');
       if (parts.length > 0 ) {
         if (parts[0] == 'v') {
-          temp_positions.push(
+          this.positions_data.push(
             [parseFloat(parts[1]),
             parseFloat(parts[2]),
             parseFloat(parts[3])]
@@ -62,7 +65,7 @@ class ComplexObject {
           );
         } else if (parts[0] == 'f') {
           // f = vertex/texture/normal vertex/texture/normal vertex/texture/normal
-          this.create_face(parts.slice(1), temp_positions, temp_normals, temp_textures);
+          this.create_face(parts.slice(1), this.positions_data, temp_normals, temp_textures);
         } else if (parts[0] == 'usemtl') {
           if (this.texture_object == null) {
             this.texture_object = new Texture(this.gl, images["./src/view/assets/textures/"+parts[1]+".png"]);
@@ -82,6 +85,7 @@ class ComplexObject {
   }
 
   push_triangle(t1, t2, t3, temp_positions, temp_normals, temp_textures) {
+    this.triangles.push([t1, t2, t3])
     this.push_vertex(t1, temp_positions, temp_normals, temp_textures);
     this.push_vertex(t2, temp_positions, temp_normals, temp_textures);
     this.push_vertex(t3, temp_positions, temp_normals, temp_textures);
@@ -176,7 +180,7 @@ class ComplexObject {
 
   setAngle(value, x, y, z) {
     this.model = glMatrix.mat4.create();
-    this.translate(this.position.x, this.position.y, this.position.z);
+    this.model = glMatrix.mat4.translate(this.model, this.model, glMatrix.vec3.fromValues(this.position.x, this.position.y, this.position.z));
     this.rotate(value, x, y, z);
   }
 

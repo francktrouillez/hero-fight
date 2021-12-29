@@ -18,7 +18,7 @@ class WispRender extends RenderObject {
       uniform_map
     )
 
-    this.object.scale(0.05);
+    this.object.scale(0.3);
 
     this.uniform_map.key_texture = this.object.texture_object.gl_texture;
     this.uniform_map.key_model = this.object.model;

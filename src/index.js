@@ -42,6 +42,7 @@ async function main() {
     ["./src/view/assets/models/Dragon/idle/", 40],
     ["./src/view/assets/models/Dragon/attack/", 40],
     "./src/view/assets/models/Wisp/Wisp.obj",
+    "./src/view/assets/models/Plane/Plane.obj",
     "./src/view/assets/models/cube.obj",
     "./src/view/assets/models/sphere_smooth.obj"
   ])
@@ -72,8 +73,8 @@ async function main() {
  }
  wisp_1.object.update = function() {
    this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI);
-   this.setXYZ(0.0, Math.sin(this.update_data.t) + 1.0, 0.0);
-   this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
+   this.setXYZ(2*Math.sin(this.update_data.t), 1.0, 2*Math.cos(this.update_data.t));
+   //this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
  }
 
  var wisp_2 = new WispRender(gl, program_only_sun, camera, [sun]);
@@ -87,7 +88,7 @@ async function main() {
    this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI)
    const radius = this.update_data.radius
    this.setXYZ(radius*Math.sin(this.update_data.t), 2.0 , radius*Math.cos(this.update_data.t))
-   this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
+   //this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
  }
 
  var wisp_3 = new WispRender(gl, program_only_sun, camera, [sun]);
@@ -101,23 +102,32 @@ async function main() {
    this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI)
    const radius = this.update_data.radius
    this.setXYZ(radius*Math.sin(this.update_data.t), 2.0 , radius*Math.cos(this.update_data.t));
-   this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
+   //this.rotate(this.update_data.speed, 0.0, 1.0, 0.0);
  }
   
   //Fill the list used to regroup all the light and send it to the render object dict to update the uniform accordingly
-  let lights_list = [sun, wisp_1.object.light, wisp_2.object.light, wisp_3.object.light];
+  let lights_list = [sun,
+    wisp_1.object.light,
+    wisp_2.object.light,
+    //wisp_3.object.light
+  ];
   
   var render_objects = {
-    "hero": new HeroRender(gl, program_full_lights, camera, lights_list),
-    "slime": new SlimeRender(gl, program_full_lights, camera, lights_list),
-    "skeleton": new SkeletonRender(gl, program_full_lights, camera, lights_list),
-    "dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
+    //"hero": new HeroRender(gl, program_full_lights, camera, lights_list),
+    //"slime": new SlimeRender(gl, program_full_lights, camera, lights_list),
+    //"skeleton": new SkeletonRender(gl, program_full_lights, camera, lights_list),
+    //"dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
     "cubemap": await generate_cubemap(gl, cubemap_program, camera),
-    "floor": generate_floor(gl, program_full_lights, camera, lights_list),
+    //"floor": generate_floor(gl, program_full_lights, camera, lights_list),
     "wisp1": wisp_1,
     "wisp2": wisp_2,
-    "wisp3": wisp_3,
+    //"wisp3": wisp_3,
   }
+
+  var render_mirrors = {
+    "mirror_1": new MirrorRender(gl, program_full_lights, camera, lights_list)
+  }
+
   var game_controller = new GameController(document, render_objects);
 
   function render() {
@@ -132,10 +142,21 @@ async function main() {
     gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
   
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    //render_mirrors["mirror_1"].mirror.rotate(0.01, 0.0, 1.0, 0.0)
+
+
+    for (var render_id in render_mirrors) {
+      render_mirrors[render_id].render_mirror(render_objects);
+    }
   
     for (var render_id in render_objects) {
       render_objects[render_id].render();
     }
+    for (var render_id in render_mirrors) {
+      render_mirrors[render_id].render();
+    }
+
     window.requestAnimationFrame(render); // While(True) loop!
   }
   

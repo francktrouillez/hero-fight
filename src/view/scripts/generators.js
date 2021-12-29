@@ -120,7 +120,7 @@ async function generate_cubemap(gl, program, camera) {
    var cubemap_object = new ComplexObject(gl, cubemap_model);
  
    // Cubemap texture
-   var texCube = await make_texture_cubemap(gl, './src/view/assets/textures/cubemaps/Sky');
+   var texCube = await make_texture_cubemap(gl, './src/view/assets/textures/cubemaps/day');
    cubemap_object.setTexture(texCube);
 
    render_object_cubemap = new RenderObject(cubemap_object, program, camera, {

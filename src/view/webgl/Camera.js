@@ -19,6 +19,7 @@ class Camera {
       glMatrix.vec3.fromValues(this.info.center.x, this.info.center.y, this.info.center.z), 
       glMatrix.vec3.fromValues(this.info.up.x, this.info.up.y, this.info.up.z)
     )
+    this.projection = glMatrix.mat4.perspective(this.projection, this.info.fov, this.info.aspect, this.info.near, this.info.far);
   }
 
   
@@ -168,6 +169,11 @@ class Camera {
       y: up_pos.y,
       z: up_pos.z
     }
+    this.refresh_camera();
+  }
+
+  set_near(near) {
+    this.info.near = near;
     this.refresh_camera();
   }
 

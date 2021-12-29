@@ -39,27 +39,27 @@ function make_texture_cubemap(gl, folder_url, width=512, height=512) {
   const faceInfos = [
     {
       target: gl.TEXTURE_CUBE_MAP_POSITIVE_X, 
-      url: folder_url + '/posx.jpg',
+      url: folder_url + '/posx.png',
     },
     {
       target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 
-      url: folder_url + '/negx.jpg',
+      url: folder_url + '/negx.png',
     },
     {
       target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 
-      url: folder_url + '/posy.jpg',
+      url: folder_url + '/posy.png',
     },
     {
       target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 
-      url: folder_url + '/negy.jpg',
+      url: folder_url + '/negy.png',
     },
     {
       target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 
-      url: folder_url + '/posz.jpg',
+      url: folder_url + '/posz.png',
     },
     {
       target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 
-      url: folder_url + '/negz.jpg',
+      url: folder_url + '/negz.png',
     },
   ];
   

@@ -41,3 +41,20 @@ function normalize(u) {
     z: u.z/norm_vector
   }
 }
+
+function projected_point(point, normal, point_plane) {
+  const t = (dot_product(normal, point_plane) - dot_product(normal, point))/dot_product(normal, normal)
+  return {
+    x: point.x + t * normal.x,
+    y: point.y + t * normal.y,
+    z: point.z + t * normal.z
+  }
+}
+
+function matrix_vector_product(matrix, vector) {
+  return {
+    x: matrix[0] * vector.x + matrix[4] * vector.y + matrix[8] * vector.z + matrix[12] * 1,
+    y: matrix[1] * vector.x + matrix[5] * vector.y + matrix[9] * vector.z + matrix[13] * 1,
+    z: matrix[2] * vector.x + matrix[6] * vector.y + matrix[10] * vector.z + matrix[14] * 1,
+  }
+}
