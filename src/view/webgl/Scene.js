@@ -99,19 +99,18 @@ class Scene {
 
     // Set the good color for the lights
     this.lights["sun"].set_color(1.0, 1.0, 1.0);
-    this.lights["sun"].set_ambient(0.35);
+    this.lights["sun"].set_ambient(0.45);
 
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
     const concerned_objects = [
-      "hero", "slime", "skeleton", "dragon", "floor", "forest", "lake"
+      "hero", "slime", "skeleton", "dragon", "floor", "forest"
     ]
 
     for (const object of concerned_objects) {
       if (!(object in this.all_objects)) {
         continue
       }
-      console.log(object)
       this.all_objects[object].set_program(program_settings.program);
       this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
     }
@@ -145,7 +144,7 @@ class Scene {
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
     const concerned_objects = [
-      "hero", "slime", "skeleton", "dragon", "floor", "forest", "lake"
+      "hero", "slime", "skeleton", "dragon", "floor", "forest"
     ]
 
     for (const object of concerned_objects) {
@@ -180,12 +179,13 @@ class Scene {
 
     // Set the good color for the lights
     this.lights["sun"].set_color(50/255, 150/255, 163/255);
+    this.lights["sun"].set_ambient(0.5);
     // Wisp doesn't need to change their color because it is always the same
 
     // Set the good program for the objects
     const program_settings = this.programs_settings["full_lights"]
     const concerned_objects = [
-      "hero", "slime", "skeleton", "dragon", "floor", "forest", "lake"
+      "hero", "slime", "skeleton", "dragon", "floor", "forest"
     ]
 
     for (const object of concerned_objects) {
