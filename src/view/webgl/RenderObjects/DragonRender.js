@@ -23,8 +23,8 @@ class DragonRender extends RenderObject {
       uniform_map
     );
     
-    this.object.setXYZ(4.0, 0.0, 0.0);
-    this.object.rotate(270*Math.PI/180, 0.0, 1.0, 0.0);
+    this.object.setXYZ(5.0, 0.0, 0.0);
+    this.object.setAngle(270*Math.PI/180, 0.0, 1.0, 0.0);
     this.object.scale(0.9);
 
     this.uniform_map.key_texture = this.object.texture_object.gl_texture;

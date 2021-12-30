@@ -1,6 +1,7 @@
 class HeroRender extends RenderObject {
 
   constructor(gl, program, camera, lights_list) {
+    console.log('hero')
 
     var obj_animation_map = {
       "idle": [],
@@ -26,8 +27,8 @@ class HeroRender extends RenderObject {
       uniform_map
     );
 
-    this.object.setXYZ(-4.0, 0.0, 0.0);
-    this.object.rotate(90*Math.PI/180, 0.0, 1.0, 0.0);
+    this.object.setXYZ(-5.0, 0.0, 0.0);
+    this.object.setAngle(90*Math.PI/180, 0.0, 1.0, 0.0);
 
 
     this.uniform_map.key_texture = this.object.texture_object.gl_texture;

@@ -142,6 +142,7 @@ class AnimatedObject {
     for (var animation in this.positions_data_map) {
       this.obj_vertex_animation[animation] = []
       for (let i = 0; i < this.positions_data_map[animation].length; i++) {
+        document.getElementById('loading_text').innerHTML = "Loading... " + animation + "_" + i
         console.log(animation + " "+i);
         positions_data_frame = this.positions_data_map[animation][i];
         normals_data_frame = this.normals_data_map[animation][i];

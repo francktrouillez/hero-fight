@@ -1,7 +1,7 @@
 function generate_camera(gl, canvas) {
   var camera = new Camera({
     eye: {
-      x: 15.0, y: 4.0, z: 0.0
+      x: 0.0, y: 6.0, z: 15.0
     },
     center: {
       x: 0.0, y: 0.0, z: 0.0
@@ -11,9 +11,26 @@ function generate_camera(gl, canvas) {
     },
     fov: 45.0,
     aspect: 1.0,
-    near: 0.01,
+    near: 5.0,
     far: 100.0
   });
+
+  camera.update_data = {
+    t: 0,
+    speed: 0.002,
+    radius: 15,
+    height: 6.0
+  }
+  
+  camera.update = function() {
+    this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI);
+    const radius = this.update_data.radius
+    this.set_eye({
+      x: radius*Math.sin(this.update_data.t), 
+      y: this.update_data.height, 
+      z: radius*Math.cos(this.update_data.t)
+    });
+  }
 
   auto_resize_window(window, canvas, gl, camera);
   return camera;
@@ -22,6 +39,48 @@ function generate_camera(gl, canvas) {
 function generate_program_lights(gl, number_of_lights) {
   const sourceV = shaders["./src/view/glsl/vertexShaderLight.vert"];
   const sourceF = shaders["./src/view/glsl/fragmentShaderLight" + number_of_lights + ".frag"];
+
+  var program = new Program(gl, sourceV, sourceF, {
+    key_model: {
+      variable:"M",
+      type: "mat4"
+    },
+    key_view: {
+      variable:"V",
+      type: "mat4"
+    },
+    key_projection: {
+      variable:"P",
+      type: "mat4"
+    },
+    key_texture: {
+      variable: "u_texture",
+      type: "sampler2D"
+    },
+    key_ITMatrix: {
+      variable:"itM",
+      type: "mat4"
+    },
+    key_view_pos:{
+      variable:"u_view_pos",
+      type: "vec3"
+    },
+    key_material:{
+      variable:"u_material",
+      type: "material"
+    },
+    key_point_ligths:{
+      variable: "u_point_ligths_list",
+      type: "lights"
+    }
+  })
+
+  return program;
+}
+
+function generate_program_mirror(gl, number_of_lights) {
+  const sourceV = shaders["./src/view/glsl/vertexShaderLight.vert"];
+  const sourceF = shaders["./src/view/glsl/fragmentShaderMirrorLight" + number_of_lights + ".frag"];
 
   var program = new Program(gl, sourceV, sourceF, {
     key_model: {
@@ -120,7 +179,7 @@ async function generate_cubemap(gl, program, camera) {
    var cubemap_object = new ComplexObject(gl, cubemap_model);
  
    // Cubemap texture
-   var texCube = await make_texture_cubemap(gl, './src/view/assets/textures/cubemaps/Sky');
+   var texCube = await make_texture_cubemap(gl, './src/view/assets/textures/cubemaps/day');
    cubemap_object.setTexture(texCube);
 
    render_object_cubemap = new RenderObject(cubemap_object, program, camera, {

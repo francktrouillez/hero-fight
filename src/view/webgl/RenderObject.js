@@ -10,8 +10,10 @@ class RenderObject {
     this.uniform_map[key] = new_value;
   }
 
-  render() {
-    this.object.update();
+  render(need_to_be_updated = true) {
+    if (need_to_be_updated) {
+      this.object.update();
+    }
     this.program.use();
     this.object.activate(this.program.program);
     this.program.manage_uniforms(this.uniform_map);

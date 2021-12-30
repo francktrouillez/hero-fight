@@ -85,6 +85,8 @@ class GameController {
             this.update_data.frame_id = (this.update_data.frame_id + 1)%(this.update_data.max_renders)
           } 
         } else if (opponent instanceof C) {
+          audios["./src/view/assets/sounds/dragon_flying.mp3"].play();
+          audios["./src/view/assets/sounds/dragon_flying.mp3"].loop = true
           this.render_objects["dragon"].object.update_data = {
             animation: "idle",
             frame_id: 0,
@@ -107,7 +109,7 @@ class GameController {
       if (this.game.state == Game.ANIMATION_REST) {
         this.animation_steps = 30;
       } else if (this.game.state == Game.ANIMATION_FIGHTING_ATTACK || this.game.state == Game.ANIMATION_FIGHTING_ATTACK_WITH_MONSTER) {
-        this.animation_steps = fps/30*20;
+        this.animation_steps = fps/30*20 + fps;
         this.render_objects["hero"].object.update_data = {
           animation: "attack",
           frame_id: 0,
@@ -130,7 +132,8 @@ class GameController {
         }
       } else if (this.game.state == Game.ANIMATION_FIGHTING_MONSTER) {
         if (opponent instanceof A) {
-          this.animation_steps = fps/30*15;
+          this.animation_steps = fps/30*15 + fps;
+          audios["./src/view/assets/sounds/slime.mp3"].play()
           this.render_objects["slime"].object.update_data = {
             animation: "attack",
             frame_id: 0,
@@ -151,7 +154,8 @@ class GameController {
             this.update_data.frame_id += this.update_data.increment
           }
         } else if (opponent instanceof B) {
-          this.animation_steps = fps/30*28;
+          this.animation_steps = fps/30*28 + fps;
+          audios["./src/view/assets/sounds/skeleton.mp3"].play();
           this.render_objects["skeleton"].object.update_data = {
             animation: "attack",
             frame_id: 0,
@@ -172,7 +176,8 @@ class GameController {
             this.update_data.frame_id += this.update_data.increment
           }
         } else if (opponent instanceof C) {
-          this.animation_steps = fps/30*40;
+          this.animation_steps = fps/30*40 + fps;
+          audios["./src/view/assets/sounds/dragon_attack.mp3"].play();
           this.render_objects["dragon"].object.update_data = {
             animation: "attack",
             frame_id: 0,
@@ -194,7 +199,8 @@ class GameController {
           }
         }
       } else if (this.game.state == Game.ANIMATION_FIGHTING_BUFF) {
-        this.animation_steps = fps/30*18;
+        this.animation_steps = fps/30*18 + fps;
+        audios["./src/view/assets/sounds/buff.mp3"].play()
         this.render_objects["hero"].object.update_data = {
           animation: "buff",
           frame_id: 0,
@@ -203,6 +209,9 @@ class GameController {
           renders_per_frames: parseInt(fps/30)
         }
         this.render_objects["hero"].object.update = function() {
+          if (this.update_data.frame_id < 0) {
+            return;
+          }
           const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
           var frame_buffers = this.obj_vertex_animation[this.update_data.animation][id_frame]
           this.position_buffer = frame_buffers["positions"]
@@ -212,12 +221,13 @@ class GameController {
           this.update_data.frame_id += this.update_data.increment
           if (this.update_data.frame_id >= this.update_data.max_renders) {
             this.update_data.increment = -1;
-          } else if (this.update_data.frame_id <= 0) {
+          } else if (this.update_data.frame_id < 0) {
             this.update_data.increment = 1;
           }
         }
       } else if (this.game.state == Game.ANIMATION_GETTING_XP) {
         this.animation_steps = 30;
+        
         this.render_objects["slime"].object.update_data = {}
         this.render_objects["skeleton"].object.update_data = {}
         this.render_objects["dragon"].object.update_data = {}
@@ -229,6 +239,8 @@ class GameController {
         this.render_objects["slime"].object.num_vertex = 0;
         this.render_objects["skeleton"].object.num_vertex = 0;
         this.render_objects["dragon"].object.num_vertex = 0;
+
+        audios["./src/view/assets/sounds/dragon_flying.mp3"].pause();
       }
     }
   }
