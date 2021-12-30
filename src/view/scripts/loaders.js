@@ -11,10 +11,11 @@ async function load_images(urls) {
   return images
 }
 
-function load_audios(urls) {
+function load_audios(values) {
   var audios = {}
-  for (const url of urls) {
-    audios[url] = new Audio(url)
+  for (const audio of values) {
+    audios[audio[0]] = new Audio(audio[0])
+    audios[audio[0]].volume = audio[1]
   }
   return audios
 }

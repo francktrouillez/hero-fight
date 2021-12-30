@@ -10,6 +10,9 @@ class MirrorRender extends RenderObject {
       camera,
       uniform_map
     )
+
+    this.mode = "reflexion"
+
     this.mirror = mirror;
     mirror.setXYZ(0.0, 0.01, 0.0);
     //mirror.rotate(-Math.PI/2, 0.0, 0.0, 1.0);
@@ -24,11 +27,14 @@ class MirrorRender extends RenderObject {
     this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [0.5, 0.5, 0.5], [0.0, 0.0, 0.0], 32.0);
   }
 
-  render_mirror(render_objects, excluded_objects) {
-    this.mirror.update_mirror("reflexion");
+  render_mirror(render_objects, excluded_objects, refraction_render_objects) {
+    this.mirror.update_mirror(this.mode);
     this.mirror.activate_frame_buffer();
     for (var render_id in render_objects) {
-      if (excluded_objects.includes(render_id)){
+      if (this.mode == 'reflexion' && excluded_objects.includes(render_id)){
+        continue;
+      }
+      if (this.mode == 'refraction' && !refraction_render_objects.includes(render_id)) {
         continue;
       }
       render_objects[render_id].update_uniform("key_view", this.mirror.mirror_camera.get_view_matrix());

@@ -11,6 +11,9 @@ class Camera {
     )
     this.projection = glMatrix.mat4.create();
     this.projection = glMatrix.mat4.perspective(this.projection, info.fov, info.aspect, info.near, info.far);
+    
+    this.update = null;
+    this.update_data = null;
   }
 
   refresh_camera() {
@@ -21,6 +24,7 @@ class Camera {
     )
     this.projection = glMatrix.mat4.perspective(this.projection, this.info.fov, this.info.aspect, this.info.near, this.info.far);
   }
+  
 
   
   
