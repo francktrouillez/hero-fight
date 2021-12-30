@@ -19,4 +19,8 @@ class RenderObject {
     this.program.manage_uniforms(this.uniform_map);
     this.object.draw();
   }
+
+  set_program(program) {
+    this.program = program;
+  }
 }

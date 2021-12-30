@@ -9,6 +9,7 @@ class ContainerRender {
     this.lights_list = lights_list
   }
 
+
   render() {
     for (const element of this.elements) {
       element.render()
@@ -18,6 +19,12 @@ class ContainerRender {
   update_uniform(key, new_value){
     for (const element of this.elements) {
       element.update_uniform(key, new_value)
+    }
+  }
+
+  set_program(program) {
+    for (const element of this.elements) {
+      element.set_program(program)
     }
   }
 }

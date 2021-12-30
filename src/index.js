@@ -10,6 +10,8 @@ async function main() {
     "./src/view/assets/textures/Fish_Texture.png",
     "./src/view/assets/textures/Tree_Texture.png",
     ["./src/view/assets/textures/cubemaps/day", "cubemap"],
+    ["./src/view/assets/textures/cubemaps/evening", "cubemap"],
+    ["./src/view/assets/textures/cubemaps/night", "cubemap"],
   ]);
 
   audios = load_audios([
@@ -29,6 +31,7 @@ async function main() {
     "./src/view/glsl/lights/light1.frag",
     "./src/view/glsl/lights/light4.frag",
     "./src/view/glsl/mirror/water_light4.frag",
+    "./src/view/glsl/mirror/water_light1.frag",
     "./src/view/glsl/simple/simple.frag",
     "./src/view/glsl/simple/simple.vert"
   ])
@@ -63,7 +66,8 @@ async function main() {
  
   // Programs
   var program_full_lights = new LightProgram(gl, 4);
-  var program_water = new WaterProgram(gl, 4);
+  var program_water_only_sun = new WaterProgram(gl, 1);
+  var program_water_full_lights = new WaterProgram(gl, 4);
   var program_only_sun = new LightProgram(gl, 1);
   var program_cubemap = new CubemapProgram(gl);
 
@@ -88,8 +92,13 @@ async function main() {
     "slime": new SlimeRender(gl, program_full_lights, camera, lights_list),
     "skeleton": new SkeletonRender(gl, program_full_lights, camera, lights_list),
     "dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
-    "cubemap": new CubemapRender(gl, program_cubemap, camera, "./src/view/assets/textures/cubemaps/day"),
-    "floor": new FloorRender(gl, program_full_lights, camera, lights_list),//generate_floor(gl, program_full_lights, camera, lights_list),
+    "cubemap": new DynamicCubemapRender(gl, program_cubemap, camera, [
+        "./src/view/assets/textures/cubemaps/day",
+        "./src/view/assets/textures/cubemaps/evening",
+        "./src/view/assets/textures/cubemaps/night",
+      ]
+    ),
+    "floor": new FloorRender(gl, program_full_lights, camera, lights_list),
     "underground": new UndergroundRender(gl, program_only_sun, camera, [sun]),
     "fish": new FishRender(gl, program_only_sun, camera, [sun]),
     "forest": new ForestRender(gl, program_full_lights, camera, lights_list),
@@ -98,10 +107,29 @@ async function main() {
 
   // Mirror objects
   var render_mirrors = {
-    "lake": new WaterRender(gl, program_water, camera, lights_list)
+    "lake": new WaterRender(gl, program_full_lights, camera, lights_list)
   }
 
-  var game_controller = new GameController(document, render_objects);
+  var scene = new Scene(
+    {...render_objects, ...render_mirrors},
+    {
+      "sun": sun
+    },
+    {
+      "only_sun": {
+        program: program_only_sun,
+        lights: [sun],
+        mirror_program: program_water_only_sun
+      },
+      "full_lights": {
+        program: program_full_lights,
+        lights: lights_list,
+        mirror_program: program_water_full_lights
+      }
+    }
+  )
+
+  var game_controller = new GameController(document, render_objects, scene);
 
   var fps_counter = new FPSCounter()
 
@@ -122,6 +150,9 @@ async function main() {
     camera.update();
 
     for (var render_id in render_mirrors) {
+      if (!scene.current_objects.includes(render_id)) {
+        continue;
+      }
       render_mirrors[render_id].render_mirror(
         render_objects,
         ["floor", "underground", "fish"],
@@ -130,9 +161,15 @@ async function main() {
     }
   
     for (var render_id in render_objects) {
+      if (!scene.current_objects.includes(render_id)) {
+        continue;
+      }
       render_objects[render_id].render();
     }
     for (var render_id in render_mirrors) {
+      if (!scene.current_objects.includes(render_id)) {
+        continue;
+      }
       render_mirrors[render_id].render();
     }
 
