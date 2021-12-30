@@ -1,152 +1,3 @@
-function generate_camera(gl, canvas) {
-  var camera = new Camera({
-    eye: {
-      x: 0.0, y: 6.0, z: 15.0
-    },
-    center: {
-      x: 0.0, y: 0.0, z: 0.0
-    },
-    up: {
-      x: 0.0, y: 1.0, z: 0.0
-    },
-    fov: 45.0,
-    aspect: 1.0,
-    near: 5.0,
-    far: 100.0
-  });
-
-  camera.update_data = {
-    t: 0,
-    speed: 0.002,
-    radius: 15,
-    height: 6.0
-  }
-  
-  camera.update = function() {
-    this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI);
-    const radius = this.update_data.radius
-    this.set_eye({
-      x: radius*Math.sin(this.update_data.t), 
-      y: this.update_data.height, 
-      z: radius*Math.cos(this.update_data.t)
-    });
-  }
-
-  auto_resize_window(window, canvas, gl, camera);
-  return camera;
-}
-
-function generate_program_lights(gl, number_of_lights) {
-  const sourceV = shaders["./src/view/glsl/vertexShaderLight.vert"];
-  const sourceF = shaders["./src/view/glsl/fragmentShaderLight" + number_of_lights + ".frag"];
-
-  var program = new Program(gl, sourceV, sourceF, {
-    key_model: {
-      variable:"M",
-      type: "mat4"
-    },
-    key_view: {
-      variable:"V",
-      type: "mat4"
-    },
-    key_projection: {
-      variable:"P",
-      type: "mat4"
-    },
-    key_texture: {
-      variable: "u_texture",
-      type: "sampler2D"
-    },
-    key_ITMatrix: {
-      variable:"itM",
-      type: "mat4"
-    },
-    key_view_pos:{
-      variable:"u_view_pos",
-      type: "vec3"
-    },
-    key_material:{
-      variable:"u_material",
-      type: "material"
-    },
-    key_point_ligths:{
-      variable: "u_point_ligths_list",
-      type: "lights"
-    }
-  })
-
-  return program;
-}
-
-function generate_program_mirror(gl, number_of_lights) {
-  const sourceV = shaders["./src/view/glsl/vertexShaderLight.vert"];
-  const sourceF = shaders["./src/view/glsl/fragmentShaderMirrorLight" + number_of_lights + ".frag"];
-
-  var program = new Program(gl, sourceV, sourceF, {
-    key_model: {
-      variable:"M",
-      type: "mat4"
-    },
-    key_view: {
-      variable:"V",
-      type: "mat4"
-    },
-    key_projection: {
-      variable:"P",
-      type: "mat4"
-    },
-    key_texture: {
-      variable: "u_texture",
-      type: "sampler2D"
-    },
-    key_ITMatrix: {
-      variable:"itM",
-      type: "mat4"
-    },
-    key_view_pos:{
-      variable:"u_view_pos",
-      type: "vec3"
-    },
-    key_material:{
-      variable:"u_material",
-      type: "material"
-    },
-    key_point_ligths:{
-      variable: "u_point_ligths_list",
-      type: "lights"
-    }
-  })
-
-  return program;
-}
-
-
-function generate_program_simple(gl) {
-  const sourceSimpleV = shaders["./src/view/glsl/vertexShader.vert"];
-  const sourceSimpleF = shaders["./src/view/glsl/fragmentShader.frag"];
-
-  var simple_program = new Program(gl, sourceSimpleV, sourceSimpleF, {
-    key_model: {
-      variable:"M",
-      type: "mat4"
-    },
-    key_view: {
-      variable:"V",
-      type: "mat4"
-    },
-    key_projection: {
-      variable:"P",
-      type: "mat4"
-    },
-    key_texture: {
-      variable: "u_texture",
-      type: "sampler2D"
-    }
-  })
-
-  return simple_program;
-}
-
 function generate_program_cubemap(gl) {
   const cubemapV = shaders["./src/view/glsl/vertexShader_cubemap.vert"];
   const cubemapF = shaders["./src/view/glsl/fragmentShader_cubemap.frag"];
@@ -175,12 +26,13 @@ function generate_program_cubemap(gl) {
 
 async function generate_cubemap(gl, program, camera) {
    // Construct the cubemap
-   const cubemap_model = obj_files["./src/view/assets/models/cube.obj"];
+   const cubemap_model = obj_files["./src/view/assets/models/Cube/Cube.obj"];
    var cubemap_object = new ComplexObject(gl, cubemap_model);
+   //var cubemap_object = new Cubemap(gl, './src/view/assets/textures/cubemaps/day')
  
    // Cubemap texture
-   var texCube = await make_texture_cubemap(gl, './src/view/assets/textures/cubemaps/day');
-   cubemap_object.setTexture(texCube);
+   var texCube = new CubemapTexture(gl, './src/view/assets/textures/cubemaps/day');//await make_texture_cubemap(gl, './src/view/assets/textures/cubemaps/day');
+   cubemap_object.texture_object = texCube;
 
    render_object_cubemap = new RenderObject(cubemap_object, program, camera, {
     key_texture: cubemap_object.texture_object.gl_texture,
@@ -190,44 +42,4 @@ async function generate_cubemap(gl, program, camera) {
   });
 
   return render_object_cubemap;
-}
-
-function generate_floor(gl, program, camera, lights_list) {
-  // Construct a base floor
-  const floor_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                      glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                      glMatrix.vec3.fromValues(0.0, 0.0, 0.0),
-                                      32.0 );
-  var tex_grass = new Texture(gl, images["./src/view/assets/textures/grass_floor.jpg"]);
-
-  var tex_face = [
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-
-    0.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-  ]
-
-  var floor = new Floor(gl, tex_grass, new Float32Array(tex_face), 
-    function() {
-      return;
-    }
-  );
-
-  floor.setXYZ(0.0,0.0,0.0);
-
-  render_object_floor = new RenderObject(floor, program, camera, {
-    key_texture: floor.texture_object.gl_texture,
-    key_model: floor.model,
-    key_view: camera.get_view_matrix(),
-    key_projection: camera.get_projection_matrix(),
-    key_ITMatrix: floor.model,
-    key_view_pos: camera.get_position(),
-    key_material: floor_material,
-    key_point_ligths: lights_list
-  });
-
-  return render_object_floor;
 }

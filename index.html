@@ -4,19 +4,20 @@
 	<link rel="stylesheet" href="./src/view/css/styles.css">
 </head>
 <body>
-
 	<canvas id="webgl_canvas"></canvas>
 
 	<!-- Model -->
-	<script type="text/javascript" src="./src/model/Character.js"></script>
-  <script type="text/javascript" src="./src/model/Characters/Hero.js"></script>
-  <script type="text/javascript" src="./src/model/Characters/Monster.js"></script>
-  <script type="text/javascript" src="./src/model/Characters/Monsters/A.js"></script>
-  <script type="text/javascript" src="./src/model/Characters/Monsters/B.js"></script>
-  <script type="text/javascript" src="./src/model/Characters/Monsters/C.js"></script>
-  <script type="text/javascript" src="./src/model/Fight.js"></script>
+	<script type="text/javascript" src="./src/model/Fight.js"></script>
   <script type="text/javascript" src="./src/model/Game.js"></script>
-
+	<script type="text/javascript" src="./src/model/Character.js"></script>
+		<!-- Characters -->
+		<script type="text/javascript" src="./src/model/Characters/Hero.js"></script>
+		<script type="text/javascript" src="./src/model/Characters/Monster.js"></script>
+			<!-- Monsters -->
+			<script type="text/javascript" src="./src/model/Characters/Monsters/A.js"></script>
+			<script type="text/javascript" src="./src/model/Characters/Monsters/B.js"></script>
+			<script type="text/javascript" src="./src/model/Characters/Monsters/C.js"></script>
+  
 	<!-- View -->
 		<!-- Libraries -->
 		<script type="text/javascript" src="./src/view/library/gl-matrix-min.js"></script>
@@ -28,62 +29,74 @@
 		<!-- WebGL -->
 		<script type="text/javascript" src="./src/view/webgl/Camera.js"></script>
 		<script type="text/javascript" src="./src/view/webgl/Program.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/Texture.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/AnimatedObject.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/ComplexObject.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/EnlightedObject.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/SimpleObject.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/Mirror.js"></script>
 		<script type="text/javascript" src="./src/view/webgl/Light.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/Material.js"></script>
-			<!-- Objects-->
-			<script type="text/javascript" src="./src/view/webgl/Objects/Floor.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/Objects/Wisp.js"></script>
-		
 		<script type="text/javascript" src="./src/view/webgl/RenderObject.js"></script>
-			<!-- Render Objects -->
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/HeroRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/SlimeRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/SkeletonRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/DragonRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/WispRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/MirrorRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/FloorRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/UndergroundRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/FishRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/TreeRender.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/RenderObjects/ForestRender.js"></script>
-		
-		<script type="text/javascript" src="./src/view/webgl/Lights/Sun.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/Cameras/SquaredViewCamera.js"></script>
+			<!-- Appearance -->
+			<script type="text/javascript" src="./src/view/webgl/Appearance/Material.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Appearance/Texture.js"></script>
+				<!-- Textures -->
+				<script type="text/javascript" src="./src/view/webgl/Appearance/Textures/CubemapTexture.js"></script>
+			<!-- Cameras -->
+			<script type="text/javascript" src="./src/view/webgl/Cameras/MainCamera.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Cameras/SquaredViewCamera.js"></script>
+			<!-- Infos -->
+			<script type="text/javascript" src="./src/view/webgl/Infos/FPSCounter.js"></script>
+			<!-- Lights -->
+			<script type="text/javascript" src="./src/view/webgl/Lights/Sun.js"></script>
+			<!-- Objects -->
+			<script type="text/javascript" src="./src/view/webgl/Objects/AnimatedObject.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Objects/ComplexObject.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Objects/EnlightedObject.js"></script>
+				<!-- Complex objects -->
+				<script type="text/javascript" src="./src/view/webgl/Objects/ComplexObjects/Mirror.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/Objects/ComplexObjects/Cubemap.js"></script>
+			<!-- Programs -->
+			<script type="text/javascript" src="./src/view/webgl/Programs/CubemapProgram.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Programs/LightProgram.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Programs/WaterProgram.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Programs/SimpleProgram.js"></script>
+			<!-- Render objects -->
+			<script type="text/javascript" src="./src/view/webgl/RenderObjects/ContainerRender.js"></script>
+				<!-- Animated objects -->
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/AnimatedObjects/DragonRender.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/AnimatedObjects/HeroRender.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/AnimatedObjects/SkeletonRender.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/AnimatedObjects/SlimeRender.js"></script>
+				<!-- Complex objects -->
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/ComplexObjects/CubemapRender.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/ComplexObjects/FishRender.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/ComplexObjects/FloorRender.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/ComplexObjects/MirrorRender.js"></script>
+				<!-- Mirror objects -->
+					<script type="text/javascript" src="./src/view/webgl/RenderObjects/ComplexObjects/MirrorObjects/WaterRender.js"></script>
 
-			
-	
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/ComplexObjects/TreeRender.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/ComplexObjects/UndergroundRender.js"></script>
+				<!-- Containers -->
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/Containers/ForestRender.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/Containers/WispHordeRender.js"></script>
+				<!-- Enlighted objects -->
+				<script type="text/javascript" src="./src/view/webgl/RenderObjects/EnlightedObjects/WispRender.js"></script>
+
 	<!-- Controller -->
 	<script type="text/javascript" src="./src/controller/Keyboard.js"></script>
+	<script type="text/javascript" src="./src/controller/Button.js"></script>
+	<script type="text/javascript" src="./src/controller/GameController.js"></script>
 		<!-- Keyboard controllers -->
 		<script type="text/javascript" src="./src/controller/KeyboardControllers/CameraController.js"></script>
-		<script type="text/javascript" src="./src/controller/KeyboardControllers/TestController.js"></script>
-	
-	<script type="text/javascript" src="./src/controller/Button.js"></script>
 		<!-- Buttons -->
 		<script type="text/javascript" src="./src/controller/Buttons/InteractiveButton.js"></script>
-	
-
-
-	<script type="text/javascript" src="./src/controller/GameController.js"></script>
-	<!-- Game controllers -->
-	<script type="text/javascript" src="./src/controller/GameControllers/HeroController.js"></script>
-	<script type="text/javascript" src="./src/controller/GameControllers/OpponentController.js"></script>
-	<script type="text/javascript" src="./src/controller/GameControllers/FightController.js"></script>
-		<!-- Controllers for the stats -->
-		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/AttackController.js"></script>
-		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/DefenseController.js"></script>
-		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/LevelController.js"></script>
-		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/LifeController.js"></script>
-		<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/XpController.js"></script>
+		<!-- Game controllers -->
+		<script type="text/javascript" src="./src/controller/GameControllers/HeroController.js"></script>
+		<script type="text/javascript" src="./src/controller/GameControllers/OpponentController.js"></script>
+		<script type="text/javascript" src="./src/controller/GameControllers/FightController.js"></script>
+			<!-- Stats controllers -->
+			<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/AttackController.js"></script>
+			<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/DefenseController.js"></script>
+			<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/LevelController.js"></script>
+			<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/LifeController.js"></script>
+			<script type="text/javascript" src="./src/controller/GameControllers/StatsControllers/XpController.js"></script>
 		
-
 	<!-- Fight menu -->
 	<div id="fight_menu">
 		<input type="image" class="menu_button" id="attack_button"/>
@@ -93,7 +106,6 @@
 	</div>
 
 	<!-- ATH -->
-
 	<div id="bottom_ath">
 		<img alt="xp_bar" id="xp_bar"/>
 	</div>
@@ -131,6 +143,7 @@
 		</div>
 	</div>
 
+	<!-- Loading screen -->
 	<div id="loading_screen">
 		<div id="loading_img_container">
 			<img id = "loading_gif" src="./src/view/assets/loading_screen/running_knight.gif" alt="running knight"/>
@@ -140,8 +153,6 @@
 		</div>
 	</div>
 	
-
-
 	<!-- Main script -->
 	<script type="text/javascript" src="./src/index.js"></script>
 </body>

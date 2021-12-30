@@ -72,7 +72,7 @@ void main() {
   vec3 view_dir = normalize(u_view_pos-vfrag_coord);
 
   vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
-  texelColor.b *= 3.0;
+  texelColor.b += 0.4;
   for(int i=0; i<NB_LIGHTS; ++i){
     lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, texelColor);
   }

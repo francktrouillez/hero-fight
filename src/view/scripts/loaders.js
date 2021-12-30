@@ -1,12 +1,27 @@
-async function load_images(urls) {
+async function load_images(values) {
   var image;
   var images = {}
-  for (let i = 0; i < urls.length; i++) {
-    image = new Image();
-    image.crossOrigin = "anonymous";
-    image.src = urls[i];
-    await wait_for_image(image);
-    images[urls[i]] = image;
+  for (const value of values) {
+    if (typeof value == "string") {
+      image = new Image();
+      image.crossOrigin = "anonymous";
+      image.src = value;
+      await wait_for_image(image);
+      images[value] = image;
+    } else if (value[1] == "cubemap") {
+      const cubemap_images = [
+        "/posx.png", "/posy.png", "/posz.png", 
+        "/negx.png", "/negy.png", "/negz.png"
+      ]
+      for (const cubemap_image of cubemap_images) {
+        image = new Image();
+        image.crossOrigin = "anonymous";
+        image.src = value[0] + cubemap_image;
+        await wait_for_image(image);
+        images[value[0] + cubemap_image] = image;
+      }
+    }
+    
   }
   return images
 }

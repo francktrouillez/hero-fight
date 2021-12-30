@@ -132,7 +132,7 @@ class GameController {
         }
       } else if (this.game.state == Game.ANIMATION_FIGHTING_MONSTER) {
         if (opponent instanceof A) {
-          this.animation_steps = fps/30*15 + fps;
+          this.animation_steps = fps/30*15;
           audios["./src/view/assets/sounds/slime.mp3"].play()
           this.render_objects["slime"].object.update_data = {
             animation: "attack",
@@ -154,7 +154,7 @@ class GameController {
             this.update_data.frame_id += this.update_data.increment
           }
         } else if (opponent instanceof B) {
-          this.animation_steps = fps/30*28 + fps;
+          this.animation_steps = fps/30*28;
           audios["./src/view/assets/sounds/skeleton.mp3"].play();
           this.render_objects["skeleton"].object.update_data = {
             animation: "attack",
@@ -176,7 +176,7 @@ class GameController {
             this.update_data.frame_id += this.update_data.increment
           }
         } else if (opponent instanceof C) {
-          this.animation_steps = fps/30*40 + fps;
+          this.animation_steps = fps/30*40;
           audios["./src/view/assets/sounds/dragon_attack.mp3"].play();
           this.render_objects["dragon"].object.update_data = {
             animation: "attack",

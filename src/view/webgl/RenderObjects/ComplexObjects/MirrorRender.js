@@ -15,7 +15,6 @@ class MirrorRender extends RenderObject {
 
     this.mirror = mirror;
     mirror.setXYZ(0.0, 0.01, 0.0);
-    //mirror.rotate(-Math.PI/2, 0.0, 0.0, 1.0);
 
     this.uniform_map.key_texture = this.mirror.gl_texture;
     this.uniform_map.key_model = this.object.model;

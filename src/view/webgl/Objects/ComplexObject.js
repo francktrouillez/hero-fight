@@ -182,11 +182,5 @@ class ComplexObject {
     this.model = glMatrix.mat4.identity(this.model);
     this.model = glMatrix.mat4.translate(this.model, this.model, glMatrix.vec3.fromValues(this.position.x, this.position.y, this.position.z));
     this.rotate(value, x, y, z);
-  }
-
-  setTexture(value){
-    this.texture_object = value;
-  }
-
-  
+  }  
 }

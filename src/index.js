@@ -1,20 +1,15 @@
 async function main() {
-
-  var fps = 144;
-
   images = await load_images([
     "./src/view/assets/textures/Warrior_Full_Texture.png",
     "./src/view/assets/textures/Slime_Texture.png",
     "./src/view/assets/textures/Skeleton_Texture.png",
     "./src/view/assets/textures/Dragon_Texture.png",
     "./src/view/assets/textures/Wisp_Texture.png",
-    "./src/view/assets/textures/blue_fire.jpeg",
-    "./src/view/assets/textures/Blue_fire.png",
-    "./src/view/assets/textures/grass_floor.jpg",
     "./src/view/assets/textures/Floor.png",
     "./src/view/assets/textures/Underground_Texture.png",
     "./src/view/assets/textures/Fish_Texture.png",
     "./src/view/assets/textures/Tree_Texture.png",
+    ["./src/view/assets/textures/cubemaps/day", "cubemap"],
   ]);
 
   audios = load_audios([
@@ -28,14 +23,14 @@ async function main() {
   ])
 
   shaders = await load_shaders([
-    "./src/view/glsl/vertexShaderLight.vert",
-    "./src/view/glsl/fragmentShaderLight4.frag",
-    "./src/view/glsl/fragmentShaderMirrorLight4.frag",
-    "./src/view/glsl/fragmentShaderLight1.frag",
-    "./src/view/glsl/vertexShader.vert",
-    "./src/view/glsl/fragmentShader.frag",
-    "./src/view/glsl/vertexShader_cubemap.vert",
-    "./src/view/glsl/fragmentShader_cubemap.frag"
+    "./src/view/glsl/cubemap/cubemap.frag",
+    "./src/view/glsl/cubemap/cubemap.vert",
+    "./src/view/glsl/lights/light.vert",
+    "./src/view/glsl/lights/light1.frag",
+    "./src/view/glsl/lights/light4.frag",
+    "./src/view/glsl/mirror/water_light4.frag",
+    "./src/view/glsl/simple/simple.frag",
+    "./src/view/glsl/simple/simple.vert"
   ])
 
   obj_files = await load_objs([
@@ -60,115 +55,60 @@ async function main() {
     "./src/view/assets/models/Tree/Tree1.obj",
     "./src/view/assets/models/Tree/Tree2.obj",
     "./src/view/assets/models/Tree/Tree3.obj",
-    "./src/view/assets/models/cube.obj",
-    "./src/view/assets/models/sphere_smooth.obj"
+    "./src/view/assets/models/Cube/Cube.obj"
   ])
 
-  // Boilerplate code
   const canvas = document.getElementById('webgl_canvas');
   const gl = canvas.getContext('webgl');
  
-  var program_full_lights = generate_program_lights(gl, 4);
-
-  var program_mirror = generate_program_mirror(gl, 4);
-
-  var program_only_sun = generate_program_lights(gl, 1);
-
-  var cubemap_program = generate_program_cubemap(gl);
+  // Programs
+  var program_full_lights = new LightProgram(gl, 4);
+  var program_water = new WaterProgram(gl, 4);
+  var program_only_sun = new LightProgram(gl, 1);
+  var program_cubemap = new CubemapProgram(gl);
 
   // Definition of the camera
-  var camera = generate_camera(gl, canvas);
-
+  var camera = new MainCamera(gl, canvas, window);
   var camera_controller = new CameraController(document, camera);
 
+  // Lights
   var sun = new Sun()
+  var wisp_horde = new WispHordeRender(gl, program_only_sun, camera, [sun])
 
- // Create the model of the wisp and the multiple values as a pointlight
- var wisp_1 = new WispRender(gl, program_only_sun, camera, [sun]);
- wisp_1.object.update_data = {
-  t: 0,
-  speed: 0.005,
-  angle: 0.0,
-  speed_rotation: Math.PI/200,
-  radius: 2
-}
-
-wisp_1.object.update = function() {
-  this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI);
-  this.update_data.angle += this.update_data.speed_rotation
-  const radius = this.update_data.radius
-  this.setXYZ(radius*Math.sin(this.update_data.t), 0.5*Math.sin(this.update_data.t * 5) + 1.5, radius*Math.cos(this.update_data.t));
-  this.setAngle(this.update_data.angle, 0.0, 1.0, 0.0)
-}
-
- var wisp_2 = new WispRender(gl, program_only_sun, camera, [sun]);
- wisp_2.object.update_data = {
-  t: Math.PI/2,
-  speed: 0.005,
-  angle: 0.0,
-  speed_rotation: Math.PI/200,
-  radius: 8
-}
-
-wisp_2.object.update = function() {
-  this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI);
-  this.update_data.angle += this.update_data.speed_rotation
-  const radius = this.update_data.radius
-  this.setXYZ(radius*Math.sin(this.update_data.t), 0.5*Math.sin(this.update_data.t * 5) + 1.5, radius*Math.cos(this.update_data.t));
-  this.setAngle(this.update_data.angle, 0.0, 1.0, 0.0)
-}
-
- var wisp_3 = new WispRender(gl, program_only_sun, camera, [sun]);
- wisp_3.object.update_data = {
-  t: 3*Math.PI/2,
-  speed: 0.005,
-  angle: 0.0,
-  speed_rotation: Math.PI/200,
-  radius: 8
-}
-
-wisp_3.object.update = function() {
-  this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI);
-  this.update_data.angle += this.update_data.speed_rotation
-  const radius = this.update_data.radius
-  this.setXYZ(radius*Math.sin(this.update_data.t), 0.5*Math.sin(this.update_data.t * 5) + 1.5, radius*Math.cos(this.update_data.t));
-  this.setAngle(this.update_data.angle, 0.0, 1.0, 0.0)
-}
+  //Fill the list used to regroup all the lights and send it to the render object dict to update the uniform accordingly
+  let lights_list = [];
+  lights_list.push(sun)
+  for (const wisp_render of wisp_horde.elements) {
+    lights_list.push(wisp_render.object.light)  
+  }
   
-  //Fill the list used to regroup all the light and send it to the render object dict to update the uniform accordingly
-  let lights_list = [
-    sun,
-    wisp_1.object.light,
-    wisp_2.object.light,
-    wisp_3.object.light
-  ];
-  
+  // Render objects
   var render_objects = {
     "hero": new HeroRender(gl, program_full_lights, camera, lights_list),
     "slime": new SlimeRender(gl, program_full_lights, camera, lights_list),
     "skeleton": new SkeletonRender(gl, program_full_lights, camera, lights_list),
     "dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
-    "cubemap": await generate_cubemap(gl, cubemap_program, camera),
+    "cubemap": new CubemapRender(gl, program_cubemap, camera, "./src/view/assets/textures/cubemaps/day"),
     "floor": new FloorRender(gl, program_full_lights, camera, lights_list),//generate_floor(gl, program_full_lights, camera, lights_list),
     "underground": new UndergroundRender(gl, program_only_sun, camera, [sun]),
     "fish": new FishRender(gl, program_only_sun, camera, [sun]),
     "forest": new ForestRender(gl, program_full_lights, camera, lights_list),
-    "wisp1": wisp_1,
-    "wisp2": wisp_2,
-    "wisp3": wisp_3,
+    "wisp_horde": wisp_horde
   }
 
+  // Mirror objects
   var render_mirrors = {
-    "mirror_1": new MirrorRender(gl, program_mirror, camera, lights_list)
+    "lake": new WaterRender(gl, program_water, camera, lights_list)
   }
 
   var game_controller = new GameController(document, render_objects);
 
-  var test_controller = new TestController(document)
+  var fps_counter = new FPSCounter()
 
-  function render() {
+  function render(time) {
+    fps_counter.update(time)
     // Model update
-    game_controller.update(fps);
+    game_controller.update(fps_counter.get_fps());
 
     //Draw loop
     gl.clearColor(0.2, 0.2, 0.2, 1);
@@ -182,7 +122,11 @@ wisp_3.object.update = function() {
     camera.update();
 
     for (var render_id in render_mirrors) {
-      render_mirrors[render_id].render_mirror(render_objects , ["floor", "underground", "fish"], ["underground", "cubemap", "fish"]);
+      render_mirrors[render_id].render_mirror(
+        render_objects,
+        ["floor", "underground", "fish"],
+        ["underground", "cubemap", "fish"]
+      );
     }
   
     for (var render_id in render_objects) {
@@ -199,11 +143,7 @@ wisp_3.object.update = function() {
   audios["./src/view/assets/sounds/background.mp3"].play();
   audios["./src/view/assets/sounds/background.mp3"].loop = true;
 
-
-
-  render();
-
-
+  render(0);
 };
 
 document.addEventListener('DOMContentLoaded', () => { main() });
