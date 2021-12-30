@@ -14,7 +14,6 @@ class MirrorRender extends RenderObject {
     this.mode = "reflexion"
 
     this.mirror = mirror;
-    mirror.setXYZ(0.0, 0.01, 0.0);
 
     this.uniform_map.key_texture = this.mirror.gl_texture;
     this.uniform_map.key_model = this.object.model;

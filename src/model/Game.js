@@ -11,7 +11,7 @@ class Game {
   static ANIMATION_GETTING_XP = 5;
 
   constructor(hero_controller, opponent_controller) {
-    this.round = 1;
+    this.round = 0;
     this.hero = new Hero(hero_controller);
     this.opponent_controller = opponent_controller;
     this.opponent = null;
@@ -144,9 +144,9 @@ class Game {
 
   go_to_next_round() {
     this.round += 1;
-    if (this.hero.get_level() < 1) {
+    if (this.hero.get_level() < 2) {
       this.opponent = new A(this.opponent_controller);
-    } else if (this.hero.get_level() < 2) {
+    } else if (this.hero.get_level() < 4) {
       this.opponent = new B(this.opponent_controller);
     } else {
       this.opponent = new C(this.opponent_controller);

@@ -1,11 +1,12 @@
 class GameController {
-  constructor(document, render_objects) {
+  constructor(document, render_objects, scene) {
     this.hero_controller = new HeroController(document);
     this.opponent_controller = new OpponentController(document);
     this.game = new Game(this.hero_controller, this.opponent_controller);
     this.animating = false;
     this.animation_steps = 0;
     this.render_objects = render_objects;
+    this.scene = scene;
   }
 
   update(fps) {
@@ -241,6 +242,9 @@ class GameController {
         this.render_objects["dragon"].object.num_vertex = 0;
 
         audios["./src/view/assets/sounds/dragon_flying.mp3"].pause();
+        if (this.game.round % 3 == 0) {
+          this.scene.next_time();
+        }
       }
     }
   }

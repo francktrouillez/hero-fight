@@ -7,11 +7,11 @@ class WispRender extends RenderObject {
       new EnlightedObject(gl, obj_files["./src/view/assets/models/Wisp/Wisp.obj"], {
         constant: 0.0,
         linear: 1.0,
-        quadratic: 0.0,
+        quadratic: 1.0,
         ambient: 0.0,
         diffuse: 0.05,
         specular: 0.1,
-        light_color: [0, 0, 255]
+        light_color: [120, 248, 255]
       }),
       program,
       camera,
