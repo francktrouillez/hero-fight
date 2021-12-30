@@ -9,7 +9,6 @@ class GameController {
   }
 
   update(fps) {
-    return;
     this.game.update();
     const opponent = this.game.opponent;
     if (this.animating) {
