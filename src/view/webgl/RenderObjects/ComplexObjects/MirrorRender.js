@@ -22,7 +22,7 @@ class MirrorRender extends RenderObject {
     this.uniform_map.key_projection = camera.get_projection_matrix();
     this.uniform_map.key_view_pos = camera.get_position();
     this.uniform_map.key_point_ligths = lights_list;
-    this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [0.0, 0.0, 0.0], 32.0);
+    this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0], 32.0);
   }
 
   render_mirror(render_objects, excluded_objects, refraction_render_objects) {

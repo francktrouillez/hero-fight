@@ -14,6 +14,8 @@ class Camera {
     
     this.update = null;
     this.update_data = null;
+
+    this.position = glMatrix.vec3.fromValues(this.info.eye.x, this.info.eye.y, this.info.eye.z)
   }
 
   refresh_camera() {
@@ -23,6 +25,9 @@ class Camera {
       glMatrix.vec3.fromValues(this.info.up.x, this.info.up.y, this.info.up.z)
     )
     this.projection = glMatrix.mat4.perspective(this.projection, this.info.fov, this.info.aspect, this.info.near, this.info.far);
+    this.position[0] = this.info.eye.x
+    this.position[1] = this.info.eye.y
+    this.position[2] = this.info.eye.z
   }
   
 
@@ -182,7 +187,7 @@ class Camera {
   }
 
   get_position(){
-    return glMatrix.vec3.fromValues(this.info.eye.x, this.info.eye.y, this.info.eye.z);
+    return this.position;
   }
 
   get_view_matrix(){

@@ -32,11 +32,11 @@ class Light {
     }
 
     set_diffuse(value) {
-      this.diffuse = this.diffuse;
+      this.diffuse = value;
     }
 
     set_specular(value) {
-      this.specular = this.specular
+      this.specular = value
     }
 
     set_color(r, g, b) {
