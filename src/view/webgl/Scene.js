@@ -211,6 +211,10 @@ class Scene {
     this.all_objects["lake"].mode = "reflexion"
   }
 
+  contains(object_id) {
+    return this.current_objects.includes(object_id)
+  }
+
 
 
 }

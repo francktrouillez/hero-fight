@@ -6,6 +6,7 @@ class Hero extends Character {
     super(10, 10, 1, 0, controller);
     this.set_level(0);
     this.set_xp(0);
+    this.action = null;
   }
 
   /* Methods */
@@ -52,6 +53,7 @@ class Hero extends Character {
       throw new Error("Action not known by hero : " + action)
     }
     this.controller.fight_controller.reset_action();
+    this.action = action;
     return action;
   }
 

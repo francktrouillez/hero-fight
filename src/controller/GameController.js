@@ -38,7 +38,8 @@ class GameController {
             this.update_data.increment = 1;
           }
         }
-        
+
+        this.render_objects["buff"].object.stop_respawn();
         
         this.render_objects["slime"].object.update_data = {}
         this.render_objects["skeleton"].object.update_data = {}
@@ -109,6 +110,7 @@ class GameController {
       this.animating = true;
       if (this.game.state == Game.ANIMATION_REST) {
         this.animation_steps = 30;
+        this.render_objects["buff"].object.stop_respawn();
       } else if (this.game.state == Game.ANIMATION_FIGHTING_ATTACK || this.game.state == Game.ANIMATION_FIGHTING_ATTACK_WITH_MONSTER) {
         this.animation_steps = fps/30*20 + fps;
         this.render_objects["hero"].object.update_data = {
@@ -202,6 +204,17 @@ class GameController {
       } else if (this.game.state == Game.ANIMATION_FIGHTING_BUFF) {
         this.animation_steps = fps/30*18 + fps;
         audios["./src/view/assets/sounds/buff.mp3"].play()
+
+        if (this.game.hero.action == "buff_attack") {
+          console.log("buff attakc")
+          this.render_objects["buff"].object.set_color([1.0, 0.0, 0.0]);
+        } else if (this.game.hero.action == "buff_defense") {
+          this.render_objects["buff"].object.set_color([0.0, 0.0, 1.0]);
+        } else if (this.game.hero.action == "heal") {
+          this.render_objects["buff"].object.set_color([0.0, 1.0, 0.0]);
+        }
+        this.render_objects["buff"].object.start_respawn();
+
         this.render_objects["hero"].object.update_data = {
           animation: "buff",
           frame_id: 0,
