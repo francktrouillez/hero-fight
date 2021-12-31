@@ -30,8 +30,10 @@ async function main() {
     "./src/view/glsl/lights/light.vert",
     "./src/view/glsl/lights/light1.frag",
     "./src/view/glsl/lights/light4.frag",
-    "./src/view/glsl/mirror/water_light4.frag",
     "./src/view/glsl/mirror/water_light1.frag",
+    "./src/view/glsl/mirror/water_light4.frag",
+    "./src/view/glsl/particle/particle.frag",
+    "./src/view/glsl/particle/particle.vert",
     "./src/view/glsl/simple/simple.frag",
     "./src/view/glsl/simple/simple.vert"
   ])
@@ -70,6 +72,7 @@ async function main() {
   var program_water_full_lights = new WaterProgram(gl, 4);
   var program_only_sun = new LightProgram(gl, 1);
   var program_cubemap = new CubemapProgram(gl);
+  var program_particles = new ParticleProgram(gl);
 
   // Definition of the camera
   var camera = new MainCamera(gl, canvas, window);
@@ -102,13 +105,21 @@ async function main() {
     "underground": new UndergroundRender(gl, program_only_sun, camera, [sun]),
     "fish": new FishRender(gl, program_only_sun, camera, [sun]),
     "forest": new ForestRender(gl, program_full_lights, camera, lights_list),
-    "wisp_horde": wisp_horde
+    "wisp_horde": wisp_horde,
+    
   }
 
   // Mirror objects
   var render_mirrors = {
     "lake": new WaterRender(gl, program_full_lights, camera, lights_list)
   }
+
+  var render_particles = {
+    "buff": new BuffRender(gl, render_objects["hero"].object, program_particles, camera),
+    "fish_water": new FishWaterRender(gl, render_objects["fish"].object, program_particles, camera),
+  }
+
+  new TestController(document, render_particles["buff"].object)
 
   var scene = new Scene(
     {...render_objects, ...render_mirrors},
@@ -129,7 +140,7 @@ async function main() {
     }
   )
 
-  var game_controller = new GameController(document, render_objects, scene);
+  var game_controller = new GameController(document, {...render_objects, ...render_particles}, scene);
 
   var fps_counter = new FPSCounter()
 
@@ -149,28 +160,37 @@ async function main() {
 
     camera.update();
 
+    for (var render_id in render_particles) {
+      render_particles[render_id].object.update_time(time);
+      render_particles[render_id].object.update();
+    }
+
     for (var render_id in render_mirrors) {
-      if (!scene.current_objects.includes(render_id)) {
+      if (!scene.contains(render_id)) {
         continue;
       }
       render_mirrors[render_id].render_mirror(
-        render_objects,
+        {...render_objects, ...render_particles},
         ["floor", "underground", "fish"],
-        ["underground", "cubemap", "fish"]
+        ["underground", "cubemap", "fish", "fish_water"]
       );
     }
   
     for (var render_id in render_objects) {
-      if (!scene.current_objects.includes(render_id)) {
+      if (!scene.contains(render_id)) {
         continue;
       }
       render_objects[render_id].render();
     }
     for (var render_id in render_mirrors) {
-      if (!scene.current_objects.includes(render_id)) {
+      if (!scene.contains(render_id)) {
         continue;
       }
       render_mirrors[render_id].render();
+    }
+
+    for (var render_id in render_particles) {
+      render_particles[render_id].render();
     }
 
     window.requestAnimationFrame(render); // While(True) loop!

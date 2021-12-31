@@ -43,6 +43,8 @@ class Program {
       this.gl.uniform2fv(uniform_location, value); return;
     } else if (type=="vec3"){
       this.gl.uniform3fv(uniform_location, value); return;
+    } else if (type=="vec4"){
+      this.gl.uniform4fv(uniform_location, value); return;
     } else if(type == "float"){
       this.gl.uniform1f(uniform_location, value); return;
     } else if (type == "mat4") {

@@ -40,6 +40,8 @@ class Keyboard {
       } 
       else if (key == ' ') {
         this.press_spacebar();
+      } else if (key == 'Enter') {
+        this.press_enter();
       }
       else {
         console.log("This key is not bound for the current controller " + this.constructor.name);
@@ -88,6 +90,10 @@ class Keyboard {
   }
 
   press_spacebar() {
+    console.log("This key is not bound for the current controller " + this.constructor.name);
+  }
+
+  press_enter() {
     console.log("This key is not bound for the current controller " + this.constructor.name);
   }
 }
