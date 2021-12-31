@@ -117,9 +117,10 @@ async function main() {
   var render_particles = {
     "buff": new BuffRender(gl, render_objects["hero"].object, program_particles, camera),
     "fish_water": new FishWaterRender(gl, render_objects["fish"].object, program_particles, camera),
+    "dragon_fire": new DragonFireRender(gl, render_objects["dragon"].object, program_particles, camera)
   }
 
-  new TestController(document, render_particles["buff"].object)
+  //new TestController(document, render_particles["buff"].object)
 
   var scene = new Scene(
     {...render_objects, ...render_mirrors},
@@ -171,7 +172,7 @@ async function main() {
       }
       render_mirrors[render_id].render_mirror(
         {...render_objects, ...render_particles},
-        ["floor", "underground", "fish"],
+        ["floor", "underground", "fish", "fish_water"],
         ["underground", "cubemap", "fish", "fish_water"]
       );
     }

@@ -13,7 +13,9 @@ class BuffRender extends ParticlesRender {
           fade_color: 0.2,
           scale: 0.1,
           life: 2.0,
-          acceleration: [0.0, 1.0, 0.0]
+          acceleration: [0.0, 1.0, 0.0],
+          randomness_acceleration: [0.0, 0.1, 0.1],
+          velocity: [0.0, 0.0, 0.0]
         }
       ),
       program,

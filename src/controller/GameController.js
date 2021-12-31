@@ -40,6 +40,7 @@ class GameController {
         }
 
         this.render_objects["buff"].object.stop_respawn();
+        this.render_objects["dragon_fire"].object.stop_respawn();
         
         this.render_objects["slime"].object.update_data = {}
         this.render_objects["skeleton"].object.update_data = {}
@@ -180,6 +181,7 @@ class GameController {
           }
         } else if (opponent instanceof C) {
           this.animation_steps = fps/30*40;
+          this.render_objects["dragon_fire"].object.start_respawn();
           audios["./src/view/assets/sounds/dragon_attack.mp3"].play();
           this.render_objects["dragon"].object.update_data = {
             animation: "attack",

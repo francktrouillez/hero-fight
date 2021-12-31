@@ -7,7 +7,7 @@ class ParticleGenerator {
     this.offset_position = offset_position;
     this.range_position = range_position;
     this.number_particles = number_particles;
-    this.respawn_rate = respawn_rate;
+    this.respawn_rate = 0;
     this.initial_respawn_rate = respawn_rate;
 
     this.color = particle_info.color;
@@ -15,6 +15,8 @@ class ParticleGenerator {
     this.scale = particle_info.scale;
     this.life = particle_info.life;
     this.acceleration = particle_info.acceleration
+    this.velocity = particle_info.velocity
+    this.randomness_acceleration = particle_info.randomness_acceleration
 
     this.particles = []
     this.last_live_particle_index = 0;
@@ -37,8 +39,16 @@ class ParticleGenerator {
             this.ref_object.position.y + this.offset_position[1],
             this.ref_object.position.z + this.offset_position[2]
           ],
-          [0.0, 0.0, 0.0],
-          this.acceleration,
+          [
+            this.velocity[0],
+            this.velocity[1],
+            this.velocity[2]  
+          ],
+          [
+            this.acceleration[0] + 2 * this.randomness_acceleration[0] * (Math.random() - 0.5),
+            this.acceleration[1] + 2 * this.randomness_acceleration[1] * (Math.random() - 0.5),
+            this.acceleration[2] + 2 * this.randomness_acceleration[2] * (Math.random() - 0.5),
+          ],
           [
             this.color[0],
             this.color[1],
@@ -98,7 +108,16 @@ class ParticleGenerator {
       1.0
     ])
     this.particles[particle_index].life = this.life;
-    this.particles[particle_index].velocity = [0.0, 0.0, 0.0]
+    this.particles[particle_index].velocity = [
+      this.velocity[0],
+      this.velocity[1],
+      this.velocity[2]  
+    ]
+    this.particles[particle_index].acceleration = [
+      this.acceleration[0] + 2 * this.randomness_acceleration[0] * (Math.random() - 0.5),
+      this.acceleration[1] + 2 * this.randomness_acceleration[1] * (Math.random() - 0.5),
+      this.acceleration[2] + 2 * this.randomness_acceleration[2] * (Math.random() - 0.5),
+    ]
   }
 
   update_particles() {
