@@ -14,12 +14,13 @@ class FishWaterRender extends ParticlesRender {
           scale: 0.08,
           life: 2.0,
           acceleration: [0.0, 1.0, 0.0],
-          randomness_acceleration: [0.0, 0.1, 0.1],
+          randomness_acceleration: [0.0, 0.0, 0.0],
           velocity: [0.0, 0.0, 0.0]
         }
       ),
       program,
       camera
     )
+    this.object.start_respawn()
   }
 }
