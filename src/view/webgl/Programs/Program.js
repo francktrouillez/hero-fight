@@ -1,12 +1,9 @@
 class Program {
 
-  constructor(gl, vertex_code, fragment_code, uniforms_map) {
+  constructor(gl, uniforms_map) {
     this.gl = gl;
-    this.vertex_shader = this.compile_shader(vertex_code, gl.VERTEX_SHADER);
-    this.fragment_shader = this.compile_shader(fragment_code, gl.FRAGMENT_SHADER);
-    this.program = null;
-    this.create_program();
     this.uniforms_map = uniforms_map;
+    this.program = null;
   }
 
   compile_shader(source, type) {
@@ -22,10 +19,18 @@ class Program {
     return shader;
   }
 
+  compile_shaders() {
+    return;
+  }
+
+  attach_shaders() {
+    return;
+  }
+
   create_program() {
+    this.compile_shaders()
     this.program = this.gl.createProgram();
-    this.gl.attachShader(this.program, this.vertex_shader);
-    this.gl.attachShader(this.program, this.fragment_shader);
+    this.attach_shaders();
     this.gl.linkProgram(this.program);
 
     if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS)) {

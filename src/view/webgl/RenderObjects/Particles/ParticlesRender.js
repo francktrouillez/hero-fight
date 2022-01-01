@@ -20,7 +20,7 @@ class ParticlesRender extends RenderObject {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
     this.program.use();
     this.program.manage_uniforms(this.uniform_map);
-    this.object.activate_and_draw(this.program.program);
+    this.object.activate_and_draw(this.program.program);     
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   }
 

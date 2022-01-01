@@ -23,11 +23,15 @@ async function main() {
     ["./src/view/assets/sounds/dragon_attack.mp3", 0.6],
     ["./src/view/assets/sounds/dragon_flying.mp3", 0.4],
     ["./src/view/assets/sounds/game_over.mp3", 0.5],
+    ["./src/view/assets/sounds/kill.mp3", 0.4],
   ])
 
   shaders = await load_shaders([
     "./src/view/glsl/cubemap/cubemap.frag",
     "./src/view/glsl/cubemap/cubemap.vert",
+    "./src/view/glsl/explosion/light.vert",
+    "./src/view/glsl/explosion/light1.frag",
+    "./src/view/glsl/explosion/light4.frag",
     "./src/view/glsl/lights/light.vert",
     "./src/view/glsl/lights/light1.frag",
     "./src/view/glsl/lights/light4.frag",
@@ -65,7 +69,7 @@ async function main() {
   ])
 
   const canvas = document.getElementById('webgl_canvas');
-  const gl = canvas.getContext('webgl');
+  const gl = canvas.getContext('webgl', { premultipliedAlpha: false });
  
   // Programs
   var program_full_lights = new LightProgram(gl, 4);
@@ -74,6 +78,8 @@ async function main() {
   var program_only_sun = new LightProgram(gl, 1);
   var program_cubemap = new CubemapProgram(gl);
   var program_particles = new ParticleProgram(gl);
+  var program_monsters_only_sun = new MonsterExplodingProgram(gl, 1);
+  var program_monsters_full_lights = new MonsterExplodingProgram(gl, 4);
 
   // Definition of the camera
   var camera = new MainCamera(gl, canvas, window);
@@ -93,9 +99,6 @@ async function main() {
   // Render objects
   var render_objects = {
     "hero": new HeroRender(gl, program_full_lights, camera, lights_list),
-    "slime": new SlimeRender(gl, program_full_lights, camera, lights_list),
-    "skeleton": new SkeletonRender(gl, program_full_lights, camera, lights_list),
-    "dragon": new DragonRender(gl, program_full_lights, camera, lights_list),
     "cubemap": new DynamicCubemapRender(gl, program_cubemap, camera, [
         "./src/view/assets/textures/cubemaps/day",
         "./src/view/assets/textures/cubemaps/evening",
@@ -106,8 +109,13 @@ async function main() {
     "underground": new UndergroundRender(gl, program_only_sun, camera, [sun]),
     "fish": new FishRender(gl, program_only_sun, camera, [sun]),
     "forest": new ForestRender(gl, program_full_lights, camera, lights_list),
-    "wisp_horde": wisp_horde,
-    
+    "wisp_horde": wisp_horde,  
+  }
+
+  var render_exploding_objects = {
+    "slime": new SlimeRender(gl, program_monsters_full_lights, camera, lights_list),
+    "skeleton": new SkeletonRender(gl, program_monsters_full_lights, camera, lights_list),
+    "dragon": new DragonRender(gl, program_monsters_full_lights, camera, lights_list),
   }
 
   // Mirror objects
@@ -118,13 +126,11 @@ async function main() {
   var render_particles = {
     "buff": new BuffRender(gl, render_objects["hero"].object, program_particles, camera),
     "fish_water": new FishWaterRender(gl, render_objects["fish"].object, program_particles, camera),
-    "dragon_fire": new DragonFireRender(gl, render_objects["dragon"].object, program_particles, camera)
+    "dragon_fire": new DragonFireRender(gl, render_exploding_objects["dragon"].object, program_particles, camera)
   }
 
-  //new TestController(document, render_particles["buff"].object)
-
   var scene = new Scene(
-    {...render_objects, ...render_mirrors},
+    {...render_objects, ...render_mirrors, ...render_exploding_objects},
     {
       "sun": sun
     },
@@ -132,17 +138,19 @@ async function main() {
       "only_sun": {
         program: program_only_sun,
         lights: [sun],
+        monsters_program: program_monsters_only_sun, 
         mirror_program: program_water_only_sun
       },
       "full_lights": {
         program: program_full_lights,
         lights: lights_list,
+        monsters_program: program_monsters_full_lights, 
         mirror_program: program_water_full_lights
       }
     }
   )
 
-  var game_controller = new GameController(document, {...render_objects, ...render_particles}, scene);
+  var game_controller = new GameController(document, {...render_objects, ...render_particles, ...render_exploding_objects}, scene);
 
   var fps_counter = new FPSCounter()
 
@@ -152,8 +160,11 @@ async function main() {
     game_controller.update(fps_counter.get_fps());
 
     //Draw loop
-    gl.clearColor(0.2, 0.2, 0.2, 1);
-    gl.clearDepth(1.0);                 // Clear everything
+    gl.clearColor(0.0, 0.0, 0.0, 1);
+    gl.clearDepth(1.0);         // Clear everything
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);        
   
     gl.enable(gl.DEPTH_TEST);           // Enable depth testing
     gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
@@ -167,12 +178,16 @@ async function main() {
       render_particles[render_id].object.update();
     }
 
+    for (var render_id in render_exploding_objects) {
+      render_exploding_objects[render_id].update_t(time);
+    }
+
     for (var render_id in render_mirrors) {
       if (!scene.contains(render_id)) {
         continue;
       }
       render_mirrors[render_id].render_mirror(
-        {...render_objects, ...render_particles},
+        {...render_objects, ...render_particles, ...render_exploding_objects},
         ["floor", "underground", "fish", "fish_water"],
         ["underground", "cubemap", "fish", "fish_water"]
       );
@@ -190,10 +205,16 @@ async function main() {
       }
       render_mirrors[render_id].render();
     }
-
+    for (var render_id in render_exploding_objects) {
+      if (!scene.contains(render_id)) {
+        continue;
+      }
+      render_exploding_objects[render_id].render();
+    }
     for (var render_id in render_particles) {
       render_particles[render_id].render();
     }
+    
 
     window.requestAnimationFrame(render); // While(True) loop!
   }

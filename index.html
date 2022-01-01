@@ -27,7 +27,6 @@
 		<script type="text/javascript" src="./src/view/scripts/math.js"></script>
 		<!-- WebGL -->
 		<script type="text/javascript" src="./src/view/webgl/Camera.js"></script>
-		<script type="text/javascript" src="./src/view/webgl/Program.js"></script>
 		<script type="text/javascript" src="./src/view/webgl/Light.js"></script>
 		<script type="text/javascript" src="./src/view/webgl/RenderObject.js"></script>
 		<script type="text/javascript" src="./src/view/webgl/Scene.js"></script>
@@ -60,13 +59,24 @@
 				
 
 			<!-- Programs -->
-			<script type="text/javascript" src="./src/view/webgl/Programs/CubemapProgram.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/Programs/LightProgram.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/Programs/ParticleProgram.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/Programs/SimpleProgram.js"></script>
-			<script type="text/javascript" src="./src/view/webgl/Programs/WaterProgram.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Programs/Program.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Programs/BasicProgram.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/Programs/GeometryProgram.js"></script>
+				<!-- Basic programs -->
+				<script type="text/javascript" src="./src/view/webgl/Programs/BasicPrograms/CubemapProgram.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/Programs/BasicPrograms/ExplodingProgram.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/Programs/BasicPrograms/LightProgram.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/Programs/BasicPrograms/ParticleProgram.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/Programs/BasicPrograms/SimpleProgram.js"></script>
+				<script type="text/javascript" src="./src/view/webgl/Programs/BasicPrograms/WaterProgram.js"></script>
+					<!-- Exploding programs -->
+					<script type="text/javascript" src="./src/view/webgl/Programs/BasicPrograms/ExplodingPrograms/MonsterExplodingProgram.js"></script>
+
+				<!-- Geometry programs -->
+
 			<!-- Render objects -->
 			<script type="text/javascript" src="./src/view/webgl/RenderObjects/ContainerRender.js"></script>
+			<script type="text/javascript" src="./src/view/webgl/RenderObjects/ExplodingRenderObject.js"></script>
 				<!-- Animated objects -->
 				<script type="text/javascript" src="./src/view/webgl/RenderObjects/AnimatedObjects/DragonRender.js"></script>
 				<script type="text/javascript" src="./src/view/webgl/RenderObjects/AnimatedObjects/HeroRender.js"></script>

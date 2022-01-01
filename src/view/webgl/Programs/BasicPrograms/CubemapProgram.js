@@ -1,4 +1,4 @@
-class CubemapProgram extends Program{
+class CubemapProgram extends BasicProgram{
 
   constructor(gl) {
     const vertex_code = shaders["./src/view/glsl/cubemap/cubemap.vert"];

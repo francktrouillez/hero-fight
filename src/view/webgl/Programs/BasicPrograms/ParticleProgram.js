@@ -1,4 +1,4 @@
-class ParticleProgram extends Program{
+class ParticleProgram extends BasicProgram{
 
   constructor(gl) {
     const vertex_code = shaders["./src/view/glsl/particle/particle.vert"]

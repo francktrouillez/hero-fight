@@ -1,4 +1,4 @@
-class WaterProgram extends Program{
+class WaterProgram extends BasicProgram{
 
   constructor(gl, number_of_lights) {
     const vertex_code = shaders["./src/view/glsl/lights/light.vert"]

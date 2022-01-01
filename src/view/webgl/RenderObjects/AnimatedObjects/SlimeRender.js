@@ -1,4 +1,4 @@
-class SlimeRender extends RenderObject {
+class SlimeRender extends ExplodingRenderObject {
 
   constructor(gl, program, camera, lights_list) {
 
@@ -35,5 +35,9 @@ class SlimeRender extends RenderObject {
     this.uniform_map.key_view_pos = camera.get_position();
     this.uniform_map.key_point_ligths = lights_list;
     this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0], 32.0);
+    this.uniform_map.key_a = program.uniforms_value.a
+    this.uniform_map.key_v0 = program.uniforms_value.v0
+    this.uniform_map.key_fade_color = program.uniforms_value.fade_color
+    this.uniform_map.key_t = 0
   }
 }

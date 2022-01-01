@@ -104,7 +104,7 @@ class Scene {
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
     const concerned_objects = [
-      "hero", "slime", "skeleton", "dragon", "floor", "forest"
+      "hero", "floor", "forest"
     ]
 
     for (const object of concerned_objects) {
@@ -112,6 +112,18 @@ class Scene {
         continue
       }
       this.all_objects[object].set_program(program_settings.program);
+      this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
+    }
+    // Set the good program for the potentially exploding objects
+    const concerned_exploding_objects = [
+      "slime", "skeleton", "dragon"
+    ]
+
+    for (const object of concerned_exploding_objects) {
+      if (!(object in this.all_objects)) {
+        continue
+      }
+      this.all_objects[object].set_program(program_settings.monsters_program);
       this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
     }
     //Set the good program for the mirrors
@@ -128,6 +140,8 @@ class Scene {
 
     // Set the good mode for the mirrors
     this.all_objects["lake"].mode = "refraction"
+
+
   }
 
   set_time_evening() {
@@ -144,7 +158,7 @@ class Scene {
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
     const concerned_objects = [
-      "hero", "slime", "skeleton", "dragon", "floor", "forest"
+      "hero", "floor", "forest"
     ]
 
     for (const object of concerned_objects) {
@@ -152,6 +166,18 @@ class Scene {
         continue
       }
       this.all_objects[object].set_program(program_settings.program);
+      this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
+    }
+    // Set the good program for the potentially exploding objects
+    const concerned_exploding_objects = [
+      "slime", "skeleton", "dragon"
+    ]
+
+    for (const object of concerned_exploding_objects) {
+      if (!(object in this.all_objects)) {
+        continue
+      }
+      this.all_objects[object].set_program(program_settings.monsters_program);
       this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
     }
     //Set the good program for the mirrors
@@ -185,7 +211,7 @@ class Scene {
     // Set the good program for the objects
     const program_settings = this.programs_settings["full_lights"]
     const concerned_objects = [
-      "hero", "slime", "skeleton", "dragon", "floor", "forest"
+      "hero", "floor", "forest"
     ]
 
     for (const object of concerned_objects) {
@@ -193,6 +219,18 @@ class Scene {
         continue
       }
       this.all_objects[object].set_program(program_settings.program);
+      this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
+    }
+    // Set the good program for the potentially exploding objects
+    const concerned_exploding_objects = [
+      "slime", "skeleton", "dragon"
+    ]
+
+    for (const object of concerned_exploding_objects) {
+      if (!(object in this.all_objects)) {
+        continue
+      }
+      this.all_objects[object].set_program(program_settings.monsters_program);
       this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
     }
     //Set the good program for the mirrors

@@ -1,4 +1,4 @@
-class SimpleProgram extends Program{
+class SimpleProgram extends BasicProgram{
 
   constructor(gl) {
     const vertex_code = shaders["./src/view/glsl/simple/simple.vert"]
