@@ -85,14 +85,6 @@ async function main() {
       "monsters_4": new MonsterExplodingProgram(gl, 4)
     }  
   )
-  var program_full_lights = new LightProgram(gl, 4);
-  var program_water_only_sun = new WaterProgram(gl, 1);
-  var program_water_full_lights = new WaterProgram(gl, 4);
-  var program_only_sun = new LightProgram(gl, 1);
-  var program_cubemap = new CubemapProgram(gl);
-  var program_particles = new ParticleProgram(gl);
-  var program_monsters_only_sun = new MonsterExplodingProgram(gl, 1);
-  var program_monsters_full_lights = new MonsterExplodingProgram(gl, 4);
 
   // Definition of the camera
   var camera = new MainCamera(gl, canvas, window);
