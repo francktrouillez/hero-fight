@@ -20,7 +20,7 @@ async function main() {
     ["./src/view/assets/sounds/buff.mp3", 0.2],
     ["./src/view/assets/sounds/slime.mp3", 0.7],
     ["./src/view/assets/sounds/skeleton.mp3", 0.8],
-    ["./src/view/assets/sounds/dragon_attack.mp3", 0.6],
+    ["./src/view/assets/sounds/dragon_fire.mp3", 0.8],
     ["./src/view/assets/sounds/dragon_flying.mp3", 0.4],
     ["./src/view/assets/sounds/game_over.mp3", 0.5],
     ["./src/view/assets/sounds/kill.mp3", 0.4],
