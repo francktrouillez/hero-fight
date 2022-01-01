@@ -6,10 +6,13 @@ class ForestRender extends ContainerRender {
     this.build_new_tree(1, {x: -8.0, y: 0.0, z: -16.0, rotation: Math.PI/8})
     this.build_new_tree(1, {x: 14.0, y: 0.0, z: -7.5, rotation: -Math.PI/8})
     this.build_new_tree(1, {x: 4.0, y: 0.0, z: 15.5, rotation: Math.PI/2})
+    this.build_new_tree(1, {x: -14.0, y: 0.0, z: -5.5, rotation: Math.PI/4})
 
     this.build_new_tree(2, {x: -14.0, y: 0.0, z: 8.0, rotation: Math.PI/8})
     this.build_new_tree(2, {x: -5.0, y: 0.0, z: 14.5, rotation: -Math.PI/8})
     this.build_new_tree(2, {x: 7.0, y: 0.0, z: -12.5, rotation: Math.PI/2})
+    this.build_new_tree(2, {x: 14.5, y: 0.0, z: 7.5, rotation: -3*Math.PI/8})
+
 
 
   }
