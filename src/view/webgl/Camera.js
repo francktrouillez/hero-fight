@@ -199,8 +199,7 @@ class Camera {
   }
 
   set_aspect_ratio(width, height) {
-    this.info.aspect = width/height
-    this.projection = glMatrix.mat4.create();
-    this.projection = glMatrix.mat4.perspective(this.projection, this.info.fov, this.info.aspect, this.info.near, this.info.far);
+    this.info.aspect = width/height;
+    this.refresh_camera()
   }
 }
