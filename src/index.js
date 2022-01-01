@@ -22,6 +22,7 @@ async function main() {
     ["./src/view/assets/sounds/skeleton.mp3", 0.8],
     ["./src/view/assets/sounds/dragon_attack.mp3", 0.6],
     ["./src/view/assets/sounds/dragon_flying.mp3", 0.4],
+    ["./src/view/assets/sounds/game_over.mp3", 0.5],
   ])
 
   shaders = await load_shaders([

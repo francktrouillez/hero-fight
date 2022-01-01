@@ -7,10 +7,22 @@ class GameController {
     this.animation_steps = 0;
     this.render_objects = render_objects;
     this.scene = scene;
+    this.is_game_over = false;
   }
 
   update(fps) {
     this.game.update();
+    if (this.game.is_game_over && !this.is_game_over) {
+      this.game_over = true;
+      document.getElementById('game_over_screen').style.visibility = "visible";
+      audios["./src/view/assets/sounds/game_over.mp3"].play()
+      audios["./src/view/assets/sounds/background.mp3"].pause();
+      audios["./src/view/assets/sounds/dragon_flying.mp3"].pause();
+      document.getElementById('fight_menu').style.visibility = "hidden";
+      document.getElementById('bottom_ath').style.visibility = "hidden";
+      document.getElementById('bottom_right_ath').style.visibility = "hidden";
+      document.getElementById('top_right_ath').style.visibility = "hidden";
+    }
     const opponent = this.game.opponent;
     if (this.animating) {
       this.animation_steps -= 1;
