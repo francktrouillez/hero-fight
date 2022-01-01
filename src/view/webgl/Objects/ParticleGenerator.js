@@ -14,6 +14,7 @@ class ParticleGenerator {
     this.fade_color = particle_info.fade_color;
     this.scale = particle_info.scale;
     this.life = particle_info.life;
+    this.randomness_life = particle_info.randomness_life;
     this.acceleration = particle_info.acceleration
     this.velocity = particle_info.velocity
     this.randomness_acceleration = particle_info.randomness_acceleration
@@ -107,7 +108,7 @@ class ParticleGenerator {
       this.color[2] + (Math.random() - 0.5) / 5,
       1.0
     ])
-    this.particles[particle_index].life = this.life;
+    this.particles[particle_index].life = this.life + this.randomness_life * (Math.random() - 0.5);
     this.particles[particle_index].velocity = [
       this.velocity[0],
       this.velocity[1],
