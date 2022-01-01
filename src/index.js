@@ -72,6 +72,19 @@ async function main() {
   const gl = canvas.getContext('webgl', { premultipliedAlpha: false });
  
   // Programs
+  var program_manager = new ProgramManager(
+    gl,
+    {
+      "lights_1": new LightProgram(gl, 1),
+      "lights_4": new LightProgram(gl, 4),
+      "water_1": new WaterProgram(gl, 1),
+      "water_4": new WaterProgram(gl, 4),
+      "cubemap": new CubemapProgram(gl),
+      "particles": new ParticleProgram(gl),
+      "monsters_1": new MonsterExplodingProgram(gl, 1),
+      "monsters_4": new MonsterExplodingProgram(gl, 4)
+    }  
+  )
   var program_full_lights = new LightProgram(gl, 4);
   var program_water_only_sun = new WaterProgram(gl, 1);
   var program_water_full_lights = new WaterProgram(gl, 4);
@@ -87,7 +100,7 @@ async function main() {
 
   // Lights
   var sun = new Sun()
-  var wisp_horde = new WispHordeRender(gl, program_only_sun, camera, [sun])
+  var wisp_horde = new WispHordeRender(gl, program_manager.get("lights_1"), camera, [sun])
 
   //Fill the list used to regroup all the lights and send it to the render object dict to update the uniform accordingly
   let lights_list = [];
@@ -98,35 +111,35 @@ async function main() {
   
   // Render objects
   var render_objects = {
-    "hero": new HeroRender(gl, program_full_lights, camera, lights_list),
-    "cubemap": new DynamicCubemapRender(gl, program_cubemap, camera, [
+    "hero": new HeroRender(gl, program_manager.get("lights_4"), camera, lights_list),
+    "cubemap": new DynamicCubemapRender(gl, program_manager.get("cubemap"), camera, [
         "./src/view/assets/textures/cubemaps/day",
         "./src/view/assets/textures/cubemaps/evening",
         "./src/view/assets/textures/cubemaps/night",
       ]
     ),
-    "floor": new FloorRender(gl, program_full_lights, camera, lights_list),
-    "underground": new UndergroundRender(gl, program_only_sun, camera, [sun]),
-    "fish": new FishRender(gl, program_only_sun, camera, [sun]),
-    "forest": new ForestRender(gl, program_full_lights, camera, lights_list),
+    "floor": new FloorRender(gl, program_manager.get("lights_4"), camera, lights_list),
+    "underground": new UndergroundRender(gl, program_manager.get("lights_1"), camera, [sun]),
+    "fish": new FishRender(gl, program_manager.get("lights_1"), camera, [sun]),
+    "forest": new ForestRender(gl, program_manager.get("lights_4"), camera, lights_list),
     "wisp_horde": wisp_horde,  
   }
 
   var render_exploding_objects = {
-    "slime": new SlimeRender(gl, program_monsters_full_lights, camera, lights_list),
-    "skeleton": new SkeletonRender(gl, program_monsters_full_lights, camera, lights_list),
-    "dragon": new DragonRender(gl, program_monsters_full_lights, camera, lights_list),
+    "slime": new SlimeRender(gl, program_manager.get("monsters_4"), camera, lights_list),
+    "skeleton": new SkeletonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
+    "dragon": new DragonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
   }
 
   // Mirror objects
   var render_mirrors = {
-    "lake": new WaterRender(gl, program_full_lights, camera, lights_list)
+    "lake": new WaterRender(gl, program_manager.get("lights_4"), camera, lights_list)
   }
 
   var render_particles = {
-    "buff": new BuffRender(gl, render_objects["hero"].object, program_particles, camera),
-    "fish_water": new FishWaterRender(gl, render_objects["fish"].object, program_particles, camera),
-    "dragon_fire": new DragonFireRender(gl, render_exploding_objects["dragon"].object, program_particles, camera)
+    "buff": new BuffRender(gl, render_objects["hero"].object, program_manager.get("particles"), camera),
+    "fish_water": new FishWaterRender(gl, render_objects["fish"].object, program_manager.get("particles"), camera),
+    "dragon_fire": new DragonFireRender(gl, render_exploding_objects["dragon"].object, program_manager.get("particles"), camera)
   }
 
   var scene = new Scene(
@@ -136,16 +149,16 @@ async function main() {
     },
     {
       "only_sun": {
-        program: program_only_sun,
+        program: program_manager.get("lights_1"),
         lights: [sun],
-        monsters_program: program_monsters_only_sun, 
-        mirror_program: program_water_only_sun
+        monsters_program: program_manager.get("monsters_1"), 
+        mirror_program: program_manager.get("water_1")
       },
       "full_lights": {
-        program: program_full_lights,
+        program: program_manager.get("lights_4"),
         lights: lights_list,
-        monsters_program: program_monsters_full_lights, 
-        mirror_program: program_water_full_lights
+        monsters_program: program_manager.get("monsters_4"), 
+        mirror_program: program_manager.get("water_4")
       }
     }
   )
