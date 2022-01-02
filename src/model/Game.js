@@ -4,11 +4,14 @@ class Game {
   static ANIMATION_REST = 1;
   static FIGHTING = 2;
   static ANIMATION_FIGHTING_ATTACK = 3;
-  static ANIMATION_FIGHTING_ATTACK_WITH_MONSTER = 7;
-  static ANIMATION_FIGHTING_MONSTER = 8;
+  static ANIMATION_FIGHTING_ATTACK_WITH_MONSTER = 4;
+  static ANIMATION_FIGHTING_MONSTER = 5;
   static ANIMATION_FIGHTING_BUFF = 6;
-  static GETTING_XP = 4;
-  static ANIMATION_GETTING_XP = 5;
+  static GETTING_XP = 7;
+  static ANIMATION_GETTING_XP = 8;
+
+  static DEMO_MODE = 9;
+  static PLAY_MODE = 10;
 
   constructor(hero_controller, opponent_controller) {
     this.round = 0;
@@ -19,6 +22,7 @@ class Game {
     this.waiting = false;
     this.state = null;
     this.fight = null;
+    this.mode = null;
 
     this.animating = false;
 
@@ -143,20 +147,39 @@ class Game {
   }
 
   go_to_next_round() {
-    this.round += 1;
-    if (this.hero.get_level() < 2) {
-      this.opponent = new A(this.opponent_controller);
-    } else if (this.hero.get_level() < 4) {
-      this.opponent = new B(this.opponent_controller);
-    } else {
-      this.opponent = new C(this.opponent_controller);
+    if (this.mode == null) {
+      return;
     }
+    this.round += 1;
+    if (this.mode == Game.PLAY_MODE) {
+      const opponent_index = Math.random() * 3;
+      if (opponent_index < 1) {
+        this.opponent = new Slime(this.opponent_controller, this.mode, this.hero.get_level());
+      } else if (opponent_index < 2) {
+        this.opponent = new Skeleton(this.opponent_controller, this.mode, this.hero.get_level());
+      } else {
+        this.opponent = new Dragon(this.opponent_controller, this.mode, this.hero.get_level());
+      }
+    } else {
+      if ((this.hero.get_level() - 1) % 3 == 0) {
+        this.opponent = new Slime(this.opponent_controller, this.mode, this.hero.get_level());
+      } else if ((this.hero.get_level() - 1) % 3 == 1) {
+        this.opponent = new Skeleton(this.opponent_controller, this.mode, this.hero.get_level());
+      } else {
+        this.opponent = new Dragon(this.opponent_controller, this.mode, this.hero.get_level());
+      }
+    }
+    
     this.fight = new Fight(this.hero, this.opponent, this);
     this.switch_state(Game.ANIMATION_REST); 
   }
 
   game_over() {
     this.is_game_over = true;
+  }
+
+  set_mode(mode) {
+    this.mode = mode;
   }
 
 

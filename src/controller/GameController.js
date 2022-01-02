@@ -73,7 +73,7 @@ class GameController {
         this.render_objects["skeleton"].reset();
         this.render_objects["dragon"].reset();
 
-        if (opponent instanceof A) {
+        if (opponent instanceof Slime) {
           this.render_objects["slime"].object.update_data = {
             animation: "idle",
             frame_id: 0,
@@ -90,7 +90,7 @@ class GameController {
             this.num_vertex = this.triangles_index_map[this.update_data.animation][id_frame].length * 3;
             this.update_data.frame_id = (this.update_data.frame_id + 1)%(this.update_data.max_renders*2)
           }
-        } else if (opponent instanceof B) {
+        } else if (opponent instanceof Skeleton) {
           this.render_objects["skeleton"].object.update_data = {
             animation: "idle",
             frame_id: 0,
@@ -106,7 +106,7 @@ class GameController {
             this.num_vertex = this.triangles_index_map[this.update_data.animation][id_frame].length * 3;
             this.update_data.frame_id = (this.update_data.frame_id + 1)%(this.update_data.max_renders)
           } 
-        } else if (opponent instanceof C) {
+        } else if (opponent instanceof Dragon) {
           audios["./src/view/assets/sounds/dragon_flying.mp3"].play();
           audios["./src/view/assets/sounds/dragon_flying.mp3"].loop = true
           this.render_objects["dragon"].object.update_data = {
@@ -171,7 +171,7 @@ class GameController {
           this.update_data.frame_id += this.update_data.increment
         }
       } else if (this.game.state == Game.ANIMATION_FIGHTING_MONSTER) {
-        if (opponent instanceof A) {
+        if (opponent instanceof Slime) {
           this.animation_steps = fps/30*15 + fps/2;
           audios["./src/view/assets/sounds/slime.mp3"].play()
           this.render_objects["slime"].object.update_data = {
@@ -193,7 +193,7 @@ class GameController {
             this.num_vertex = this.triangles_index_map[this.update_data.animation][id_frame].length * 3;
             this.update_data.frame_id += this.update_data.increment
           }
-        } else if (opponent instanceof B) {
+        } else if (opponent instanceof Skeleton) {
           this.animation_steps = fps/30*28 + fps/2;
           audios["./src/view/assets/sounds/skeleton.mp3"].play();
           this.render_objects["skeleton"].object.update_data = {
@@ -215,7 +215,7 @@ class GameController {
             this.num_vertex = this.triangles_index_map[this.update_data.animation][id_frame].length * 3;
             this.update_data.frame_id += this.update_data.increment
           }
-        } else if (opponent instanceof C) {
+        } else if (opponent instanceof Dragon) {
           this.animation_steps = fps/30*40;
           this.render_objects["dragon_fire"].object.start_respawn();
           audios["./src/view/assets/sounds/dragon_fire.mp3"].play();

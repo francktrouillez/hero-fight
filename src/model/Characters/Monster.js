@@ -14,26 +14,7 @@ class Monster extends Character {
 
   play(opponent) {
     this.attack_character(opponent); return "attack";
-    let action = Math.floor(Math.random() * 4);
-    if (action == Monster.ATTACK) {
-      this.attack_character(opponent);
-    } else if (action == Monster.BUFF_ATTACK) {
-      this.buff_attack(Math.ceil(0.2*this.attack));
-    } else if (action == Monster.BUFF_DEFENSE) {
-      this.buff_defense(Math.ceil(0.4*this.defense));
-    } else if (action == Monster.HEAL) {
-      this.gain_life(Math.ceil(0.5*this.max_life));
-    }
   }
-
-  buff_attack(bonus_attack) {
-    this.attack += bonus_attack;
-  }
-
-  buff_defense(bonus_defense) {
-    this.defense += bonus_defense;
-  }
-
 
   /* Getter */
 

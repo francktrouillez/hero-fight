@@ -14,9 +14,9 @@
 		<script type="text/javascript" src="./src/model/Characters/Hero.js"></script>
 		<script type="text/javascript" src="./src/model/Characters/Monster.js"></script>
 			<!-- Monsters -->
-			<script type="text/javascript" src="./src/model/Characters/Monsters/A.js"></script>
-			<script type="text/javascript" src="./src/model/Characters/Monsters/B.js"></script>
-			<script type="text/javascript" src="./src/model/Characters/Monsters/C.js"></script>
+			<script type="text/javascript" src="./src/model/Characters/Monsters/Dragon.js"></script>
+			<script type="text/javascript" src="./src/model/Characters/Monsters/Skeleton.js"></script>
+			<script type="text/javascript" src="./src/model/Characters/Monsters/Slime.js"></script>
   
 	<!-- View -->
 		<!-- Libraries -->
@@ -110,6 +110,7 @@
 	<script type="text/javascript" src="./src/controller/Keyboard.js"></script>
 	<script type="text/javascript" src="./src/controller/Button.js"></script>
 	<script type="text/javascript" src="./src/controller/GameController.js"></script>
+	<script type="text/javascript" src="./src/controller/MainMenuController.js"></script>
 		<!-- Keyboard controllers -->
 		<script type="text/javascript" src="./src/controller/KeyboardControllers/CameraController.js"></script>
 		<script type="text/javascript" src="./src/controller/KeyboardControllers/TestController.js"></script>
@@ -172,13 +173,31 @@
 		</div>
 	</div>
 
+	<!-- Main menu screen -->
+	<div class="full_black_screen" id="main_menu_screen">
+		<div id="main_menu_img_container">
+			<img  class="screen_gif" src="./src/view/assets/main_menu_screen/warrior.gif" alt="running knight"/>
+			<div class="title_img_container">
+				<img  class="title_img" src="./src/view/assets/main_menu_screen/title.png" alt="hero fight"/>
+			</div>
+		</div>
+		<div id="main_menu_buttons">
+			<div class="main_menu_button_container">
+				<input type="image" class="main_menu_button" id="demo_button"/>
+			</div>
+			<div class="main_menu_button_container">
+				<input type="image" class="main_menu_button" id="play_button"/>
+			</div>
+		</div>
+	</div>
+
 	<!-- Loading screen -->
 	<div class="full_black_screen" id="loading_screen">
 		<div id="loading_img_container">
-			<img  class="screen_gif" id="loading_gif" src="./src/view/assets/loading_screen/running_knight.gif" alt="running knight"/>
+			<img  class="screen_gif" src="./src/view/assets/loading_screen/running_knight.gif" alt="running knight"/>
 		</div>
-		<div id="loading_info">
-			<p id="loading_text">Loading ...</p>
+		<div id="loading_bar_container">
+			<img  class="screen_gif" src="./src/view/assets/loading_screen/loading.gif" alt="loading bar"/>
 		</div>
 	</div>
 

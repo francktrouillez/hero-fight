@@ -4,7 +4,7 @@ class Hero extends Character {
 
   constructor(controller) {
     super(10, 10, 1, 0, controller);
-    this.set_level(0);
+    this.set_level(1);
     this.set_xp(0);
     this.action = null;
   }
@@ -46,7 +46,7 @@ class Hero extends Character {
     } else if (action == "buff_attack") {
       this.set_buff_attack(this.buff_attack + 2);
     } else if (action == "buff_defense") {
-      this.set_buff_defense(this.buff_defense + 2);
+      this.set_buff_defense(this.buff_defense + 1);
     } else if (action == "heal") {
       this.gain_life(10);
     } else {

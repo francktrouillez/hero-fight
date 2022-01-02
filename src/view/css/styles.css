@@ -96,7 +96,7 @@ html, body {
     display: flex;
 }
 
-#loading_text {
+.big_white_text {
     vertical-align: middle;
     color: white;
     font-size: 70px;
@@ -106,6 +106,12 @@ html, body {
 #loading_img_container {
     position: absolute;
     top: 150px;
+    height: 300px;
+}
+
+#loading_bar_container {
+    position: absolute;
+    bottom: 50px;
     height: 300px;
 }
 
@@ -123,5 +129,42 @@ html, body {
     bottom: 150px;
 }
 
+#main_menu_img_container {
+    position: absolute;
+    top: 50px;
+    height: 300px;
+    justify-content: space-around;
+    display: flex;
+}
 
+#main_menu_buttons {
+    position: absolute;
+    bottom: 50px;
+    height: 300px;
+    width: 80%;
+}
+
+.title_img_container {
+    top: 0px;
+    bottom: 0px;
+}
+
+.main_menu_button_container {
+    height: 50%;
+    top: 0px;
+    bottom: 0px;
+}
+
+.main_menu_button {
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.title_img {
+    width: 100%;
+    height: 100%; 
+    object-fit: contain;
+}
 

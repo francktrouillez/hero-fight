@@ -88,7 +88,7 @@ async function main() {
 
   // Definition of the camera
   var camera = new MainCamera(gl, canvas, window);
-  var camera_controller = new CameraController(document, camera);
+  new CameraController(document, camera);
 
   // Lights
   var sun = new Sun()
@@ -223,10 +223,10 @@ async function main() {
 
     window.requestAnimationFrame(render); // While(True) loop!
   }
+
+  new MainMenuController(document, game_controller.game)
   
   document.getElementById('loading_screen').style.visibility = "hidden";
-  audios["./src/view/assets/sounds/background.mp3"].play();
-  audios["./src/view/assets/sounds/background.mp3"].loop = true;
 
   render(0);
 };
