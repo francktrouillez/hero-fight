@@ -10,8 +10,8 @@ async function main() {
     "./src/view/assets/textures/Wisp_Texture.png",
     "./src/view/assets/textures/blue_fire.jpeg",
     "./src/view/assets/textures/Blue_fire.png",
-    "./src/view/assets/textures/bumpmap/grass_DIFFUSE.jpg",
-    "./src/view/assets/textures/bumpmap/grass_NORMAL.jpg",
+    "./src/view/assets/textures/bumpmap/floor_DIFFUSE.jpg",
+    "./src/view/assets/textures/bumpmap/floor_NORMAL.jpg",
     "./src/view/assets/textures/grass_floor.jpg",
     "./src/view/assets/textures/bumpmap/brickwall_DIFFUSE.jpg",
     "./src/view/assets/textures/bumpmap/brickwall_NORMAL.jpg"

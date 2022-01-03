@@ -180,8 +180,8 @@ async function generate_bumpmap(gl, program, camera, point_lights_list) {
                                       glMatrix.vec3.fromValues(0.5, 0.5, 0.5),
                                       glMatrix.vec3.fromValues(0.5, 0.5, 0.5),
                                       32.0 );                                 
-  var tex_diffuse = new Texture(gl, images["./src/view/assets/textures/bumpmap/grass_DIFFUSE.jpg"]);
-  var tex_normal = new Texture(gl,images["./src/view/assets/textures/bumpmap/grass_NORMAL.jpg"] );
+  var tex_diffuse = new Texture(gl, images["./src/view/assets/textures/bumpmap/floor_DIFFUSE.jpg"]);
+  var tex_normal = new Texture(gl,images["./src/view/assets/textures/bumpmap/floor_NORMAL.jpg"] );
 
   var bumpmap = new FloorBumpmapping(gl, tex_diffuse, tex_normal, 
     function() {
