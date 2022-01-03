@@ -170,7 +170,7 @@ class ComplexObject {
     }
   }
 
-   // Scale the position on the space of the object by th sent value
+   // Scale the position on the space of the object by the sent value
   scale(value){
     for(let pos in this.positions){
       this.positions[pos] = this.positions[pos] * value;

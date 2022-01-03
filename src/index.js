@@ -6,6 +6,7 @@ async function main() {
     "./src/view/assets/textures/Dragon_Texture.png",
     "./src/view/assets/textures/Wisp_Texture.png",
     "./src/view/assets/textures/Floor.png",
+    "./src/view/assets/textures/Floor_normal.png",
     "./src/view/assets/textures/Underground_Texture.png",
     "./src/view/assets/textures/Fish_Texture.png",
     "./src/view/assets/textures/Tree_Texture.png",
@@ -29,6 +30,9 @@ async function main() {
   shaders = await load_shaders([
     "./src/view/glsl/cubemap/cubemap.frag",
     "./src/view/glsl/cubemap/cubemap.vert",
+    "./src/view/glsl/bumpmap/bumpmap.vert",
+    "./src/view/glsl/bumpmap/bumpmap1.frag",
+    "./src/view/glsl/bumpmap/bumpmap4.frag",
     "./src/view/glsl/explosion/light.vert",
     "./src/view/glsl/explosion/light1.frag",
     "./src/view/glsl/explosion/light4.frag",
@@ -42,7 +46,7 @@ async function main() {
     "./src/view/glsl/simple/simple.frag",
     "./src/view/glsl/simple/simple.vert"
   ])
-
+  
   obj_files = await load_objs([
     "./src/view/assets/models/Warrior/Warrior.obj",
     ["./src/view/assets/models/Warrior/idle/", 15],
@@ -80,6 +84,8 @@ async function main() {
       "water_1": new WaterProgram(gl, 1),
       "water_4": new WaterProgram(gl, 4),
       "cubemap": new CubemapProgram(gl),
+      "bumpmap1": new BumpmapProgram(gl,1),
+      "bumpmap4": new BumpmapProgram(gl,4),
       "particles": new ParticleProgram(gl),
       "monsters_1": new MonsterExplodingProgram(gl, 1),
       "monsters_4": new MonsterExplodingProgram(gl, 4)
@@ -100,6 +106,8 @@ async function main() {
   for (const wisp_render of wisp_horde.elements) {
     lights_list.push(wisp_render.object.light)  
   }
+
+
   
   // Render objects
   var render_objects = {
@@ -110,7 +118,7 @@ async function main() {
         "./src/view/assets/textures/cubemaps/night",
       ]
     ),
-    "floor": new FloorRender(gl, program_manager.get("lights_4"), camera, lights_list),
+    "floor": new BumpmapRender(gl, program_manager.get("bumpmap1"),camera, lights_list),
     "underground": new UndergroundRender(gl, program_manager.get("lights_1"), camera, [sun]),
     "fish": new FishRender(gl, program_manager.get("lights_1"), camera, [sun]),
     "forest": new ForestRender(gl, program_manager.get("lights_4"), camera, lights_list),
@@ -142,12 +150,14 @@ async function main() {
     {
       "only_sun": {
         program: program_manager.get("lights_1"),
+        bumpmap: program_manager.get("bumpmap1"),
         lights: [sun],
         monsters_program: program_manager.get("monsters_1"), 
         mirror_program: program_manager.get("water_1")
       },
       "full_lights": {
         program: program_manager.get("lights_4"),
+        bumpmap: program_manager.get("bumpmap4"),
         lights: lights_list,
         monsters_program: program_manager.get("monsters_4"), 
         mirror_program: program_manager.get("water_4")
