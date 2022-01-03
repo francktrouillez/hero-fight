@@ -91,6 +91,16 @@ class Scene {
     this.time = time
   }
 
+  set_objects_program(concerned_objects, program, lights){
+    for (const object of concerned_objects) {
+      if (!(object in this.all_objects)) {
+        continue
+      }
+      this.all_objects[object].set_program(program);
+      this.all_objects[object].update_uniform("key_point_ligths", lights)
+    }
+  }
+
   set_time_day() {
     // Select the good objects
     this.current_objects = this.day_objects
@@ -115,6 +125,13 @@ class Scene {
       this.all_objects[object].set_program(program_settings.program);
       this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
     }
+
+    //Set the good program for the bumpmap
+    const concerned_bumpmaps = [
+      "floor"
+    ]
+    this.set_objects_program(concerned_bumpmaps, program_settings.bumpmap, program_settings.lights);
+
     // Set the good program for the potentially exploding objects
     const concerned_exploding_objects = [
       "slime", "skeleton", "dragon"
@@ -159,7 +176,7 @@ class Scene {
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
     const concerned_objects = [
-      "hero",  "forest"
+      "hero", "forest"
     ]
 
     for (const object of concerned_objects) {
@@ -169,6 +186,14 @@ class Scene {
       this.all_objects[object].set_program(program_settings.program);
       this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
     }
+
+    //Set the good program for the bumpmap
+    const concerned_bumpmaps = [
+      "floor"
+    ]
+    this.set_objects_program(concerned_bumpmaps, program_settings.bumpmap, program_settings.lights);
+
+
     // Set the good program for the potentially exploding objects
     const concerned_exploding_objects = [
       "slime", "skeleton", "dragon"
@@ -222,6 +247,13 @@ class Scene {
       this.all_objects[object].set_program(program_settings.program);
       this.all_objects[object].update_uniform("key_point_ligths", program_settings.lights)
     }
+
+    //Set the good program for the bumpmap
+    const concerned_bumpmaps = [
+      "floor"
+    ]
+    this.set_objects_program(concerned_bumpmaps, program_settings.bumpmap, program_settings.lights);
+
     // Set the good program for the potentially exploding objects
     const concerned_exploding_objects = [
       "slime", "skeleton", "dragon"

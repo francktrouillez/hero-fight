@@ -1,25 +1,17 @@
-class BumpmappingObject {
+class BumpmappingObject extends ComplexObject {
 
-  constructor(gl, texture_diffuse, texture_normals, positions, textures, num_vertex, update) {
-    this.gl = gl;
+  constructor(gl, obj_content, texture_normals) {
 
-    this.texture_object = texture_diffuse;
+    super(gl, obj_content);
     this.texture_normals = texture_normals;
 
-    this.positions = positions;
-    this.textures = textures;
-    this.num_vertex = num_vertex;
-    this.update = update;
-    this.update_data = null;
-
-    
     // Calculate the different tangent/bitangent vectors for each triangle and associate one to each face
     let vectors = this.generate_tangents_bitangents_vectors(this.positions, this.textures, this.num_vertex);
     let vectors_tangents = vectors[0]
     let vectors_bitangents = vectors[1];
 
     let vectors_normals = []
-    for(var i=0; i<(num_vertex/3);++i){
+    for(var i=0; i<(this.num_vertex/3);++i){
       var normal = glMatrix.vec3.create();
       normal = glMatrix.vec3.cross(normal, vectors_tangents[i],vectors_bitangents[i]);
       vectors_normals.push(normal);
@@ -29,29 +21,27 @@ class BumpmappingObject {
     this.normals = this.float32Array_from_vec3s(vectors_normals);
     this.tangents = this.float32Array_from_vec3s(vectors_tangents);
     this.bitangents = this.float32Array_from_vec3s(vectors_bitangents);
+
+    console.log(this.positions);
+    console.log(this.textures);
+    console.log(this.normals);
+    console.log(this.tangents);
+    console.log(this.bitangents);
     
     // Buffers
-    this.position_buffer = null;
-    this.texture_buffer = null;
-    this.normal_buffer = null;
     this.tangent_buffer = null;
     this.bitangent_buffer = null;
     this.init_buffers();
-
-    this.model = null;
-    this.position = null;
-    this.init_model();
-
   }
 
   init_buffers() {
     this.position_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.position_buffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, this.positions, this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
 
     this.texture_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.texture_buffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, this.textures, this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.textures), this.gl.STATIC_DRAW);
 
     this.normal_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normal_buffer);
@@ -65,14 +55,9 @@ class BumpmappingObject {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bitangent_buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, this.bitangents, this.gl.STATIC_DRAW);
 
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
-  }
 
-  init_model() {
-    this.model = glMatrix.mat4.create();
-    this.position = {
-      x: 0, y: 0, z: 0
-    }
+
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
   }
 
   activate(program) {
@@ -108,38 +93,6 @@ class BumpmappingObject {
     this.gl.enableVertexAttribArray(att_bitangent);
     this.gl.vertexAttribPointer(att_bitangent, 3, this.gl.FLOAT, false, 0*sizeofFloat, 0*sizeofFloat);
 
-  }
-
-  translate(x, y, z) {
-    this.position.x += x;
-    this.position.y += y;
-    this.position.z += z;
-    this.model = glMatrix.mat4.translate(this.model, this.model, glMatrix.vec3.fromValues(x, y, z));
-  }
-
-  rotate(value, x, y, z) {
-    this.model = glMatrix.mat4.rotate(this.model, this.model, value, glMatrix.vec3.fromValues(x, y, z));
-  }
-
-  setXYZ(x, y, z) {
-    this.translate(
-      x-this.position.x, 
-      y-this.position.y,
-      z-this.position.z
-    );
-    this.position = {
-      x: x, y: y, z: z
-    }
-  }
-
-  setAngle(value, x, y, z) {
-    this.model = glMatrix.mat4.create();
-    this.translate(this.position.x, this.position.y, this.position.z);
-    this.rotate(value, x, y, z);
-  }
-
-  draw() {
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.num_vertex);
   }
 
   generate_tangents_bitangents_vectors(pos, tex, num_vertex){

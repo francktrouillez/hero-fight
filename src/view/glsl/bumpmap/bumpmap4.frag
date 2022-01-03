@@ -84,5 +84,5 @@ void main() {
   }
 
   gl_FragColor = vec4(lights_vec,texelColor.a);
-      
+    
 }
