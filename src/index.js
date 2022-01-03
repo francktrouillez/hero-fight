@@ -12,6 +12,8 @@ async function main() {
     ["./src/view/assets/textures/cubemaps/day", "cubemap"],
     ["./src/view/assets/textures/cubemaps/evening", "cubemap"],
     ["./src/view/assets/textures/cubemaps/night", "cubemap"],
+    "./src/view/assets/textures/bumpmap/floor_DIFFUSE.jpg",
+    "./src/view/assets/textures/bumpmap/floor_NORMAL.jpg"
   ]);
 
   audios = load_audios([
@@ -29,6 +31,8 @@ async function main() {
   shaders = await load_shaders([
     "./src/view/glsl/cubemap/cubemap.frag",
     "./src/view/glsl/cubemap/cubemap.vert",
+    "./src/view/glsl/bumpmap/bumpmap.vert",
+    "./src/view/glsl/bumpmap/bumpmap.frag",
     "./src/view/glsl/explosion/light.vert",
     "./src/view/glsl/explosion/light1.frag",
     "./src/view/glsl/explosion/light4.frag",
@@ -80,6 +84,7 @@ async function main() {
       "water_1": new WaterProgram(gl, 1),
       "water_4": new WaterProgram(gl, 4),
       "cubemap": new CubemapProgram(gl),
+      "bumpmap": new BumpmapProgram(gl),
       "particles": new ParticleProgram(gl),
       "monsters_1": new MonsterExplodingProgram(gl, 1),
       "monsters_4": new MonsterExplodingProgram(gl, 4)
@@ -102,10 +107,40 @@ async function main() {
   for (const wisp_render of wisp_horde.elements) {
     lights_list.push(wisp_render.object.light)  
   }
+
+  async function generate_bumpmap(gl, program, camera, point_lights_list) {
+    const bumpmap_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
+                                        glMatrix.vec3.fromValues(0.5, 0.5, 0.5),
+                                        glMatrix.vec3.fromValues(0.5, 0.5, 0.5),
+                                        32.0 );                                 
+    var tex_diffuse = new Texture(gl, images["./src/view/assets/textures/bumpmap/floor_DIFFUSE.jpg"]);
+    var tex_normal = new Texture(gl,images["./src/view/assets/textures/bumpmap/floor_NORMAL.jpg"] );
+  
+    var bumpmap = new FloorBumpmapping(gl, tex_diffuse, tex_normal, 
+      function() {
+        return;
+      }
+    );
+    bumpmap.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
+  
+    render_object_bumpmap = new RenderObject(bumpmap, program, camera, {
+      key_texture_diffuse: bumpmap.texture_diffuse.gl_texture,
+      key_texture_normal: bumpmap.texture_normals.gl_texture,
+      key_model: bumpmap.model,
+      key_view: camera.get_view_matrix(),
+      key_projection: camera.get_projection_matrix(),
+      key_view_pos: camera.get_position(),
+      key_material: bumpmap_material,
+      key_point_ligths: point_lights_list
+    });
+  
+    return render_object_bumpmap;
+  }
+  
   
   // Render objects
   var render_objects = {
-    "hero": new HeroRender(gl, program_manager.get("lights_4"), camera, lights_list),
+    //"hero": new HeroRender(gl, program_manager.get("lights_4"), camera, lights_list),
     "cubemap": new DynamicCubemapRender(gl, program_manager.get("cubemap"), camera, [
         "./src/view/assets/textures/cubemaps/day",
         "./src/view/assets/textures/cubemaps/evening",
@@ -120,9 +155,9 @@ async function main() {
   }
 
   var render_exploding_objects = {
-    "slime": new SlimeRender(gl, program_manager.get("monsters_4"), camera, lights_list),
-    "skeleton": new SkeletonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
-    "dragon": new DragonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
+    //"slime": new SlimeRender(gl, program_manager.get("monsters_4"), camera, lights_list),
+    //"skeleton": new SkeletonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
+    //"dragon": new DragonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
   }
 
   // Mirror objects
@@ -164,7 +199,7 @@ async function main() {
   function render(time) {
     fps_counter.update(time)
     // Model update
-    game_controller.update(fps_counter.get_fps());
+    //game_controller.update(fps_counter.get_fps());
 
     //Draw loop
     gl.clearColor(0.0, 0.0, 0.0, 1);
