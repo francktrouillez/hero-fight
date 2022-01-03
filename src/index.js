@@ -1,4 +1,5 @@
 async function main() {
+
   images = await load_images([
     "./src/view/assets/textures/Warrior_Full_Texture.png",
     "./src/view/assets/textures/Slime_Texture.png",
