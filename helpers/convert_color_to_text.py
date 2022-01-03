@@ -27,6 +27,8 @@ def parse_obj(lines, new_tex, number_of_colors):
     elements = line.split(' ')
     if elements[0] == 'usemtl':
       text_counter += 1
+    if (elements[0] == 'vt'):
+      continue
     elif elements[0] == 'f':
       new_face = "f "
       for i in range(3):
@@ -47,4 +49,4 @@ def parse_obj(lines, new_tex, number_of_colors):
 #for i in range(41):
 #  write_file("filtered/"+ str(i) + ".obj", parse_obj(read_file("raw/" + str(i) + ".obj"), "Dragon_Texture", 6))
 
-write_file("Wisp.obj", parse_obj(read_file("raw/Wisp.obj"), "Wisp_Texture", 1))
+write_file("ClownFish.obj", parse_obj(read_file("raw/ClownFish.obj"), "ClownFish_Texture", 3))

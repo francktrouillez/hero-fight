@@ -14,6 +14,34 @@ class Light {
 
         this.color = glMatrix.vec3.fromValues(light_color[0], light_color[1], light_color[2]);
     }
+
+    set_constant(value) {
+      this.constant = value;
+    }
+
+    set_linear(value) {
+      this.linear = value;
+    }
+
+    set_quadratic(value) {
+      this.quadratic = value
+    }
+
+    set_ambient(value) {
+      this.ambient = value;
+    }
+
+    set_diffuse(value) {
+      this.diffuse = value;
+    }
+
+    set_specular(value) {
+      this.specular = value
+    }
+
+    set_color(r, g, b) {
+      this.color = glMatrix.vec3.fromValues(r, g, b);
+    }
   
     set_position(x, y, z) {
       this.pos = glMatrix.vec3.fromValues(x, y, z);

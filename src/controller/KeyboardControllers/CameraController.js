@@ -5,42 +5,87 @@ class CameraController extends Keyboard {
   }
 
   press_up() {
-    this.camera.move({x: 0.0, y: -0.05});
+    if (this.camera.update_data == null) {
+      this.camera.move({x: 0.0, y: -0.05});
+    }
   }
 
   press_down() {
-    this.camera.move({x: 0.0, y: 0.05});
+    if (this.camera.update_data == null) {
+      this.camera.move({x: 0.0, y: 0.05});
+    }
   }
 
   press_left() {
-    this.camera.move({x: 0.05, y: 0.0});
+    if (this.camera.update_data == null) {
+      this.camera.move({x: 0.05, y: 0.0});
+    }
   }
 
   press_right() {
-    this.camera.move({x: -0.05, y: 0.0});
+    if (this.camera.update_data == null) {
+      this.camera.move({x: -0.05, y: 0.0});
+    }
   }
 
   press_plus() {
-    this.camera.zoom(0.05);
+    if (this.camera.update_data == null) {
+      this.camera.zoom(0.05);
+    }
   }
 
   press_minus() {
-    this.camera.zoom(-0.05);
+    if (this.camera.update_data == null) {
+      this.camera.zoom(-0.05);
+    }
   }
 
   press_z() {
-    this.camera.rotateX(0.05);
+    if (this.camera.update_data == null) {
+      this.camera.rotateRelX(0.05);
+    }
   }
 
+
   press_q() {
-    this.camera.rotateY(0.05);
+    if (this.camera.update_data == null) {
+      this.camera.rotateRelY(0.05);
+    }
   }
 
   press_s() {
-    this.camera.rotateX(-0.05);
+    if (this.camera.update_data == null) {
+      this.camera.rotateRelX(-0.05);
+    }
   }
 
   press_d() {
-    this.camera.rotateY(-0.05);
+    if (this.camera.update_data == null) {
+      this.camera.rotateRelY(-0.05);
+    }
+  }
+
+  press_spacebar() {
+    if (this.camera.update_data == null) {
+      this.camera.update_data = {
+        t: 0,
+        speed: 0.002,
+        radius: 15,
+        height: 6.0
+      }
+      
+      this.camera.update = function() {
+        this.update_data.t = (this.update_data.t + this.update_data.speed)%(2*Math.PI);
+        const radius = this.update_data.radius
+        this.set_eye({
+          x: radius*Math.sin(this.update_data.t), 
+          y: this.update_data.height, 
+          z: radius*Math.cos(this.update_data.t)
+        });
+      }
+    } else {
+      this.camera.update = function() {}
+      this.camera.update_data = null
+    }
   }
 }
