@@ -2,7 +2,7 @@ class BumpmapProgram extends BasicProgram{
 
   constructor(gl) {
     const vertex_code = shaders["./src/view/glsl/bumpmap/bumpmap.vert"];
-    const fragment_code = shaders["./src/view/glsl/bumpmap/bumapmap.frag"];  
+    const fragment_code = shaders["./src/view/glsl/bumpmap/bumpmap.frag"];  
     const uniforms_map = {
       key_model: {
         variable:"M",

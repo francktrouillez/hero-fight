@@ -3,7 +3,7 @@ class BumpmappingObject {
   constructor(gl, texture_diffuse, texture_normals, positions, textures, num_vertex, update) {
     this.gl = gl;
 
-    this.texture_diffuse = texture_diffuse;
+    this.texture_object = texture_diffuse;
     this.texture_normals = texture_normals;
 
     this.positions = positions;

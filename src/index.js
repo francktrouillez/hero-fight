@@ -91,8 +91,6 @@ async function main() {
     }  
   )
 
-  var bumpmap_program = generate_program_bumpmap(gl);
-
   // Definition of the camera
   var camera = new MainCamera(gl, canvas, window);
   new CameraController(document, camera);
@@ -108,35 +106,7 @@ async function main() {
     lights_list.push(wisp_render.object.light)  
   }
 
-  async function generate_bumpmap(gl, program, camera, point_lights_list) {
-    const bumpmap_material = new Material(glMatrix.vec3.fromValues(1.0, 1.0, 1.0),
-                                        glMatrix.vec3.fromValues(0.5, 0.5, 0.5),
-                                        glMatrix.vec3.fromValues(0.5, 0.5, 0.5),
-                                        32.0 );                                 
-    var tex_diffuse = new Texture(gl, images["./src/view/assets/textures/bumpmap/floor_DIFFUSE.jpg"]);
-    var tex_normal = new Texture(gl,images["./src/view/assets/textures/bumpmap/floor_NORMAL.jpg"] );
-  
-    var bumpmap = new FloorBumpmapping(gl, tex_diffuse, tex_normal, 
-      function() {
-        return;
-      }
-    );
-    bumpmap.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
-  
-    render_object_bumpmap = new RenderObject(bumpmap, program, camera, {
-      key_texture_diffuse: bumpmap.texture_diffuse.gl_texture,
-      key_texture_normal: bumpmap.texture_normals.gl_texture,
-      key_model: bumpmap.model,
-      key_view: camera.get_view_matrix(),
-      key_projection: camera.get_projection_matrix(),
-      key_view_pos: camera.get_position(),
-      key_material: bumpmap_material,
-      key_point_ligths: point_lights_list
-    });
-  
-    return render_object_bumpmap;
-  }
-  
+
   
   // Render objects
   var render_objects = {
@@ -147,6 +117,7 @@ async function main() {
         "./src/view/assets/textures/cubemaps/night",
       ]
     ),
+    "bummap": new BumpmapRender(gl, program_manager.get("bumpmap"),camera, lights_list),
     "floor": new FloorRender(gl, program_manager.get("lights_4"), camera, lights_list),
     "underground": new UndergroundRender(gl, program_manager.get("lights_1"), camera, [sun]),
     "fish": new FishRender(gl, program_manager.get("lights_1"), camera, [sun]),
@@ -166,9 +137,9 @@ async function main() {
   }
 
   var render_particles = {
-    "buff": new BuffRender(gl, render_objects["hero"].object, program_manager.get("particles"), camera),
+    //"buff": new BuffRender(gl, render_objects["hero"].object, program_manager.get("particles"), camera),
     "fish_water": new FishWaterRender(gl, render_objects["fish"].object, program_manager.get("particles"), camera),
-    "dragon_fire": new DragonFireRender(gl, render_exploding_objects["dragon"].object, program_manager.get("particles"), camera)
+    //"dragon_fire": new DragonFireRender(gl, render_exploding_objects["dragon"].object, program_manager.get("particles"), camera)
   }
 
   var scene = new Scene(
