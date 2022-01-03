@@ -21,7 +21,7 @@ class BumpmapProgram extends BasicProgram{
         type: "sampler2D"
       },
       key_normal: {
-        variable: "u_texture",
+        variable: "u_normalMap",
         type: "sampler2D_1"
       },
       key_view_pos:{

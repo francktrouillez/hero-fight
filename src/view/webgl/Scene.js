@@ -4,6 +4,7 @@ class Scene {
   static EVENING = 1;
   static NIGHT = 2;
 
+
   constructor(render_objects, lights, programs_settings) {
     /*
     lights = {
@@ -104,7 +105,7 @@ class Scene {
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
     const concerned_objects = [
-      "hero", "floor", "forest"
+      "hero", "forest"
     ]
 
     for (const object of concerned_objects) {
@@ -158,7 +159,7 @@ class Scene {
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
     const concerned_objects = [
-      "hero", "floor", "forest"
+      "hero",  "forest"
     ]
 
     for (const object of concerned_objects) {
@@ -211,7 +212,7 @@ class Scene {
     // Set the good program for the objects
     const program_settings = this.programs_settings["full_lights"]
     const concerned_objects = [
-      "hero", "floor", "forest"
+      "hero", "forest"
     ]
 
     for (const object of concerned_objects) {

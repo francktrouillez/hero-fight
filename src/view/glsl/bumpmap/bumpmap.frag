@@ -30,7 +30,7 @@ varying vec3 vfrag_coord;
 varying mat3 vTBN;
 
 uniform sampler2D u_texture;
-uniform sampler2D u_normalMap;  
+uniform sampler2D u_normalMap;
 uniform vec3 u_view_pos;
 
 #define NB_POINT_LIGHTS 4

@@ -7,19 +7,18 @@ class BumpmapRender extends RenderObject {
     var tex_normal = new Texture(gl,images["./src/view/assets/textures/bumpmap/floor_NORMAL.jpg"] );
 
     // Bummap is an object different from a complex one because of the two different textures
-    var bumpmap = new FloorBumpmapping(gl, tex_diffuse, tex_normal, 
-      function() {
-        return;
-      }
-    );
-    bumpmap.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
-
     super(
-      bumpmap,
+      new FloorBumpmapping(gl, tex_diffuse, tex_normal, 
+        function() {
+          return;
+        }
+      ),
       program,
       camera,
       uniform_map
     )
+
+    this.object.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
 
     this.uniform_map.key_texture = this.object.texture_object.gl_texture;
     this.uniform_map.key_normal = this.object.texture_normals.gl_texture;
