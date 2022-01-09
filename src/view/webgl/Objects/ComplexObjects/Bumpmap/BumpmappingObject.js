@@ -21,12 +21,6 @@ class BumpmappingObject extends ComplexObject {
     this.normals = this.float32Array_from_vec3s(vectors_normals);
     this.tangents = this.float32Array_from_vec3s(vectors_tangents);
     this.bitangents = this.float32Array_from_vec3s(vectors_bitangents);
-
-    console.log(this.positions);
-    console.log(this.textures);
-    console.log(this.normals);
-    console.log(this.tangents);
-    console.log(this.bitangents);
     
     // Buffers
     this.tangent_buffer = null;

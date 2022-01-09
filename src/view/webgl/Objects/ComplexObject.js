@@ -11,6 +11,7 @@ class ComplexObject {
     this.triangles = [];
 
     this.texture_object = null;
+    this.image_string = null;
 
     this.num_vertex = null;
 
@@ -68,7 +69,8 @@ class ComplexObject {
           this.create_face(parts.slice(1), this.positions_data, temp_normals, temp_textures);
         } else if (parts[0] == 'usemtl') {
           if (this.texture_object == null) {
-            this.texture_object = new Texture(this.gl, images["./src/view/assets/textures/"+parts[1]+".png"]);
+            this.image_string = "./src/view/assets/textures/"+parts[1]+".png";
+            this.texture_object = new Texture(this.gl, images[this.image_string]);
           }
         }
       }

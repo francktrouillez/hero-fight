@@ -26,10 +26,12 @@ struct Material {
   
 
 varying vec2 vTexcoord;
+varying vec2 vTexcoord_ripples;
 varying vec3 vnormal;
 varying vec3 vfrag_coord;
 
 uniform sampler2D u_texture;
+uniform sampler2D u_ripples;
 uniform vec3 u_view_pos;
 
 #define NB_LIGHTS 1
@@ -72,6 +74,9 @@ void main() {
   vec3 view_dir = normalize(u_view_pos-vfrag_coord);
 
   vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
+
+  vec4 texelColor_ripples = texture2D(u_ripples, vec2(vTexcoord_ripples.x, 1.0-vTexcoord_ripples.y));
+
   
   for(int i=0; i<NB_LIGHTS; ++i){
     lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, texelColor);
@@ -79,6 +84,8 @@ void main() {
 
   lights_vec.b += 0.15;
 
-  gl_FragColor = vec4(lights_vec,texelColor.a);
-      
+  //gl_FragColor = vec4(lights_vec,texelColor.a);  
+  gl_FragColor = vec4(texelColor_ripples.rgb,texelColor_ripples.a);  
+  //gl_FragColor = vec4(vTexcoord_ripples,0,texelColor_ripples.a);  
+
 }
