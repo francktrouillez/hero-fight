@@ -20,7 +20,7 @@ class MainCamera extends Camera {
       t: 0,
       speed: 0.002,
       radius: 15,
-      height: 6.0
+      height: 6
     }
     
     this.update = function() {

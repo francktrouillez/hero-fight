@@ -5,18 +5,12 @@ class Water extends ComplexObject {
 
     // Create the ripple generator used by water to update the ripples
     this.ripple_gen = new RipplesGenerator(images[this.image_string].width,images[this.image_string].height, 0.9);
-    this.counter = 0;
+    this.counter_update = 0;
+    this.update_limit = 10; //Used to say how many calls need to be done to update to move the ripples
+    this.counter_ripples = 0;
+    this.ripples_limit = 15;
 
-
-    // TO REPLACE !!
-    this.ripple_gen.create_ripple(this.ripple_gen.width/2,this.ripple_gen.height/2);
-
-    /*for(var i=0; i<60; ++i){
-      this.ripple_gen.update_grid();
-    }
-    this.ripple_gen.update_8intarray_from_grid();
-    this.texture_object.gl_texture = this.create_tex_from_pixels(this.ripple_gen.pixels);*/
-
+    this.updated = false;
   }
 
   activate(program) {
@@ -43,12 +37,25 @@ class Water extends ComplexObject {
 }
 
   update_texture(){
-    this.counter +=1;
-    if(this.counter % 50 == 0){
+    // Update if the counter reach the correct amount the grid and the pixel array correspondent
+    this.counter_update +=1;
+    if(this.counter_update % this.update_limit== 0){
+      this.updated = true;
       this.ripple_gen.update_grid();
       this.ripple_gen.update_8intarray_from_grid();
       this.texture_object.gl_texture = this.create_tex_from_pixels(this.ripple_gen.pixels);
-      this.counter = 0;
+      this.counter_update = 0;
+    }
+    
+    // Generate ripples randomly, will probably be used in consert with the rain
+    this.counter_ripples += 1;
+    if(this.counter_ripples % this.ripples_limit== 0){
+      var y = Math.floor(Math.random() * this.ripple_gen.height -1)+1;
+      var x = Math.floor(Math.random() * this.ripple_gen.width -1)+1;
+
+      this.ripple_gen.create_ripple(x,y);
+
+      this.counter_ripples = 0;
     }
   }
 
