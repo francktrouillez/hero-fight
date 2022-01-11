@@ -1,8 +1,6 @@
 class HeroRender extends RenderObject {
 
   constructor(gl, program, camera, lights_list) {
-    console.log('hero')
-
     var obj_animation_map = {
       "idle": [],
       "attack": [],

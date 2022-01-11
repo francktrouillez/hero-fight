@@ -27,6 +27,7 @@ class MirrorRender extends RenderObject {
 
   render_mirror(render_objects, excluded_objects, refraction_render_objects) {
     this.mirror.update_mirror(this.mode);
+    const save_buffer = this.mirror.gl.getParameter(this.mirror.gl.FRAMEBUFFER_BINDING);
     this.mirror.activate_frame_buffer();
     for (var render_id in render_objects) {
       if (this.mode == 'reflexion' && excluded_objects.includes(render_id)){
@@ -43,7 +44,7 @@ class MirrorRender extends RenderObject {
       render_objects[render_id].update_uniform("key_projection", this.camera.get_projection_matrix());
       render_objects[render_id].update_uniform("key_view_pos", this.camera.get_position());
     }
-    this.mirror.disable_frame_buffer();
+    this.mirror.disable_frame_buffer(save_buffer);
   }
 
   render(need_to_be_updated = true) {

@@ -40,11 +40,15 @@ class Light {
     }
 
     set_color(r, g, b) {
-      this.color = glMatrix.vec3.fromValues(r, g, b);
+      this.color[0] = r;
+      this.color[1] = g;
+      this.color[2] = b;
     }
   
     set_position(x, y, z) {
-      this.pos = glMatrix.vec3.fromValues(x, y, z);
+      this.pos[0] = x;
+      this.pos[1] = y;
+      this.pos[2] = z;
     }
 
     get_position(){

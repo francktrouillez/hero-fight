@@ -111,6 +111,7 @@ class Scene {
     // Set the good color for the lights
     this.lights["sun"].set_color(1.0, 1.0, 1.0);
     this.lights["sun"].set_ambient(0.45);
+    this.lights["sun"].set_position(5.0, 50.0, 5.0);
 
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
@@ -172,6 +173,7 @@ class Scene {
     // Set the good color for the lights
     this.lights["sun"].set_color(255/255, 145/255, 65/255);
     this.lights["sun"].set_ambient(0.5);
+    this.lights["sun"].set_position(0.0, 20.0, 40.0)
 
     // Set the good program for the objects
     const program_settings = this.programs_settings["only_sun"]
@@ -232,6 +234,7 @@ class Scene {
     // Set the good color for the lights
     this.lights["sun"].set_color(50/255, 150/255, 163/255);
     this.lights["sun"].set_ambient(0.5);
+    this.lights["sun"].set_position(5.0, 50.0, 5.0)
     // Wisp doesn't need to change their color because it is always the same
 
     // Set the good program for the objects

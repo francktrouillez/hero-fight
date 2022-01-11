@@ -18,7 +18,8 @@ class WaterProgram extends BasicProgram{
       },
       key_texture: {
         variable: "u_texture",
-        type: "sampler2D"
+        type: "sampler2D",
+        index: 0
       },
       //Element added to send to the shaders the ripple map
       key_ripples: {

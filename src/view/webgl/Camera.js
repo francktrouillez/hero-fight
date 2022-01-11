@@ -186,6 +186,11 @@ class Camera {
     this.refresh_camera();
   }
 
+  set_far(far) {
+    this.info.far = far;
+    this.refresh_camera();
+  }
+
   get_position(){
     return this.position;
   }

@@ -13,7 +13,7 @@ class BumpmappingObject extends ComplexObject {
     let vectors_normals = []
     for(var i=0; i<(this.num_vertex/3);++i){
       var normal = glMatrix.vec3.create();
-      normal = glMatrix.vec3.cross(normal, vectors_tangents[i],vectors_bitangents[i]);
+      normal = glMatrix.vec3.cross(normal, vectors_tangents[i], vectors_bitangents[i]);
       vectors_normals.push(normal);
     }
 

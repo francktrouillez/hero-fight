@@ -37,6 +37,8 @@ async function main() {
     "./src/view/glsl/bumpmap/bumpmap.vert",
     "./src/view/glsl/bumpmap/bumpmap1.frag",
     "./src/view/glsl/bumpmap/bumpmap4.frag",
+    "./src/view/glsl/bumpmap_shadow/shadow.vert",
+    "./src/view/glsl/bumpmap_shadow/shadow.frag",
     "./src/view/glsl/explosion/light.vert",
     "./src/view/glsl/explosion/light1.frag",
     "./src/view/glsl/explosion/light4.frag",
@@ -80,6 +82,13 @@ async function main() {
 
   const canvas = document.getElementById('webgl_canvas');
   const gl = canvas.getContext('webgl', { premultipliedAlpha: false });
+  if (!gl) {
+    return alert('WebGL is not supported');
+  }
+  const ext = gl.getExtension('WEBGL_depth_texture');
+  if (!ext) {
+    return alert('WebGL Depth texture not supported');
+  }
  
   // Programs
   var program_manager = new ProgramManager(
@@ -92,6 +101,8 @@ async function main() {
       "cubemap": new CubemapProgram(gl),
       "bumpmap1": new BumpmapProgram(gl,1),
       "bumpmap4": new BumpmapProgram(gl,4),
+      "bumpmap_shadow1": new BumpmapShadowProgram(gl, 1),
+      "bumpmap_shadow4": new BumpmapShadowProgram(gl, 4),
       "particles": new ParticleProgram(gl),
       "monsters_1": new MonsterExplodingProgram(gl, 1),
       "monsters_4": new MonsterExplodingProgram(gl, 4)
@@ -124,11 +135,14 @@ async function main() {
         "./src/view/assets/textures/cubemaps/night",
       ]
     ),
-    "floor": new BumpmapRender(gl, program_manager.get("bumpmap1"),camera, lights_list),
     "underground": new UndergroundRender(gl, program_manager.get("lights_1"), camera, [sun]),
     "fish": new FishRender(gl, program_manager.get("lights_1"), camera, [sun]),
     "forest": new ForestRender(gl, program_manager.get("lights_4"), camera, lights_list),
     "wisp_horde": wisp_horde,  
+  }
+
+  var render_shadow_objects = {
+    "floor": new FloorRender(gl, program_manager.get("bumpmap_shadow1"), camera, lights_list),
   }
 
   var render_exploding_objects = {
@@ -149,14 +163,14 @@ async function main() {
   }
 
   var scene = new Scene(
-    {...render_objects, ...render_mirrors, ...render_exploding_objects},
+    {...render_objects, ...render_mirrors, ...render_shadow_objects, ...render_exploding_objects},
     {
       "sun": sun
     },
     {
       "only_sun": {
         program: program_manager.get("lights_1"),
-        bumpmap: program_manager.get("bumpmap1"),
+        bumpmap: program_manager.get("bumpmap_shadow1"),
         lights: [sun],
         monsters_program: program_manager.get("monsters_1"), 
         mirror_program: program_manager.get("water_1")
@@ -171,7 +185,7 @@ async function main() {
     }
   )
 
-  var game_controller = new GameController(document, {...render_objects, ...render_particles, ...render_exploding_objects}, scene);
+  var game_controller = new GameController(document, {...render_objects, ...render_particles, ...render_shadow_objects, ...render_exploding_objects}, scene);
 
   var fps_counter = new FPSCounter()
 
@@ -180,7 +194,8 @@ async function main() {
     // Model update
     game_controller.update(fps_counter.get_fps());
 
-    //console.log(fps_counter.get_fps());
+    //We draw in the canvas
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     //Draw loop
     gl.clearColor(0.0, 0.0, 0.0, 1);
@@ -205,12 +220,24 @@ async function main() {
       render_exploding_objects[render_id].update_t(time);
     }
 
+    for (var render_id in render_shadow_objects) {
+      if (!scene.contains(render_id)) {
+        continue;
+      }
+      render_shadow_objects[render_id].render_from_light(sun, {
+        ...render_objects,
+        ...render_exploding_objects
+      },
+      ["hero", "forest", "slime", "dragon", "skeleton"]
+      );
+    }
+
     for (var render_id in render_mirrors) {
       if (!scene.contains(render_id)) {
         continue;
       }
       render_mirrors[render_id].render_mirror(
-        {...render_objects, ...render_particles, ...render_exploding_objects},
+        {...render_objects, ...render_particles, ...render_shadow_objects, ...render_exploding_objects},
         ["floor", "underground", "fish", "fish_water"],
         ["underground", "cubemap", "fish", "fish_water"]
       );
@@ -221,6 +248,12 @@ async function main() {
         continue;
       }
       render_objects[render_id].render();
+    }
+    for (var render_id in render_shadow_objects) {
+      if (!scene.contains(render_id)) {
+        continue;
+      }
+      render_shadow_objects[render_id].render();
     }
     for (var render_id in render_mirrors) {
       if (!scene.contains(render_id)) {
