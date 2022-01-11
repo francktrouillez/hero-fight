@@ -73,9 +73,14 @@ void main() {
   vec3 normal = normalize(vnormal);
   vec3 view_dir = normalize(u_view_pos-vfrag_coord);
 
-  vec4 texelColor_ripples = texture2D(u_ripples, vec2(vTexcoord_ripples.x, 1.0-vTexcoord_ripples.y));// OLAOLAOLAOLA
-  vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x+(texelColor_ripples.g/255.0), 1.0-(vTexcoord.y+(texelColor_ripples.b/255.0))));
-  //vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
+  vec4 texelColor_ripples = texture2D(u_ripples, vec2(vTexcoord_ripples.x, 1.0-vTexcoord_ripples.y));
+
+  // Calculate the total offsets
+
+  float offsetX = (texelColor_ripples.g/255.0);
+  float offsetY = (texelColor_ripples.b/255.0);
+
+  vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x+offsetX, 1.0-(vTexcoord.y+offsetY)));
 
   for(int i=0; i<NB_LIGHTS; ++i){
     lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, texelColor);
@@ -83,11 +88,15 @@ void main() {
 
   lights_vec.b += 0.15;
 
-  vec3 temp = 0.03*vec3(1.0,1.0,1.0);
-  lights_vec.rgb += temp * texelColor_ripples.r;
+  // Add some effects for the ripples deplacement
+  vec3 temp = 0.25*vec3(1.0,1.0,1.0);
+  lights_vec.rgb += temp * texelColor_ripples.b;
 
-  gl_FragColor = vec4(lights_vec,texelColor.a);  
-  //gl_FragColor = vec4(texelColor_ripples.rgb,texelColor_ripples.a);  
-  //gl_FragColor = vec4(vTexcoord_ripples,0,texelColor_ripples.a);  
+  lights_vec.rgb += temp * texelColor_ripples.g;
+ 
+
+  //gl_FragColor = vec4(lights_vec,texelColor.a); 
+  gl_FragColor = vec4(texelColor_ripples.r,0,0,255.0); 
+
 
 }
