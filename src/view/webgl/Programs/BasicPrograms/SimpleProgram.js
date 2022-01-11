@@ -15,10 +15,6 @@ class SimpleProgram extends BasicProgram{
       key_projection: {
         variable:"P",
         type: "mat4"
-      },
-      key_texture: {
-        variable: "u_texture",
-        type: "sampler2D"
       }
     }
     super(gl, vertex_code, fragment_code, uniforms_map);

@@ -18,7 +18,8 @@ class ExplodingProgram extends BasicProgram{
       },
       key_texture: {
         variable: "u_texture",
-        type: "sampler2D"
+        type: "sampler2D",
+        index: 0
       },
       key_ITMatrix: {
         variable:"itM",

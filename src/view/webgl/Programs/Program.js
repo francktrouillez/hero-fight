@@ -43,7 +43,7 @@ class Program {
     this.gl.useProgram(this.program);
   }
 
-  map_uniform(uniform_location, type, value) {
+  map_uniform(uniform_location, type, value, infos = null) {
     if (type == "vec2") {
       this.gl.uniform2fv(uniform_location, value); return;
     } else if (type=="vec3"){
@@ -55,14 +55,9 @@ class Program {
     } else if (type == "mat4") {
       this.gl.uniformMatrix4fv(uniform_location, false, value); return;
     } else if (type == "sampler2D") {
-      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.activeTexture(this.gl.TEXTURE0 + infos.index);
       this.gl.bindTexture(this.gl.TEXTURE_2D, value);
-      this.gl.uniform1i(uniform_location, 0);
-      return;
-    } else if (type == "sampler2D_1") {
-      this.gl.activeTexture(this.gl.TEXTURE1);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, value);
-      this.gl.uniform1i(uniform_location, 1);
+      this.gl.uniform1i(uniform_location, infos.index);
       return;
     } else if (type == "samplerCube") {
       this.gl.activeTexture(this.gl.TEXTURE0);
@@ -164,7 +159,7 @@ class Program {
       }
       else{
         const uniform_location = this.gl.getUniformLocation(this.program, this.uniforms_map[key].variable);
-        this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key]);
+        this.map_uniform(uniform_location, this.uniforms_map[key].type, map[key], this.uniforms_map[key]);
       }
     }
   }

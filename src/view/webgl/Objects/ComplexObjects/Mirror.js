@@ -330,8 +330,8 @@ class Mirror extends ComplexObject {
 
   }
 
-  disable_frame_buffer() {
-    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+  disable_frame_buffer(save_buffer) {
+    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, save_buffer);
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     
     this.gl.clearColor(0.2, 0.2, 0.2, 1);
