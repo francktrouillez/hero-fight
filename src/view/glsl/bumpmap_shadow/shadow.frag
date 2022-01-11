@@ -85,7 +85,7 @@ void main() {
   float depth = projectedTexcoord.z;
   float projected_depth = texture2D(u_projected_texture, projectedTexcoord.xy).r; // Only need the r channel for a depth texture
   float shadow_light = 0.0;
-  if (projected_depth >= depth - 0.00001) {
+  if (projected_depth >= depth - 0.00001) { // avoid shadow acne : bias
     shadow_light = 1.0;
   }
 
