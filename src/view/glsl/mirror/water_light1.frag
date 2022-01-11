@@ -77,10 +77,13 @@ void main() {
 
   // Calculate the total offsets
 
-  float offsetX = (texelColor_ripples.g/255.0);
-  float offsetY = (texelColor_ripples.b/255.0);
+  float coordTexX = vTexcoord.x + (texelColor_ripples.g) + (texelColor_ripples.r);
+  float coordTexY = 1.0 - ( vTexcoord.y+ (texelColor_ripples.b) + (texelColor_ripples.r) );
 
-  vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x+offsetX, 1.0-(vTexcoord.y+offsetY)));
+  if(coordTexX > 1.0){coordTexX = 1.0;}
+  if(coordTexY < 0.0){coordTexX = 0.0;}
+
+  vec4 texelColor = texture2D(u_texture, vec2(coordTexX, coordTexY));
 
   for(int i=0; i<NB_LIGHTS; ++i){
     lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, texelColor);
@@ -89,14 +92,12 @@ void main() {
   lights_vec.b += 0.15;
 
   // Add some effects for the ripples deplacement
-  vec3 temp = 0.25*vec3(1.0,1.0,1.0);
+  vec3 temp = 0.05*vec3(1.0,1.0,1.0);
   lights_vec.rgb += temp * texelColor_ripples.b;
 
   lights_vec.rgb += temp * texelColor_ripples.g;
  
-
-  //gl_FragColor = vec4(lights_vec,texelColor.a); 
-  gl_FragColor = vec4(texelColor_ripples.r,0,0,255.0); 
+  gl_FragColor = vec4(lights_vec,texelColor.a);
 
 
 }

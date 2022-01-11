@@ -19,9 +19,7 @@ class MainCamera extends Camera {
     this.update_data = {
       t: 0,
       speed: 0.002,
-      //radius: 15,
-      radius: 5,
-      //height: 5
+      radius: 15,
       height: 8
     }
     

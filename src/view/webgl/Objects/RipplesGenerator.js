@@ -21,10 +21,12 @@ class RipplesGenerator {
 
       // Create the grid that will hold the values for the Perlin Nois
       this.Perlin_grid = JSON.parse(JSON.stringify(this.current_grid));
-      this.nodes = 300;
+      this.nodes = 64;
+      this.deformation = 4.0;
       this.gradients_grid = [];
       this.init_Perlin_noise();
 
+      //this.update_Perlin_noise();
       for(var i=0; i<this.height; i++){
         for(var j=0; j<this.width; j++){
           this.Perlin_grid[i][j]=  this.perlin_noise(j,i);
@@ -50,7 +52,8 @@ class RipplesGenerator {
         var offsetX = this.current_grid[y][x-1] - this.current_grid[y][x+1];
         var offsetY = this.current_grid[y-1][x] - this.current_grid[y+1][x];
         
-        this.pixels[i] = this.Perlin_grid[y][x]*255.0;
+        //this.pixels[i] = this.Perlin_grid[y][x]*255.0;
+        this.pixels[i] = this.Perlin_grid[y][x]*this.deformation;
 
         if(offsetX<0){this.pixels[i+1]= -1.0*offsetX;}
         else{this.pixels[i+1]  = offsetX;}
@@ -89,6 +92,29 @@ class RipplesGenerator {
       this.buffer_mode1 = ! this.buffer_mode1;
 
     }
+
+    update_Perlin_noise(){
+      var old_grid = JSON.parse(JSON.stringify(this.gradients_grid));
+
+      for(var i=0; i<this.nodes+1; i++){
+        for(var j=1; j<this.nodes+1; j++){
+          this.gradients_grid[i][j] = old_grid[i][j-1];
+        }
+      }
+
+      for(var i=0; i<this.nodes+1; i++){
+        this.gradients_grid[i][0] = this.random_unit_vector();
+      }
+
+
+      for(var i=0; i<this.height; i++){
+        for(var j=0; j<this.width; j++){
+          this.Perlin_grid[i][j]=  this.perlin_noise(j,i);
+        }
+      }
+
+
+    }
   
     create_ripple(x,y){
       if( x < 0 || x >= this.width){
@@ -104,7 +130,7 @@ class RipplesGenerator {
     }
 
     init_Perlin_noise(){
-      // We need to generate the table that will hold the values for the pseudo random gradient vectors picked
+      // We need to generate the table that will hold the values for therandom gradient vectors picked
       for (let i = 0; i < this.nodes+1; i++) {
         let row = [];
         for (let j = 0; j < this.nodes+1; j++) {
