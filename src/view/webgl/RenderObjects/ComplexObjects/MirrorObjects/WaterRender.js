@@ -13,7 +13,7 @@ class WaterRender extends MirrorRender {
       this.object.update();
     }
 
-    this.water.update_texture();
+    //this.water.update_texture();
     if(this.water.updated){
       this.uniform_map.key_ripples = this.water.texture_object.gl_texture;
       this.water.updated = false;

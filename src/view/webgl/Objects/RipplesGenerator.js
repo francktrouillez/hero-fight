@@ -22,11 +22,11 @@ class RipplesGenerator {
       // Create the grid that will hold the values for the Perlin Nois
       this.Perlin_grid = JSON.parse(JSON.stringify(this.current_grid));
       this.nodes = 64;
-      this.deformation = 4.0;
+      this.deformation = 3.0;
       this.gradients_grid = [];
       this.init_Perlin_noise();
 
-      //this.update_Perlin_noise();
+      // Fill the perlin grid with the calculated gradient vectors
       for(var i=0; i<this.height; i++){
         for(var j=0; j<this.width; j++){
           this.Perlin_grid[i][j]=  this.perlin_noise(j,i);
@@ -52,7 +52,6 @@ class RipplesGenerator {
         var offsetX = this.current_grid[y][x-1] - this.current_grid[y][x+1];
         var offsetY = this.current_grid[y-1][x] - this.current_grid[y+1][x];
         
-        //this.pixels[i] = this.Perlin_grid[y][x]*255.0;
         this.pixels[i] = this.Perlin_grid[y][x]*this.deformation;
 
         if(offsetX<0){this.pixels[i+1]= -1.0*offsetX;}
@@ -68,7 +67,6 @@ class RipplesGenerator {
     update_grid() {
 
       if(this.buffer_mode1){
-
 
         for(var i=1; i<this.height-1; i++){
           for(var j=1; j<this.width-1; j++){
@@ -93,7 +91,10 @@ class RipplesGenerator {
 
     }
 
+    // Complete update and calculation of the grid
     update_Perlin_noise(){
+
+      // Update the first width of gradients
       var old_grid = JSON.parse(JSON.stringify(this.gradients_grid));
 
       for(var i=0; i<this.nodes+1; i++){
@@ -109,10 +110,9 @@ class RipplesGenerator {
 
       for(var i=0; i<this.height; i++){
         for(var j=0; j<this.width; j++){
-          this.Perlin_grid[i][j]=  this.perlin_noise(j,i);
+         this.Perlin_grid[i][j]=  this.perlin_noise(j,i);
         }
       }
-
 
     }
   
@@ -180,6 +180,7 @@ class RipplesGenerator {
     return d_vect.x * g_vect.x + d_vect.y * g_vect.y;
   }
 
+  // In order to smooth the result obtained by the interpolation we use the function below
   smootherstep(x){
     return 6*x**5 - 15*x**4 + 10*x**3;
   }

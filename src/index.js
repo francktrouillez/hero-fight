@@ -121,9 +121,8 @@ async function main() {
   let lights_list = [];
   lights_list.push(sun)
   for (const wisp_render of wisp_horde.elements) {
-    lights_list.push(wisp_render.object.light)  
+    lights_list.push(wisp_render.object.light)
   }
-
 
   
   // Render objects
@@ -194,6 +193,7 @@ async function main() {
     // Model update
     game_controller.update(fps_counter.get_fps());
 
+    //console.log(fps_counter.get_fps());
     //We draw in the canvas
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
