@@ -4,6 +4,11 @@ class BumpmappingObject extends ComplexObject {
 
     super(gl, obj_content);
     this.texture_normals = texture_normals;
+  }
+
+  init_buffers() {
+
+    super.init_buffers();
 
     // Calculate the different tangent/bitangent vectors for each triangle and associate one to each face
     let vectors = this.generate_tangents_bitangents_vectors(this.positions, this.textures, this.num_vertex);
@@ -21,14 +26,10 @@ class BumpmappingObject extends ComplexObject {
     this.normals = this.float32Array_from_vec3s(vectors_normals);
     this.tangents = this.float32Array_from_vec3s(vectors_tangents);
     this.bitangents = this.float32Array_from_vec3s(vectors_bitangents);
-    
-    // Buffers
+
     this.tangent_buffer = null;
     this.bitangent_buffer = null;
-    this.init_buffers();
-  }
 
-  init_buffers() {
     this.position_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.position_buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.positions), this.gl.STATIC_DRAW);
@@ -45,11 +46,11 @@ class BumpmappingObject extends ComplexObject {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.tangent_buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, this.tangents, this.gl.STATIC_DRAW);
 
+    console.log(this.constructor.name);
+
     this.bitangent_buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bitangent_buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, this.bitangents, this.gl.STATIC_DRAW);
-
-
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
   }

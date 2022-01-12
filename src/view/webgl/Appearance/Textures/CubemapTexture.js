@@ -6,10 +6,6 @@ class CubemapTexture extends Texture {
   make_texture(gl, folder_url) {
     var gl_texture = gl.createTexture();
   
-    // We need to specify the type of texture we are using
-    // This is useful for the SAMPLER in the shader
-    // It will allow us to sample a point in any direction!
-    // and not only in (s,t) coordinates
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, gl_texture);
     
     const faceInfos = [
