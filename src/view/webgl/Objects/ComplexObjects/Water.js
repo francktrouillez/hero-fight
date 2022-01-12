@@ -6,9 +6,9 @@ class Water extends ComplexObject {
     // Create the ripple generator used by water to update the ripples
     this.ripple_gen = new RipplesGenerator(images[this.image_string].width,images[this.image_string].height, 0.99);
     this.counter_update = 0;
-    this.update_limit = 40; //Used to say how many calls need to be done to update to move the ripples
+    this.update_limit =35; //Used to say how many calls need to be done to update to move the ripples
     this.counter_ripples = 0;
-    this.ripples_limit_original = 150;
+    this.ripples_limit_original = 200;
     this.ripples_limit = this.ripples_limit_original;
 
     //To create the ripples
