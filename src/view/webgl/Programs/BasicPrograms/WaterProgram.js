@@ -1,7 +1,7 @@
 class WaterProgram extends BasicProgram{
 
   constructor(gl, number_of_lights) {
-    const vertex_code = shaders["./src/view/glsl/mirror/water.vert"]
+    const vertex_code = shaders["./src/view/glsl/lights/light.vert"]
     const fragment_code = shaders["./src/view/glsl/mirror/water_light" + number_of_lights + ".frag"]
     const uniforms_map = {
       key_model: {
@@ -20,11 +20,6 @@ class WaterProgram extends BasicProgram{
         variable: "u_texture",
         type: "sampler2D",
         index: 0
-      },
-      //Element added to send to the shaders the ripple map
-      key_ripples: {
-        variable: "u_ripples",
-        type: "sampler2D_1"
       },
       key_ITMatrix: {
         variable:"itM",
