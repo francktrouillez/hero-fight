@@ -1,4 +1,5 @@
 async function main() {
+
   images = await load_images([
     "./src/view/assets/textures/Warrior_Full_Texture.png",
     "./src/view/assets/textures/Slime_Texture.png",
@@ -8,11 +9,14 @@ async function main() {
     "./src/view/assets/textures/Floor.png",
     "./src/view/assets/textures/Floor_normal.png",
     "./src/view/assets/textures/Underground_Texture.png",
+    "./src/view/assets/textures/Black_screen.png",
     "./src/view/assets/textures/Fish_Texture.png",
     "./src/view/assets/textures/Tree_Texture.png",
     ["./src/view/assets/textures/cubemaps/day", "cubemap"],
     ["./src/view/assets/textures/cubemaps/evening", "cubemap"],
     ["./src/view/assets/textures/cubemaps/night", "cubemap"],
+    "./src/view/assets/textures/bumpmap/brickwall_DIFFUSE.jpg",
+    "./src/view/assets/textures/DiskTextured.png",
   ]);
 
   audios = load_audios([
@@ -41,6 +45,7 @@ async function main() {
     "./src/view/glsl/lights/light.vert",
     "./src/view/glsl/lights/light1.frag",
     "./src/view/glsl/lights/light4.frag",
+    "./src/view/glsl/mirror/water.vert",
     "./src/view/glsl/mirror/water_light1.frag",
     "./src/view/glsl/mirror/water_light4.frag",
     "./src/view/glsl/particle/particle.frag",
@@ -65,6 +70,7 @@ async function main() {
     ["./src/view/assets/models/Dragon/attack/", 40],
     "./src/view/assets/models/Wisp/Wisp.obj",
     "./src/view/assets/models/Disk/Disk.obj",
+    "./src/view/assets/models/Disk/DiskTextured.obj",
     "./src/view/assets/models/Floor/Floor.obj",
     "./src/view/assets/models/Fish/Fish.obj",
     "./src/view/assets/models/Underground/Underground.obj",
