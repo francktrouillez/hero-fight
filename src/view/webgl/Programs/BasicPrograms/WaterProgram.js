@@ -24,7 +24,8 @@ class WaterProgram extends BasicProgram{
       //Element added to send to the shaders the ripple map
       key_ripples: {
         variable: "u_ripples",
-        type: "sampler2D_1"
+        type: "sampler2D",
+        index: 1
       },
       key_ITMatrix: {
         variable:"itM",
