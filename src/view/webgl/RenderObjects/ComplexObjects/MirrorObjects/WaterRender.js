@@ -8,6 +8,10 @@ class WaterRender extends MirrorRender {
 
   }
 
+  update_fish_position(pos){
+    this.water.fish_position = pos;
+  }
+
   render(need_to_be_updated = true) {
     if (need_to_be_updated) {
       this.object.update();

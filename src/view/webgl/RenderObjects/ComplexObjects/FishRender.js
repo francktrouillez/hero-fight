@@ -35,4 +35,8 @@ class FishRender extends RenderObject {
     this.uniform_map.key_point_ligths = lights_list;
     this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [0.0, 0.0, 0.0], 32.0);
   }
+
+  get_position(){
+    return this.object.position;
+  }
 }

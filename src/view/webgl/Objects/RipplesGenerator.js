@@ -6,7 +6,7 @@ class RipplesGenerator {
       this.width = width;
       this.dampening = dampening;
 
-      this.max_value = 50.0;
+      this.max_value = 80.0;
 
       for(var i=0; i<this.height; i++){
         grid.push(new Array(this.width));

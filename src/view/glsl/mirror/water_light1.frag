@@ -77,8 +77,8 @@ void main() {
 
   // Calculate the total offsets
 
-  float coordTexX = vTexcoord.x + (texelColor_ripples.g) + (texelColor_ripples.r);
-  float coordTexY = 1.0 - ( vTexcoord.y+ (texelColor_ripples.b) + (texelColor_ripples.r) );
+  float coordTexX = vTexcoord.x + (texelColor_ripples.g/4.0) + (texelColor_ripples.r);
+  float coordTexY = 1.0 - ( vTexcoord.y+ (texelColor_ripples.b/4.0) + (texelColor_ripples.r) );
 
   if(coordTexX > 1.0){coordTexX = 1.0;}
   if(coordTexY < 0.0){coordTexX = 0.0;}
