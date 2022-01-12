@@ -36,8 +36,8 @@ class GameController {
           animation: "idle",
           frame_id: 0,
           increment: 1,
-          max_renders: 15*parseInt(fps/30),
-          renders_per_frames: parseInt(fps/30)
+          max_renders: 15*Math.max(parseInt(fps/30),1),
+          renders_per_frames: Math.max(parseInt(fps/30),1)
         }
         this.render_objects["hero"].object.update = function() {
           const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
@@ -78,8 +78,8 @@ class GameController {
             animation: "idle",
             frame_id: 0,
             increment: 1,
-            max_renders: 20*parseInt(fps/30),
-            renders_per_frames: parseInt(fps/30)*2
+            max_renders: 20*Math.max(parseInt(fps/30),1),
+            renders_per_frames: Math.max(parseInt(fps/30),1)*2
           }
           this.render_objects["slime"].object.update = function() {
             const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
@@ -94,8 +94,8 @@ class GameController {
           this.render_objects["skeleton"].object.update_data = {
             animation: "idle",
             frame_id: 0,
-            max_renders: 80*parseInt(fps/30),
-            renders_per_frames: parseInt(fps/30)
+            max_renders: 80*Math.max(parseInt(fps/30),1),
+            renders_per_frames: Math.max(parseInt(fps/30),1)
           }
           this.render_objects["skeleton"].object.update = function() {
             const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
@@ -112,8 +112,8 @@ class GameController {
           this.render_objects["dragon"].object.update_data = {
             animation: "idle",
             frame_id: 0,
-            max_renders: 40*parseInt(fps/30),
-            renders_per_frames: parseInt(fps/30)
+            max_renders: 40*Math.max(parseInt(fps/30),1),
+            renders_per_frames: Math.max(parseInt(fps/30),1)
           }
           this.render_objects["dragon"].object.update = function() {
             const id_frame = parseInt(this.update_data.frame_id/this.update_data.renders_per_frames)
@@ -154,8 +154,8 @@ class GameController {
           animation: "attack",
           frame_id: 0,
           increment: 1,
-          max_renders: 20*parseInt(fps/30),
-          renders_per_frames: parseInt(fps/30)
+          max_renders: 20*Math.max(parseInt(fps/30),1),
+          renders_per_frames: Math.max(parseInt(fps/30),1)
         }
         audios["./src/view/assets/sounds/sword_slash.mp3"].play();
         this.render_objects["hero"].object.update = function() {
@@ -178,8 +178,8 @@ class GameController {
             animation: "attack",
             frame_id: 0,
             increment: 1,
-            max_renders: 15*parseInt(fps/30),
-            renders_per_frames: parseInt(fps/30)
+            max_renders: 15*Math.max(parseInt(fps/30),1),
+            renders_per_frames: Math.max(parseInt(fps/30),1)
           }
           this.render_objects["slime"].object.update = function() {
             if (this.update_data.frame_id > this.update_data.max_renders) {
@@ -200,8 +200,8 @@ class GameController {
             animation: "attack",
             frame_id: 0,
             increment: 1,
-            max_renders: 28*parseInt(fps/30),
-            renders_per_frames: parseInt(fps/30)
+            max_renders: 28*Math.max(parseInt(fps/30),1),
+            renders_per_frames: Math.max(parseInt(fps/30),1)
           }
           this.render_objects["skeleton"].object.update = function() {
             if (this.update_data.frame_id > this.update_data.max_renders) {
@@ -223,8 +223,8 @@ class GameController {
             animation: "attack",
             frame_id: 0,
             increment: 1,
-            max_renders: 40*parseInt(fps/30),
-            renders_per_frames: parseInt(fps/30)
+            max_renders: 40*Math.max(parseInt(fps/30),1),
+            renders_per_frames: Math.max(parseInt(fps/30),1)
           }
           this.render_objects["dragon"].object.update = function() {
             if (this.update_data.frame_id > this.update_data.max_renders) {
@@ -257,8 +257,8 @@ class GameController {
           animation: "buff",
           frame_id: 0,
           increment: 1,
-          max_renders: 18*parseInt(fps/30),
-          renders_per_frames: parseInt(fps/30)
+          max_renders: 18*Math.max(parseInt(fps/30),1),
+          renders_per_frames: Math.max(parseInt(fps/30),1)
         }
         this.render_objects["hero"].object.update = function() {
           if (this.update_data.frame_id < 0) {

@@ -8,9 +8,7 @@ class Water extends ComplexObject {
     this.counter_update = 0;
     this.update_limit = 20; //Used to say how many calls need to be done to update to move the ripples
     this.counter_ripples = 0;
-    this.ripples_limit = 200;
-    this.counter_update_noise = 0;
-    this.update_limit_noise = 120;
+    this.ripples_limit = 20;
 
     this.updated = false;
 
@@ -47,13 +45,6 @@ class Water extends ComplexObject {
       this.ripple_gen.update_grid();
       this.ripple_gen.update_8intarray_from_grid();
       this.counter_update = 0;
-    }
-
-    this.counter_update_noise += 1;
-    if(this.counter_update_noise % this.update_limit_noise == 0){
-      this.updated = true;
-      this.ripple_gen.update_Perlin_noise();
-      this.counter_update_noise = 0;
     }
     
     // Generate ripples randomly, will probably be used in consert with the rain

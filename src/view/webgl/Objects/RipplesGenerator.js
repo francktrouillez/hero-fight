@@ -6,7 +6,7 @@ class RipplesGenerator {
       this.width = width;
       this.dampening = dampening;
 
-      this.max_value = 400;
+      this.max_value = 50.0;
 
       for(var i=0; i<this.height; i++){
         grid.push(new Array(this.width));
@@ -21,17 +21,14 @@ class RipplesGenerator {
 
       // Create the grid that will hold the values for the Perlin Nois
       this.Perlin_grid = JSON.parse(JSON.stringify(this.current_grid));
-      this.nodes = 64;
+      this.nodes = 30;//64;
+      this.octaves = 3;
       this.deformation = 3.0;
       this.gradients_grid = [];
       this.init_Perlin_noise();
 
       // Fill the perlin grid with the calculated gradient vectors
-      for(var i=0; i<this.height; i++){
-        for(var j=0; j<this.width; j++){
-          this.Perlin_grid[i][j]=  this.perlin_noise(j,i);
-        }
-      }
+      this.calculate_all_Perlin_grid();
 
       // Setup the pixels array for the texture of the ripples
       this.pixels = new Uint8Array(this.width* this.height * 4);
@@ -91,29 +88,19 @@ class RipplesGenerator {
 
     }
 
-    // Complete update and calculation of the grid
-    update_Perlin_noise(){
-
-      // Update the first width of gradients
-      var old_grid = JSON.parse(JSON.stringify(this.gradients_grid));
-
-      for(var i=0; i<this.nodes+1; i++){
-        for(var j=1; j<this.nodes+1; j++){
-          this.gradients_grid[i][j] = old_grid[i][j-1];
+    calculate_all_Perlin_grid(){
+      var frequency = 1.0;
+      var amplitude = 1.0;
+      for(var o=0; o<this.octaves; o++){
+        for(var i=0; i<this.height; i++){
+          for(var j=0; j<this.width; j++){
+          this.Perlin_grid[i][j] +=  amplitude * this.perlin_noise(j,i,frequency,o);
+          }
         }
+        // Higher frequency and lower amplitude  for next octave 
+        frequency += 1;
+        amplitude /= 3;
       }
-
-      for(var i=0; i<this.nodes+1; i++){
-        this.gradients_grid[i][0] = this.random_unit_vector();
-      }
-
-
-      for(var i=0; i<this.height; i++){
-        for(var j=0; j<this.width; j++){
-         this.Perlin_grid[i][j]=  this.perlin_noise(j,i);
-        }
-      }
-
     }
   
     create_ripple(x,y){
@@ -130,40 +117,48 @@ class RipplesGenerator {
     }
 
     init_Perlin_noise(){
-      // We need to generate the table that will hold the values for therandom gradient vectors picked
-      for (let i = 0; i < this.nodes+1; i++) {
-        let row = [];
-        for (let j = 0; j < this.nodes+1; j++) {
-            row.push(this.random_unit_vector());
+      // We need to generate the table that will hold the values for the random gradient vectors picked
+      for(var o=1; o<=this.octaves;+ o++){
+        let bloc = [];
+        for (let i = 0; i < (this.nodes*o)+1; i++) {
+          let row = [];
+          for (let j = 0; j < (this.nodes*o)+1; j++) {
+              row.push(this.random_unit_vector());
+          }
+          bloc.push(row);
         }
-        this.gradients_grid.push(row);
+        this.gradients_grid.push(bloc);
       }
 
       return true;
     }
 
     random_unit_vector(){
+      //let theta_list = [0, Math.PI/4 ,Math.PI/2, (3/4)*Math.PI, Math.PI, (5/4)*Math.PI, (3/2)*Math.PI, Math.PI*(7/4)];
       let theta = Math.random() * 2 * Math.PI;
+      //let theta = theta_list[Math.floor(Math.random() * 4)];
       return {
           x: Math.cos(theta),
           y: Math.sin(theta)
       };
   }
 
-  perlin_noise(x, y) {
-    var x_local = (x/this.width) * (this.nodes);
-    var y_local = (y/this.height) * (this.nodes);
+  perlin_noise(x, y, freq, octave) {
+    var node_nb = Math.floor(this.nodes * freq);
+    var x_local = (x/this.width) * (node_nb);
+    var y_local = (y/this.height) * (node_nb);
     var x0 = Math.floor(x_local);
     var x1 = x0 + 1;
     var y0 = Math.floor(y_local);
     var y1 = y0 + 1;
 
+
     // g1 ¦¦ g2
     // g3 ¦¦ g4
-    var g1 = this.dot_prod_grid(x_local,y_local, x0,y0);
-    var g2 = this.dot_prod_grid(x_local,y_local, x1,y0);
-    var g3 = this.dot_prod_grid(x_local,y_local, x0,y1);
-    var g4 = this.dot_prod_grid(x_local,y_local, x1,y1);
+    var g1 = this.dot_prod_grid(x_local,y_local, x0,y0, octave);
+    var g2 = this.dot_prod_grid(x_local,y_local, x1,y0, octave);
+    var g3 = this.dot_prod_grid(x_local,y_local, x0,y1, octave);
+    var g4 = this.dot_prod_grid(x_local,y_local, x1,y1, octave);
 
     // Then we need to interpolate this 4 values to find the one to x,y
     var inter1 = this.lerp((x_local-x0), g1,g2);
@@ -174,8 +169,8 @@ class RipplesGenerator {
   }
 
   // Dot product between distance vect and gradients
-  dot_prod_grid(x, y, vert_x, vert_y){
-    var g_vect = this.gradients_grid[vert_y][vert_x];
+  dot_prod_grid(x, y, vert_x, vert_y, octave){
+    var g_vect = this.gradients_grid[octave][vert_y][vert_x];
     var d_vect = {x: x - vert_x, y: y - vert_y};
     return d_vect.x * g_vect.x + d_vect.y * g_vect.y;
   }
