@@ -26,12 +26,10 @@ struct Material {
   
 
 varying vec2 vTexcoord;
-varying vec2 vTexcoord_ripples;
 varying vec3 vnormal;
 varying vec3 vfrag_coord;
 
 uniform sampler2D u_texture;
-uniform sampler2D u_ripples;
 uniform vec3 u_view_pos;
 
 #define NB_LIGHTS 1
@@ -73,31 +71,14 @@ void main() {
   vec3 normal = normalize(vnormal);
   vec3 view_dir = normalize(u_view_pos-vfrag_coord);
 
-  vec4 texelColor_ripples = texture2D(u_ripples, vec2(vTexcoord_ripples.x, 1.0-vTexcoord_ripples.y));
-
-  // Calculate the total offsets
-
-  float coordTexX = vTexcoord.x + (texelColor_ripples.g) + (texelColor_ripples.r);
-  float coordTexY = 1.0 - ( vTexcoord.y+ (texelColor_ripples.b) + (texelColor_ripples.r) );
-
-  if(coordTexX > 1.0){coordTexX = 1.0;}
-  if(coordTexY < 0.0){coordTexX = 0.0;}
-
-  vec4 texelColor = texture2D(u_texture, vec2(coordTexX, coordTexY));
-
+  vec4 texelColor = texture2D(u_texture, vec2(vTexcoord.x, 1.0-vTexcoord.y));
+  
   for(int i=0; i<NB_LIGHTS; ++i){
     lights_vec += CalcPointLight(u_point_ligths_list[i], normal, vfrag_coord, view_dir, texelColor);
   }
 
   lights_vec.b += 0.15;
 
-  // Add some effects for the ripples deplacement
-  vec3 temp = 0.05*vec3(1.0,1.0,1.0);
-  lights_vec.rgb += temp * texelColor_ripples.b;
-
-  lights_vec.rgb += temp * texelColor_ripples.g;
- 
   gl_FragColor = vec4(lights_vec,texelColor.a);
-
-
+      
 }
