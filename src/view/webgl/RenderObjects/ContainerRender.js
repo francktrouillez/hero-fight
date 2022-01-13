@@ -23,6 +23,7 @@ class ContainerRender {
   }
 
   set_program(program) {
+    this.program = program;
     for (const element of this.elements) {
       element.set_program(program)
     }
