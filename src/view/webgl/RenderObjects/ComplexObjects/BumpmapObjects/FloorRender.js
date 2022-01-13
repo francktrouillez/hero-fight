@@ -24,7 +24,7 @@ class FloorRender extends BumpmapShadowRender {
     this.uniform_map.key_projection = camera.get_projection_matrix();
     this.uniform_map.key_view_pos = camera.get_position();
     this.uniform_map.key_point_ligths = lights_list;
-    this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [0.5, 0.5, 0.5], [0.5, 0.5, 0.5], 32.0);
+    this.uniform_map.key_material = new Material([1.0, 1.0, 1.0], [0.5, 0.2, 1.0], [0.5, 0.2, 1.0], 32.0);
     this.uniform_map.key_projected_texture = this.object.depth_texture;
     this.uniform_map.key_texture_matrix = this.texture_matrix;
   }
