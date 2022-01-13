@@ -12,10 +12,14 @@ class CameraController extends Keyboard {
     this.camera = camera;
     this.mode = CameraController.FOCUS_SCENE;
     this.switch_scene(this.mode);
+    this.update = null;
+    this.paused = false;
   }
 
   switch_scene(mode) {
+    console.log(mode)
     this.mode = mode;
+    this.paused = false;
     if (mode == CameraController.FOCUS_SCENE) {
       this.switch_scene_focus_scene();
     } else if (mode == CameraController.UNDERGROUND) {
@@ -36,7 +40,7 @@ class CameraController extends Keyboard {
   }
 
   previous_scene() {
-    this.switch_scene((this.mode - 1) % 6);
+    this.switch_scene((this.mode - 1 + 6) % 6);
   }
 
   press_right() {
@@ -247,6 +251,19 @@ class CameraController extends Keyboard {
         y: 1.0,
         z: 0.0
       })
+    }
+  }
+
+  press_spacebar() {
+    if (this.camera.update_data != null) {
+      if (this.paused) {
+        this.camera.update = this.update;
+        this.paused = false;
+      } else {
+        this.update = this.camera.update;
+        this.camera.update = function() {};
+        this.paused = true;
+      }
     }
   }
 }
