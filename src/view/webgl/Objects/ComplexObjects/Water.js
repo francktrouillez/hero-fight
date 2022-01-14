@@ -74,7 +74,7 @@ class Water extends ComplexObject {
 
     this.counter_noise += 1;
     if(this.counter_noise >= this.update_noise_limit){
-      //this.ripple_gen.move_Perlin_noise();
+      this.ripple_gen.move_Perlin_noise();
       this.counter_noise = 0;
     }
 

@@ -55,7 +55,7 @@ async function main() {
   ])
   
   obj_files = await load_objs([
-    /*"./src/view/assets/models/Warrior/Warrior.obj",
+    "./src/view/assets/models/Warrior/Warrior.obj",
     ["./src/view/assets/models/Warrior/idle/", 15],
     ["./src/view/assets/models/Warrior/attack/", 20],
     ["./src/view/assets/models/Warrior/punch/", 18],
@@ -67,7 +67,7 @@ async function main() {
     ["./src/view/assets/models/Skeleton/attack/", 28],
     "./src/view/assets/models/Dragon/Dragon.obj",
     ["./src/view/assets/models/Dragon/idle/", 40],
-    ["./src/view/assets/models/Dragon/attack/", 40],*/
+    ["./src/view/assets/models/Dragon/attack/", 40],
     "./src/view/assets/models/Wisp/Wisp.obj",
     "./src/view/assets/models/Disk/Disk.obj",
     "./src/view/assets/models/Disk/DiskTextured.obj",
@@ -127,7 +127,7 @@ async function main() {
   
   // Render objects
   var render_objects = {
-    //"hero": new HeroRender(gl, program_manager.get("lights_4"), camera, lights_list),
+    "hero": new HeroRender(gl, program_manager.get("lights_4"), camera, lights_list),
     "cubemap": new DynamicCubemapRender(gl, program_manager.get("cubemap"), camera, [
         "./src/view/assets/textures/cubemaps/day",
         "./src/view/assets/textures/cubemaps/evening",
@@ -145,9 +145,9 @@ async function main() {
   }
 
   var render_exploding_objects = {
-    //"slime": new SlimeRender(gl, program_manager.get("monsters_4"), camera, lights_list),
-    //"skeleton": new SkeletonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
-    //"dragon": new DragonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
+    "slime": new SlimeRender(gl, program_manager.get("monsters_4"), camera, lights_list),
+    "skeleton": new SkeletonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
+    "dragon": new DragonRender(gl, program_manager.get("monsters_4"), camera, lights_list),
   }
 
   // Mirror objects
@@ -156,9 +156,9 @@ async function main() {
   }
 
   var render_particles = {
-    //"buff": new BuffRender(gl, render_objects["hero"].object, program_manager.get("particles"), camera),
+    "buff": new BuffRender(gl, render_objects["hero"].object, program_manager.get("particles"), camera),
     "fish_water": new FishWaterRender(gl, render_objects["fish"].object, program_manager.get("particles"), camera),
-    //"dragon_fire": new DragonFireRender(gl, render_exploding_objects["dragon"].object, program_manager.get("particles"), camera)
+    "dragon_fire": new DragonFireRender(gl, render_exploding_objects["dragon"].object, program_manager.get("particles"), camera)
   }
 
   var scene = new Scene(
@@ -191,7 +191,7 @@ async function main() {
   function render(time) {
     fps_counter.update(time)
     // Model update
-    //game_controller.update(fps_counter.get_fps());
+    game_controller.update(fps_counter.get_fps());
 
     console.log(fps_counter.get_fps());
     //We draw in the canvas
@@ -231,8 +231,7 @@ async function main() {
         ...render_objects,
         ...render_exploding_objects
       },
-      //["hero", "forest", "slime", "dragon", "skeleton"]
-      ["forest"]
+      ["hero", "forest", "slime", "dragon", "skeleton"]
       );
     }
 
