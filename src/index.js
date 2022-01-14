@@ -193,7 +193,7 @@ async function main() {
     // Model update
     //game_controller.update(fps_counter.get_fps());
 
-    //console.log(fps_counter.get_fps());
+    console.log(fps_counter.get_fps());
     //We draw in the canvas
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 

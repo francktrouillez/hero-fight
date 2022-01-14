@@ -25,7 +25,7 @@ class RipplesGenerator {
       this.octaves = 3;
       this.deformation = 3.0;
       this.gradients_grid = [];
-      this.amplitude_movement = Math.floor(this.width/15.0);
+      this.amplitude_movement = Math.floor(this.width/40.0);
       this.init_Perlin_noise();
 
       // Fill the perlin grid with the calculated gradient vectors
@@ -106,10 +106,6 @@ class RipplesGenerator {
 
     // Move pixels of the precalculated perlin noise from this.amplitude_movement in the width direction (x texture)
     move_Perlin_noise(){
-      
-      console.log("Move");
-      console.log(this.amplitude_movement);
-
       let first_pixels = [];
       for(var i=0; i<this.height; i++){
         var row = [];
@@ -120,9 +116,9 @@ class RipplesGenerator {
       }
 
       for(var i=0; i<this.height; i++){
-        for(var j=this.amplitude_movement;  j<this.width; j++){
+        for(var j=this.width-1;  j>=this.amplitude_movement; j--){
           var element = this.Perlin_grid[i][j-this.amplitude_movement];
-          this.Perlin_grid[i].splice(j-this.amplitude_movement, 1,);
+          this.Perlin_grid[i].splice(j-this.amplitude_movement, 1);
           this.Perlin_grid[i].splice(j, 0, element);
         }
       }

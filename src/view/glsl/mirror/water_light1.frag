@@ -96,8 +96,8 @@ void main() {
 
   lights_vec.rgb += temp * texelColor_ripples.g;
  
-  //gl_FragColor = vec4(lights_vec,texelColor.a);
-  gl_FragColor = vec4(texelColor_ripples.r*127.0,0,0,0.7);
+  gl_FragColor = vec4(lights_vec,texelColor.a);
+  //gl_FragColor = vec4(texelColor_ripples.r*127.0,0,0,0.7);
 
 
 }

@@ -9,9 +9,13 @@ class Water extends ComplexObject {
     this.update_limit_original = (1/3); //Used to say how many update called they need *fps (so the inverse of number per sec)
     this.update_limit = this.update_limit_original; 
     this.counter_ripples = 0;
-    //this.ripples_limit_original = 2;
     this.ripples_limit_original = 2;
     this.ripples_limit = this.ripples_limit_original;
+
+    this.counter_noise = 0;
+    this.update_noise_limit_original = 4;
+    this.update_noise_limit = this.update_limit_original;
+
 
     //To create the ripples
     this.fish_position =  {x:0, y:0, z:0};
@@ -66,9 +70,15 @@ class Water extends ComplexObject {
       this.ripple_gen.create_ripple(Math.floor((this.fish_position.x*this.ripple_gen.width/6)+this.grid_center_x + x ),Math.floor(-(this.fish_position.z*this.ripple_gen.height/6)+this.grid_center_y+y ));
       
       this.counter_ripples = 0;
-
-      this.ripple_gen.move_Perlin_noise();
     }
+
+    this.counter_noise += 1;
+    if(this.counter_noise >= this.update_noise_limit){
+      //this.ripple_gen.move_Perlin_noise();
+      this.counter_noise = 0;
+    }
+
+
 
     if(this.updated){
       this.texture_object.gl_texture = this.create_tex_from_pixels(this.ripple_gen.pixels);
