@@ -61,8 +61,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragCoord, vec3 viewDir,
     diffuse *= attenuation;
     specular *= attenuation;
 
-    return vec3( (ambient + diffuse + specular )*texelColor.rgb); 
-    return reflectDir;
+    return vec3( (ambient + diffuse + specular )*texelColor.rgb);
 } 
 
 
