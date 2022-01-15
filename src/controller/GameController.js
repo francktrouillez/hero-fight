@@ -144,7 +144,7 @@ class GameController {
         this.render_objects["dragon"].object.num_vertex = 0;
 
         audios["./src/view/assets/sounds/dragon_flying.mp3"].pause();
-        if (this.game.round % 3 == 0) {
+        if ((this.game.round - 1) % 3 == 0 && (this.game.round - 1) != 0) {
           this.scene.next_time();
         }
 

@@ -161,9 +161,9 @@ class Game {
         this.opponent = new Dragon(this.opponent_controller, this.mode, this.hero.get_level());
       }
     } else {
-      if ((this.hero.get_level() - 1) % 3 == 0) {
+      if ((this.hero.get_level() - 1) % 4 == 0) {
         this.opponent = new Slime(this.opponent_controller, this.mode, this.hero.get_level());
-      } else if ((this.hero.get_level() - 1) % 3 == 1) {
+      } else if ((this.hero.get_level() - 1) % 4 == 1) {
         this.opponent = new Skeleton(this.opponent_controller, this.mode, this.hero.get_level());
       } else {
         this.opponent = new Dragon(this.opponent_controller, this.mode, this.hero.get_level());
