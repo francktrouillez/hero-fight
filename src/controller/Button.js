@@ -1,4 +1,5 @@
 class Button {
+  /* Class to control an HTML button */
   constructor(html_button, image, controller, action) {
     this.html_button = html_button;
     this.html_button.src = image;
