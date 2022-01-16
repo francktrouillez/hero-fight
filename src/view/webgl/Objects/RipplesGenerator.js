@@ -163,9 +163,7 @@ class RipplesGenerator {
     }
 
     _random_unit_vector(){
-      //let theta_list = [0, Math.PI/4 ,Math.PI/2, (3/4)*Math.PI, Math.PI, (5/4)*Math.PI, (3/2)*Math.PI, Math.PI*(7/4)];
       let theta = Math.random() * 2 * Math.PI;
-      //let theta = theta_list[Math.floor(Math.random() * 4)];
       return {
           x: Math.cos(theta),
           y: Math.sin(theta)
