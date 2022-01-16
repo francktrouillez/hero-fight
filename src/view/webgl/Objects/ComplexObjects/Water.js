@@ -41,7 +41,6 @@ class Water extends ComplexObject {
   create_tex_from_pixels(data) {
     var texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-    //this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, data);
     this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.ripple_gen.width, this.ripple_gen.height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, data);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
