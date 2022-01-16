@@ -2,7 +2,6 @@ class Camera {
 
   constructor(info) {
     this.info = info
-    // Position is useful for the lights ATTENTION needs to be updated accordingly to the movement of the cam
     this.view = glMatrix.mat4.create();
     this.view = glMatrix.mat4.lookAt(this.view, 
       glMatrix.vec3.fromValues(info.eye.x, info.eye.y, info.eye.z), 
