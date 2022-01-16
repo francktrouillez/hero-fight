@@ -9,7 +9,6 @@ async function main() {
     "./src/view/assets/textures/Floor.png",
     "./src/view/assets/textures/Floor_normal.png",
     "./src/view/assets/textures/Underground_Texture.png",
-    "./src/view/assets/textures/Black_screen.png",
     "./src/view/assets/textures/Fish_Texture.png",
     "./src/view/assets/textures/Tree_Texture.png",
     ["./src/view/assets/textures/cubemaps/day", "cubemap"],
