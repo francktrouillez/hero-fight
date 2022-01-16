@@ -39,8 +39,8 @@ class BumpmapShadowRender extends RenderObject {
 
     const save_buffer = gl.getParameter(gl.FRAMEBUFFER_BINDING);
     this.object.activate_frame_buffer();
-    gl.enable(gl.DEPTH_TEST);           // Enable depth testing
-    gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
     for (const render_id of render_ids) {
       const save_program = render_objects[render_id].program;
       render_objects[render_id].set_program(this.depth_program);
