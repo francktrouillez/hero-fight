@@ -193,7 +193,7 @@ async function main() {
     // Model update
     game_controller.update(fps_counter.get_fps());
 
-    //console.log(fps_counter.get_fps());
+    console.log(fps_counter.get_fps());
     //We draw in the canvas
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
@@ -212,7 +212,7 @@ async function main() {
     camera.update();
 
     //Update the fish position for the ripples
-    render_mirrors["lake"].update_fish_position(render_objects["fish"].get_position());
+    render_mirrors["lake"].update_ripples_values(render_objects["fish"].get_position(), fps_counter.get_fps());
 
     for (var render_id in render_particles) {
       render_particles[render_id].object.update_time(time);

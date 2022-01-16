@@ -3,7 +3,7 @@ precision mediump float;
 struct PointLight {    
     vec3 position;
     
-    // Paramters linked to the attenuation
+    // Parameters linked to the attenuation
     float constant;
     float linear;
     float quadratic;  

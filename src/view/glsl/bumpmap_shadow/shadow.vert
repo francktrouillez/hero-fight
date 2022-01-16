@@ -4,9 +4,6 @@ attribute vec3 aNormal;
 attribute vec3 aTangent;
 attribute vec3 aBitangent; 
 
-// Difference between a normal light shader is that the normal is not passed to the vertex and then the frag, it is direclty
-// infer in the fragment shader from a texture contaning the normals of the object
-
 uniform mat4 M;
 uniform mat4 V;
 uniform mat4 P;

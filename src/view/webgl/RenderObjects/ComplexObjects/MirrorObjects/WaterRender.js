@@ -8,8 +8,11 @@ class WaterRender extends MirrorRender {
 
   }
 
-  update_fish_position(pos){
-    this.water.fish_position = pos;
+  update_ripples_values(pos_fish, fps){
+    this.water.fish_position = pos_fish;
+    this.water.ripples_limit = (this.water.ripples_limit_original*fps);
+    this.water.update_limit = (this.water.update_limit_original*fps);
+    this.water.update_noise_limit = (this.water.update_noise_limit_original*fps);
   }
 
   render(need_to_be_updated = true) {
