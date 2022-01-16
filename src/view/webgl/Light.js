@@ -2,7 +2,7 @@ class Light {
     constructor(position_init, constant, linear, quadratic, ambient, diffuse, specular, light_color) {
         this.pos = glMatrix.vec3.fromValues(position_init[0], position_init[1], position_init[2]);
 
-        // Paramters linked to the attenuation
+        // Parameters linked to the attenuation
         this.constant = constant;
         this.linear = linear;
         this.quadratic = quadratic;  
