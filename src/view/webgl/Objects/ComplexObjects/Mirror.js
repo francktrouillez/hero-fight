@@ -94,7 +94,7 @@ class Mirror extends ComplexObject {
     const r = this.radius_object;
     const alpha = this.mirror_camera.info.fov * Math.PI/180 / 2;
 
-    const dist = r/Math.tan(alpha); //Math.max(dist_1, dist_2);
+    const dist = r/Math.tan(alpha);
 
     const near_dist = Math.sqrt(dist * dist + r * r - 2 * dist * r * Math.cos(theta))  
 
@@ -346,7 +346,6 @@ class Mirror extends ComplexObject {
       y: this.position.y,
       z: this.position.z
     }
-    //this.mirror_camera.set_eye(this.position);
   }
 
   rotate(value, x, y, z) {
@@ -398,7 +397,6 @@ class Mirror extends ComplexObject {
       y: this.position.y,
       z: this.position.z
     }
-    //this.mirror_camera.set_eye(this.position);
   }
 
   setAngle(value, x, y, z) {
